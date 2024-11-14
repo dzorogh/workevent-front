@@ -1,4 +1,4 @@
-import AppLink from "./AppLink";
+import AppLink from "@/components/ui/app-link";
 
 export default function Menu() {
   return (
