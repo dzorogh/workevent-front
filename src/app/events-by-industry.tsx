@@ -27,6 +27,7 @@ export default function EventsByIndustry({ initialIndustries, initialEvents, ini
         setIsEventsLoading(true);
         setSelectedIndustry(industryId);
         try {
+            setEvents([]);
             const response = await Api.GET('/v1/events', {
                 params: {
                     query: {
@@ -47,18 +48,23 @@ export default function EventsByIndustry({ initialIndustries, initialEvents, ini
     };
 
     const handleLoadMore = async () => {
-        const response = await Api.GET('/v1/events', {
-            params: {
-                query: {
-                    per_page: 4,
-                    industry_id: selectedIndustry,
-                    page: page + 1
+        setIsEventsLoading(true);
+        try {
+            const response = await Api.GET('/v1/events', {
+                params: {
+                    query: {
+                        per_page: 4,
+                        industry_id: selectedIndustry,
+                        page: page + 1
+                    }
                 }
-            }
-        });
-        setEvents(prev => [...prev, ...response.data?.data ?? []]);
-        setPage(prev => prev + 1);
-        setIsLastPage(response.data?.meta.current_page === response.data?.meta.last_page);
+            });
+            setEvents(prev => [...prev, ...response.data?.data ?? []]);
+            setPage(prev => prev + 1);
+            setIsLastPage(response.data?.meta.current_page === response.data?.meta.last_page);
+        } finally {
+            setIsEventsLoading(false);
+        }
     };
 
     return (
@@ -85,15 +91,15 @@ export default function EventsByIndustry({ initialIndustries, initialEvents, ini
                     ))}
                 </div>
                 <EventCardGrid>
+                    {events?.map((event) => (
+                        <EventCard key={event.id} event={event} />
+                    ))}
+
                     {isEventsLoading ? (
                         Array(4).fill(0).map((_, index) => (
                             <EventCardSkeleton key={index} />
                         ))
-                    ) : (
-                        events?.map((event) => (
-                            <EventCard key={event.id} event={event} />
-                        ))
-                    )}
+                    ): ""}
                 </EventCardGrid>
                 {!isLastPage && <LoadMoreButton onClick={handleLoadMore} />}
             </div>
