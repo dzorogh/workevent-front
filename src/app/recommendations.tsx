@@ -7,7 +7,7 @@ import LoadMoreButton from '@/components/load-more-button';
 import EventCard from '@/components/event-card';
 import { EventResource } from '@/lib/api/types';
 import EventCardSkeleton from '@/components/event-card-skeleton';
-import { api } from '@/lib/api';
+import Api from '@/lib/api';
 import { components } from '@/lib/api/v1';
 
 interface RecommendationsProps {
@@ -24,14 +24,14 @@ export default function Recommendations({ initialEvents, initialMeta }: Recommen
     const handleLoadMore = async () => {
         setIsLoading(true);
         try {
-            const response = await api.fetchClient.GET('/v1/events', {
+            const response = await Api.GET('/v1/events', {
                 cache: 'force-cache',
                 revalidate: false,
                 params: {
                     query: {
                         per_page: 4,
                         page: page + 1,
-                        is_priority: 1
+                        is_priority: 'true'
                     }
                 }
             });
@@ -59,4 +59,4 @@ export default function Recommendations({ initialEvents, initialMeta }: Recommen
             </div>
         </div>
     );
-} 
+}

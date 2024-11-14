@@ -17,7 +17,7 @@ import { Overlay } from "@/components/ui/overlay"
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 import { IconLoader } from '@tabler/icons-react';
-
+import { components } from '@/lib/api/v1';
 
 const LazyCalendar = dynamic(() => import('@/components/ui/calendar').then(mod => mod.Calendar), {
   loading: () => (
@@ -28,7 +28,6 @@ const LazyCalendar = dynamic(() => import('@/components/ui/calendar').then(mod =
   ssr: false,
 })
 
-
 const FormSchema = z.object({
   query: z.string(),
   dateRange: z.string(),
@@ -36,7 +35,12 @@ const FormSchema = z.object({
   city: z.string(),
 })
 
-export default function Search() {
+interface SearchProps {
+  industries: components["schemas"]["IndustryResource"][];
+  cities: components["schemas"]["CityResource"][];
+}
+
+export default function Search({ industries, cities }: SearchProps) {
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -61,8 +65,8 @@ export default function Search() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="">
-        <div className="flex gap-4 rounded-lg bg-gradient-to-r from-brand to-brand-dark py-5 px-8 text-brand-foreground font-normal items-end">
-          <div className="flex-[1.5] flex flex-col gap-2">
+        <div className="grid grid-cols-9 gap-4 rounded-lg bg-gradient-to-r from-brand to-brand-dark py-5 px-8 text-brand-foreground font-normal items-end">
+          <div className="flex flex-col gap-2 col-span-2">
             <div className="text-lg">Поиск события</div>
             <FormField
               control={form.control}
@@ -72,7 +76,7 @@ export default function Search() {
               )}
             />
           </div>
-          <div className="flex-1 flex flex-col gap-2">
+          <div className="flex flex-col gap-2 col-span-2">
             <div className="text-lg">Даты проведения</div>
             <FormField
               control={form.control}
@@ -112,7 +116,7 @@ export default function Search() {
             />
 
           </div>
-          <div className="flex-1 flex flex-col gap-2">
+          <div className="flex flex-col gap-2 col-span-2">
             <div className="text-lg">Отрасль</div>
             <FormField
               control={form.control}
@@ -122,15 +126,15 @@ export default function Search() {
                   value={field.value}
                   onValueChange={field.onChange}
                   placeholder="Отрасль"
-                  options={[
-                    { value: 'gas', label: 'Нефть и газ' },
-                    { value: 'it', label: 'IT' },
-                  ]}
+                  options={industries.map(industry => ({
+                    value: industry.id.toString(),
+                    label: industry.title
+                  }))}
                 />
               )}
             />
           </div>
-          <div className="flex-1 flex flex-col gap-2">
+          <div className="flex flex-col gap-2 col-span-2">
             <div className="text-lg">Город</div>
             <FormField
               control={form.control}
@@ -140,15 +144,15 @@ export default function Search() {
                   value={field.value}
                   onValueChange={field.onChange}
                   placeholder="Город"
-                  options={[
-                    { value: 'moscow', label: 'Москва' },
-                    { value: 'spb', label: 'Санкт-Петербург' },
-                  ]}
+                  options={cities.map(city => ({
+                    value: city.id.toString(),
+                    label: city.title
+                  }))}
                 />
               )}
             />
           </div>
-          <div className="flex-[0.5] flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
             <Button variant="primary">Поиск</Button>
           </div>
         </div>

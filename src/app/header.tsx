@@ -1,5 +1,5 @@
 import Logo from "@/components/icons/logo";
-import Menu from "@/components/menu";
+import Menu from "@/app/menu";
 import Auth from "@/components/auth";
 import Link from "next/link";
 export default function Header() {

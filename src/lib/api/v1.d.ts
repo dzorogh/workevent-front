@@ -100,7 +100,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/presets}": {
+    "/v1/presets": {
         parameters: {
             query?: never;
             header?: never;
@@ -124,22 +124,6 @@ export interface paths {
             cookie?: never;
         };
         get: operations["preset.show"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/priority-events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["priorityEvents.index"];
         put?: never;
         post?: never;
         delete?: never;
@@ -228,20 +212,19 @@ export interface components {
                 creator: string | null;
             };
         };
-        /** PresetDetailResource */
-        PresetDetailResource: {
-            id: string;
-            title: string;
-            slug: string;
-            filters: string;
-            events: components["schemas"]["SearchEventsResource"];
+        /** PresetFiltersResource */
+        PresetFiltersResource: {
+            format: string;
+            city_id: string;
+            industry_id: string;
         };
         /** PresetResource */
         PresetResource: {
             id: number;
             title: string;
             slug: string;
-            filters: unknown[];
+            filters: components["schemas"]["PresetFiltersResource"];
+            events?: components["schemas"]["EventResource"][];
         };
         /** SearchEventsResource */
         SearchEventsResource: {
@@ -353,6 +336,7 @@ export interface operations {
                 date_to?: string | null;
                 per_page?: number | null;
                 page?: number | null;
+                is_priority?: "true" | "false" | null;
             };
             header?: never;
             path?: never;
@@ -490,40 +474,15 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description `PresetDetailResource` */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        data: components["schemas"]["PresetDetailResource"];
-                    };
+                    "application/json": Record<string, never>;
                 };
             };
             404: components["responses"]["ModelNotFoundException"];
-        };
-    };
-    "priorityEvents.index": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Array of `EventResource` */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["EventResource"][];
-                    };
-                };
-            };
         };
     };
 }

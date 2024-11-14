@@ -14,16 +14,7 @@ import { Overlay } from "@/components/ui/overlay";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { IconCaretDownFilled } from "@tabler/icons-react";
-const industries = [
-    { id: '1', label: 'Нефть и газ' },
-    { id: '2', label: 'IT' },
-    { id: '3', label: 'Металлургия' },
-    { id: '4', label: 'Строительство' },
-    { id: '5', label: 'Транспорт' },
-    { id: '6', label: 'Финансы' },
-    { id: '7', label: 'Телеком' },
-    { id: '8', label: 'Другое' },
-] as const;
+import { components } from "@/lib/api/v1";
 
 const FormSchema = z.object({
     industries: z.array(z.string()).min(1, 'Выберите хотя бы одну отрасль'),
@@ -32,7 +23,7 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>;
 
-export default function Subscribe() {
+export default function Subscribe({ industries }: { industries: components["schemas"]["IndustryResource"][] }) {
     const { toast } = useToast();
     const [open, setOpen] = useState(false);
 
@@ -112,15 +103,15 @@ export default function Subscribe() {
                                         {industries.map((industry) => (
                                             <div key={industry.id} className="flex items-center gap-x-2">
                                                 <Checkbox 
-                                                    id={industry.id}
-                                                    checked={selectedIndustries.includes(industry.id)}
-                                                    onCheckedChange={() => toggleIndustry(industry.id)}
+                                                    id={industry.id.toString()}
+                                                    checked={selectedIndustries.includes(industry.id.toString())}
+                                                    onCheckedChange={() => toggleIndustry(industry.id.toString())}
                                                 />
                                                 <label
-                                                    htmlFor={industry.id}
+                                                    htmlFor={industry.id.toString()}
                                                     className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                 >
-                                                    {industry.label}
+                                                    {industry.title}
                                                 </label>
                                             </div>
                                         ))}

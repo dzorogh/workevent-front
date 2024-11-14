@@ -5,8 +5,7 @@ import EventCardGrid from '@/components/event-card-grid';
 import LoadMoreButton from '@/components/load-more-button';
 import { Button } from '@/components/ui/button';
 import EventCard from '@/components/event-card';
-import { api } from '@/lib/api';
-import { IndustryResource, EventResource } from '@/lib/api/types';
+import Api from '@/lib/api';
 import EventCardSkeleton from '@/components/event-card-skeleton';
 import H2 from "@/components/ui/h2";
 import { components } from '@/lib/api/v1';
@@ -28,7 +27,7 @@ export default function EventsByIndustry({ initialIndustries, initialEvents, ini
         setIsEventsLoading(true);
         setSelectedIndustry(industryId);
         try {
-            const response = await api.fetchClient.GET('/v1/events', {
+            const response = await Api.GET('/v1/events', {
                 params: {
                     query: {
                         per_page: 4,
@@ -48,7 +47,7 @@ export default function EventsByIndustry({ initialIndustries, initialEvents, ini
     };
 
     const handleLoadMore = async () => {
-        const response = await api.fetchClient.GET('/v1/events', {
+        const response = await Api.GET('/v1/events', {
             params: {
                 query: {
                     per_page: 4,

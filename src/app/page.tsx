@@ -1,19 +1,13 @@
-import SearchClientWrapper from "@/components/search-client-wrapper";
-import Presets from "@/components/presets";
-import EventsByIndustry from "@/components/events-by-industry";
-import SubscribeClientWrapper from "@/components/subscribe-client-wrapper";
-import Recommendations from "@/components/recommendations";
-import { api } from "@/lib/api";
+import Search from "@/app/search";
+import Presets from "@/app/presets";
+import EventsByIndustry from "@/app/events-by-industry";
+import Subscribe from "@/app/subscribe";
+import Recommendations from "@/app/recommendations";
+import Api from "@/lib/api";
 
 async function getData() {
-  const [industriesResponse, eventsResponse, recommendationsResponse] = await Promise.all([
-    api.fetchClient.GET('/v1/industries',
-      {
-        cache: 'force-cache',
-        revalidate: false,
-      }
-    ),
-    api.fetchClient.GET('/v1/events', {
+  const [eventsResponse, recommendationsResponse, industriesResponse, citiesResponse] = await Promise.all([
+    Api.GET('/v1/events', {
       cache: 'force-cache',
       revalidate: false,
       params: {
@@ -22,38 +16,51 @@ async function getData() {
         }
       }
     }),
-    api.fetchClient.GET('/v1/events', {
+    Api.GET('/v1/events', {
       cache: 'force-cache',
       revalidate: false,
       params: {
         query: {
           per_page: 4,
-          is_priority: 1
+          is_priority: 'true'
         }
       }
+    }),
+    Api.GET('/v1/industries',
+      {
+        cache: 'force-cache',
+        revalidate: false,
+      }
+    ),
+    Api.GET('/v1/cities', {
+      cache: 'force-cache',
+      revalidate: false,
     })
   ]);
   return {
-    industries: industriesResponse.data?.data ?? [],
-    eventsByIndustry: eventsResponse.data?.data ?? [],
-    eventsByIndustryMeta: eventsResponse.data?.meta,
+    events: eventsResponse.data?.data ?? [],
+    eventsMeta: eventsResponse.data?.meta,
     recommendations: recommendationsResponse.data?.data ?? [],
-    recommendationsMeta: recommendationsResponse.data?.meta
+    recommendationsMeta: recommendationsResponse.data?.meta,
+    industries: industriesResponse.data?.data ?? [],
+    cities: citiesResponse.data?.data ?? []
   };
 }
 
+const EMPTY_META = {total: '0', per_page: '0', current_page: '0', last_page: '0'};
+
 export default async function Home() {
-  const { industries, eventsByIndustry, eventsByIndustryMeta, recommendations, recommendationsMeta } = await getData();
+  const { industries, events, eventsMeta, recommendations, recommendationsMeta, cities } = await getData();
 
   return (
     <div className="my-20 flex flex-col gap-20">
       <div className="flex flex-col gap-6">
-        <SearchClientWrapper />
+        <Search industries={industries} cities={cities} />
         <Presets />
       </div>
-      <Recommendations initialEvents={recommendations} initialMeta={recommendationsMeta ?? {total: '0', per_page: '0', current_page: '0', last_page: '0'}} />
-      <EventsByIndustry initialIndustries={industries} initialEvents={eventsByIndustry} initialMeta={eventsByIndustryMeta ?? {total: '0', per_page: '0', current_page: '0', last_page: '0'}} />
-      <SubscribeClientWrapper />
+      <Recommendations initialEvents={recommendations} initialMeta={recommendationsMeta ?? EMPTY_META} />
+      <EventsByIndustry initialIndustries={industries} initialEvents={events} initialMeta={eventsMeta ?? EMPTY_META} />
+      <Subscribe industries={industries} />
     </div>
   );
 }
