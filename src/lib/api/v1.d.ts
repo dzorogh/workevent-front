@@ -158,27 +158,19 @@ export interface components {
             id: number;
             title: string;
             description: string | null;
-            cover: {
-                original: string | "";
-                thumb: string | "";
-                preview: string | "";
-            };
+            cover: string | "";
             gallery: string;
             start_date: string;
             end_date: string;
             format: components["schemas"]["EventFormat"];
             website: string | null;
-            city: {
-                id: string;
-                title: string;
-            };
-            industry: {
-                id: string;
-                title: string;
-            };
-            tags: string;
             sort_order: number;
-            metadata: components["schemas"]["MetadataResource"];
+            city_id: number | null;
+            city?: components["schemas"]["CityResource"];
+            industry_id: number;
+            industry?: components["schemas"]["CityResource"];
+            tags?: components["schemas"]["CityResource"][];
+            metadata?: components["schemas"]["CityResource"];
         };
         /** IndustryResource */
         IndustryResource: {
@@ -230,15 +222,18 @@ export interface components {
         SearchEventsResource: {
             data: components["schemas"]["EventResource"][];
             facets: {
-                formats: string;
-                cities: string;
-                industries: string;
+                [key: string]: string[];
+            };
+            facets_stats: {
+                [key: string]: {
+                    [key: string]: number;
+                };
             };
             meta: {
-                total: string;
-                per_page: string;
-                current_page: string;
-                last_page: string;
+                last_page: number;
+                current_page: number;
+                per_page: number;
+                total: number;
             };
         };
     };

@@ -32,10 +32,10 @@ export default async function Events({
     const response = await getEvents(initialParams);
     const initialEvents = response.data?.data ?? [];
     const initialMeta = response.data?.meta ?? {
-        total: '0',
-        per_page: '8',
-        current_page: '1',
-        last_page: '1'
+        total: 0,
+        per_page: 0,
+        current_page: 0,
+        last_page: 0
     };
     
     const industries = await Api.GET('/v1/industries').then(res => res.data);
@@ -44,8 +44,6 @@ export default async function Events({
 
     return (
         <div className="flex flex-col gap-10">
-            {JSON.stringify(initialParams)}
-
             <Search industries={industries?.data ?? []} cities={cities?.data ?? []} initialParams={initialParams} />
             
             <Suspense>

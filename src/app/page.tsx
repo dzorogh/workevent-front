@@ -47,7 +47,7 @@ async function getData() {
   };
 }
 
-const EMPTY_META = {total: '0', per_page: '0', current_page: '0', last_page: '0'};
+const EMPTY_META = {total: 0, per_page: 0, current_page: 0, last_page: 0};
 
 export default async function Home() {
   const { industries, events, eventsMeta, recommendations, recommendationsMeta, cities } = await getData();
