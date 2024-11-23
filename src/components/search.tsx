@@ -18,6 +18,10 @@ import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 import { IconLoader } from '@tabler/icons-react';
 import { components } from '@/lib/api/v1';
+import { useRouter } from 'next/navigation'
+import { operations } from '@/lib/api/v1';
+
+type SearchParams = NonNullable<operations["event.index"]["parameters"]["query"]>;
 
 const LazyCalendar = dynamic(() => import('@/components/ui/calendar').then(mod => mod.Calendar), {
   loading: () => (
@@ -29,36 +33,49 @@ const LazyCalendar = dynamic(() => import('@/components/ui/calendar').then(mod =
 })
 
 const FormSchema = z.object({
-  query: z.string(),
-  dateRange: z.string(),
-  industry: z.string(),
-  city: z.string(),
+  query: z.string().optional(),
+  dateRange: z.string().optional(),
+  industry: z.string().optional(),
+  city: z.string().optional(),
 })
 
 interface SearchProps {
   industries: components["schemas"]["IndustryResource"][];
   cities: components["schemas"]["CityResource"][];
+  initialParams?: SearchParams;
 }
 
-export default function Search({ industries, cities }: SearchProps) {
-  const { toast } = useToast()
+export default function Search({ industries, cities, initialParams = {} }: SearchProps) {
+  const router = useRouter()
+
+  const [date, setDate] = useState<DateRange | undefined>(() => {
+    const from = initialParams.date_from ? new Date(initialParams.date_from as string) : undefined;
+    const to = initialParams.date_to ? new Date(initialParams.date_to as string) : undefined;
+    return from || to ? { from, to } : undefined;
+  });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      query: initialParams.query as string || '',
+      dateRange: '',
+      industry: initialParams.industry_id?.toString() || '',
+      city: initialParams.city_id?.toString() || '',
+    }
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
-  }
+    const searchParams: Record<string, string> = {};
+    
+    if (data.query) searchParams.query = data.query;
+    if (date?.from) searchParams.date_from = date.from.toISOString();
+    if (date?.to) searchParams.date_to = date.to.toISOString();
+    if (data.industry) searchParams.industry_id = data.industry;
+    if (data.city) searchParams.city_id = data.city;
 
-  const [date, setDate] = useState<DateRange | undefined>()
+    const params = new URLSearchParams(searchParams);
+    router.push(`/events?${params.toString()}`);
+  }
 
   const [open, setOpen] = useState(false)
 
@@ -85,19 +102,24 @@ export default function Search({ industries, cities }: SearchProps) {
                 <Popover open={open} onOpenChange={setOpen}>
                   <PopoverTrigger asChild>
                     <div className="relative cursor-pointer">
-                      {!(date?.from || date?.to) ?
+                      {!(date?.from || date?.to) && (
                         <div className="flex items-center gap-2 absolute top-0 left-0 text-muted-foreground h-full w-full justify-between px-4 select-none text-sm">
                           <div className="grow">С</div>
                           <div className="w-px h-5 bg-border"></div>
                           <div className="grow">По</div>
-                        </div> : ""
-                      }
-                      <Input {...field} value={
-                        [
-                          date?.from?.toLocaleDateString('ru', { day: 'numeric', month: 'short', formatMatcher: 'best fit' }) ?? null,
-                          date?.to?.toLocaleDateString('ru', { day: 'numeric', month: 'short', formatMatcher: 'best fit' }) ?? null
-                        ].filter(Boolean).join(' - ')
-                      }
+                        </div>
+                      )}
+                      <Input 
+                        {...field} 
+                        value={
+                            date?.from || date?.to 
+                                ? [
+                                    date?.from?.toLocaleDateString('ru', { day: 'numeric', month: 'short', formatMatcher: 'best fit' }) ?? null,
+                                    date?.to?.toLocaleDateString('ru', { day: 'numeric', month: 'short', formatMatcher: 'best fit' }) ?? null
+                                  ].filter(Boolean).join(' - ')
+                                : ''  // Provide empty string as default value
+                        }
+                        readOnly  // Make it read-only since it's controlled by the calendar
                       />
                     </div>
                   </PopoverTrigger>
@@ -153,7 +175,7 @@ export default function Search({ industries, cities }: SearchProps) {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Button variant="primary">Поиск</Button>
+            <Button variant="primary" type="submit">Поиск</Button>
           </div>
         </div>
       </form>

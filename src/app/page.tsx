@@ -1,4 +1,4 @@
-import Search from "@/app/search";
+import Search from "@/components/search";
 import Presets from "@/app/presets";
 import EventsByIndustry from "@/app/events-by-industry";
 import Subscribe from "@/app/subscribe";
@@ -53,7 +53,7 @@ export default async function Home() {
   const { industries, events, eventsMeta, recommendations, recommendationsMeta, cities } = await getData();
 
   return (
-    <div className="my-20 flex flex-col gap-20">
+    <div className="flex flex-col gap-20">
       <div className="flex flex-col gap-6">
         <Search industries={industries} cities={cities} />
         <Presets />

@@ -29,7 +29,7 @@ export default function RootLayout({
           <Header />
         </Container>
 
-        <Container>
+        <Container className="py-20">
           {children}
         </Container>
 
