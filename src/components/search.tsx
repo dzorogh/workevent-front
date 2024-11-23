@@ -8,7 +8,6 @@ import {
 import { z } from "zod"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useToast } from "@/hooks/use-toast"
 import ClearableSelect from '@/components/clearable-select';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { DateRange } from "react-day-picker"
@@ -17,11 +16,10 @@ import { Overlay } from "@/components/ui/overlay"
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 import { IconLoader } from '@tabler/icons-react';
-import { components } from '@/lib/api/v1';
 import { useRouter } from 'next/navigation'
-import { operations } from '@/lib/api/v1';
+import {CityResource, IndustryResource, EventIndexParametersQuery} from "@/lib/api/types";
 
-type SearchParams = NonNullable<operations["event.index"]["parameters"]["query"]>;
+type SearchParams = NonNullable<EventIndexParametersQuery>;
 
 const LazyCalendar = dynamic(() => import('@/components/ui/calendar').then(mod => mod.Calendar), {
   loading: () => (
@@ -40,8 +38,8 @@ const FormSchema = z.object({
 })
 
 interface SearchProps {
-  industries: components["schemas"]["IndustryResource"][];
-  cities: components["schemas"]["CityResource"][];
+  industries: IndustryResource[];
+  cities: CityResource[];
   initialParams?: SearchParams;
 }
 
@@ -66,7 +64,7 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const searchParams: Record<string, string> = {};
-    
+
     if (data.query) searchParams.query = data.query;
     if (date?.from) searchParams.date_from = date.from.toISOString();
     if (date?.to) searchParams.date_to = date.to.toISOString();
@@ -109,10 +107,10 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
                           <div className="grow">По</div>
                         </div>
                       )}
-                      <Input 
-                        {...field} 
+                      <Input
+                        {...field}
                         value={
-                            date?.from || date?.to 
+                            date?.from || date?.to
                                 ? [
                                     date?.from?.toLocaleDateString('ru', { day: 'numeric', month: 'short', formatMatcher: 'best fit' }) ?? null,
                                     date?.to?.toLocaleDateString('ru', { day: 'numeric', month: 'short', formatMatcher: 'best fit' }) ?? null

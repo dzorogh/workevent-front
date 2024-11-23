@@ -5,14 +5,13 @@ import H2 from '@/components/ui/h2';
 import EventCardGrid from '@/components/event-card-grid';
 import LoadMoreButton from '@/components/load-more-button';
 import EventCard from '@/components/event-card';
-import { EventResource } from '@/lib/api/types';
+import {EventResource, SearchEventsResourceMeta} from '@/lib/api/types';
 import EventCardSkeleton from '@/components/event-card-skeleton';
 import Api from '@/lib/api';
-import { components } from '@/lib/api/v1';
 
 interface RecommendationsProps {
-    initialEvents: components["schemas"]["EventResource"][];
-    initialMeta: components["schemas"]["SearchEventsResource"]["meta"];
+    initialEvents: EventResource[];
+    initialMeta: SearchEventsResourceMeta;
 }
 
 export default function Recommendations({ initialEvents, initialMeta }: RecommendationsProps) {

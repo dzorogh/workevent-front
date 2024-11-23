@@ -1,3 +1,5 @@
+import React from "react";
+
 interface EventCardGridProps {
     children: React.ReactNode;
 }
@@ -8,4 +10,4 @@ export default function EventCardGrid({ children }: EventCardGridProps) {
             {children}
         </div>
     );
-} 
+}

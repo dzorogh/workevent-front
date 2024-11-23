@@ -4,6 +4,7 @@ import Header from '@/app/header'
 import Footer from '@/app/footer'
 import Container from '@/components/ui/container'
 import "@/app/globals.css";
+import React from "react";
 
 const inter = Inter({
     subsets: ['latin', 'cyrillic'],

@@ -1,13 +1,13 @@
 import Api from "@/lib/api";
 import { Suspense } from "react";
 import EventsList from "./events-list";
-import { operations } from "@/lib/api/v1";
 import Search from "@/components/search";
+import {EventIndexParametersQuery} from "@/lib/api/types";
 
-type SearchParams = NonNullable<operations["event.index"]["parameters"]["query"]>;
+type SearchParams = NonNullable<EventIndexParametersQuery>;
 
 async function getEvents(searchParams: SearchParams) {
-    const response = await Api.GET('/v1/events', {
+    return await Api.GET('/v1/events', {
         params: {
             query: {
                 query: searchParams.query,
@@ -19,7 +19,6 @@ async function getEvents(searchParams: SearchParams) {
             }
         }
     });
-    return response;
 }
 
 export default async function Events({
@@ -37,7 +36,7 @@ export default async function Events({
         current_page: 0,
         last_page: 0
     };
-    
+
     const industries = await Api.GET('/v1/industries').then(res => res.data);
     const cities = await Api.GET('/v1/cities').then(res => res.data);
 
@@ -45,7 +44,7 @@ export default async function Events({
     return (
         <div className="flex flex-col gap-10">
             <Search industries={industries?.data ?? []} cities={cities?.data ?? []} initialParams={initialParams} />
-            
+
             <Suspense>
                 <EventsList initialEvents={initialEvents} initialMeta={initialMeta} params={initialParams} />
             </Suspense>

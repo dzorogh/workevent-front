@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 const Select = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Root>
->(({ open, children, ...props }, ref) => (
+>(({ open, children, ...props }, _ref) => (
   <SelectPrimitive.Root
     open={open}
     {...props}

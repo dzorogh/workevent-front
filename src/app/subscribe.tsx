@@ -14,7 +14,7 @@ import { Overlay } from "@/components/ui/overlay";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { IconCaretDownFilled } from "@tabler/icons-react";
-import { components } from "@/lib/api/v1";
+import {IndustryResource} from "@/lib/api/types";
 
 const FormSchema = z.object({
     industries: z.array(z.string()).min(1, 'Выберите хотя бы одну отрасль'),
@@ -23,7 +23,7 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>;
 
-export default function Subscribe({ industries }: { industries: components["schemas"]["IndustryResource"][] }) {
+export default function Subscribe({ industries }: { industries: IndustryResource[] }) {
     const { toast } = useToast();
     const [open, setOpen] = useState(false);
 
@@ -44,7 +44,7 @@ export default function Subscribe({ industries }: { industries: components["sche
                 method: 'POST',
                 body: JSON.stringify(data),
             });
-            
+
             toast({
                 title: "Успешно!",
                 description: "Вы успешно подписались на рассылку",
@@ -69,10 +69,10 @@ export default function Subscribe({ industries }: { industries: components["sche
 
     return (
         <div className="flex flex-col gap-8 px-10 h-64 justify-center bg-gradient-to-r from-brand to-brand-dark rounded-lg text-brand-foreground bg-cover bg-center relative">
-            <Image 
-                src="/subscribe-bg.svg" 
-                alt="" 
-                fill 
+            <Image
+                src="/subscribe-bg.svg"
+                alt=""
+                fill
                 className="absolute !right-0 !left-auto !w-auto top-0 mix-blend-screen z-0"
                 priority
             />
@@ -88,8 +88,8 @@ export default function Subscribe({ industries }: { industries: components["sche
                             <Popover open={open} onOpenChange={setOpen}>
                                 <PopoverTrigger asChild>
                                     <div className="relative">
-                                        <Input 
-                                            placeholder="Выберите отрасль" 
+                                        <Input
+                                            placeholder="Выберите отрасль"
                                             value={selectedIndustries.length ? `Выбрано: ${selectedIndustries.length}` : ''}
                                             readOnly
                                             className="cursor-pointer"
@@ -102,7 +102,7 @@ export default function Subscribe({ industries }: { industries: components["sche
                                     <div className="flex flex-col gap-4 p-5">
                                         {industries.map((industry) => (
                                             <div key={industry.id} className="flex items-center gap-x-2">
-                                                <Checkbox 
+                                                <Checkbox
                                                     id={industry.id.toString()}
                                                     checked={selectedIndustries.includes(industry.id.toString())}
                                                     onCheckedChange={() => toggleIndustry(industry.id.toString())}
@@ -115,8 +115,8 @@ export default function Subscribe({ industries }: { industries: components["sche
                                                 </label>
                                             </div>
                                         ))}
-                                        <Button 
-                                            variant="brand" 
+                                        <Button
+                                            variant="brand"
                                             onClick={() => setOpen(false)}
                                             type="button"
                                         >
@@ -138,10 +138,10 @@ export default function Subscribe({ industries }: { industries: components["sche
                                 name="email"
                                 control={form.control}
                                 render={({ field }) => (
-                                    <Input 
-                                        {...field} 
-                                        type="email" 
-                                        placeholder="Укажите вашу почту" 
+                                    <Input
+                                        {...field}
+                                        type="email"
+                                        placeholder="Укажите вашу почту"
                                     />
                                 )}
                             />

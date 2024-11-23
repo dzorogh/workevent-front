@@ -5,19 +5,19 @@ import EventCard from "@/components/event-card";
 import EventCardGrid from "@/components/event-card-grid";
 import Api from "@/lib/api";
 import LoadMoreButton from "@/components/load-more-button";
-import { operations, components } from "@/lib/api/v1";
 import EventCardSkeleton from "@/components/event-card-skeleton";
 import EventsNotFound from "@/components/events-not-found";
+import {EventResource, EventIndexParametersQuery, SearchEventsResourceMeta} from "@/lib/api/types";
 
-type SearchParams = NonNullable<operations["event.index"]["parameters"]["query"]>;
+type SearchParams = NonNullable<EventIndexParametersQuery>;
 
 export default function EventsList({
     initialEvents,
     initialMeta,
     params
 }: {
-    initialEvents: components["schemas"]["EventResource"][],
-    initialMeta: components["schemas"]["SearchEventsResource"]["meta"],
+    initialEvents: EventResource[],
+    initialMeta: SearchEventsResourceMeta,
     params: SearchParams
 }) {
     console.log(initialMeta);
@@ -80,4 +80,4 @@ export default function EventsList({
             )}
         </div>
     );
-} 
+}

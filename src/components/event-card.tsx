@@ -39,7 +39,7 @@ export default function EventCard({ event }: EventCardProps) {
             <Link href={`/events/${event.id}` as Route} className="block">
                 <div className="flex flex-col gap-5">
                     <div className="relative aspect-video w-full border-secondary border rounded-lg overflow-hidden bg-muted">
-                        <EventCoverImage cover={event.cover} title={event.title} />
+                        {event.cover && <EventCoverImage cover={event.cover} title={event.title} />}
                     </div>
                     <div className="flex flex-col gap-2">
                         <div className="text-muted-foreground-dark">{formatDates(event)}</div>

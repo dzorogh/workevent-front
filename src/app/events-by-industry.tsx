@@ -8,19 +8,19 @@ import EventCard from '@/components/event-card';
 import Api from '@/lib/api';
 import EventCardSkeleton from '@/components/event-card-skeleton';
 import H2 from "@/components/ui/h2";
-import { components } from '@/lib/api/v1';
+import {EventResource, IndustryResource, SearchEventsResourceMeta} from "@/lib/api/types";
 
 interface EventsByIndustryProps {
-    initialIndustries: components["schemas"]["IndustryResource"][];
-    initialEvents: components["schemas"]["EventResource"][];
-    initialMeta: components["schemas"]["SearchEventsResource"]["meta"];
+    initialIndustries: IndustryResource[];
+    initialEvents: EventResource[];
+    initialMeta: SearchEventsResourceMeta;
 }
 
 export default function EventsByIndustry({ initialIndustries, initialEvents, initialMeta }: EventsByIndustryProps) {
     const [isEventsLoading, setIsEventsLoading] = useState(false);
     const [selectedIndustry, setSelectedIndustry] = useState<number | null>(null);
-    const [events, setEvents] = useState<components["schemas"]["EventResource"][]>(initialEvents);
-    const [industries, setIndustries] = useState<components["schemas"]["IndustryResource"][]>(initialIndustries);
+    const [events, setEvents] = useState<EventResource[]>(initialEvents);
+    const [industries] = useState<IndustryResource[]>(initialIndustries);
     const [isLastPage, setIsLastPage] = useState(initialMeta.current_page === initialMeta.last_page);
     const [page, setPage] = useState(1);
     const handleIndustryClick = async (industryId: number | null) => {

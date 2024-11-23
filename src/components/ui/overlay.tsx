@@ -1,4 +1,5 @@
 import { createPortal } from "react-dom";
+import React from "react";
 
 export const Overlay = (props: React.ComponentPropsWithoutRef<'div'>) => {
     return (

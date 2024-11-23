@@ -9,7 +9,7 @@ interface EventCoverImageProps {
 }
 
 export default function EventCoverImage({ cover, title }: EventCoverImageProps) {
-    const isSvg = cover?.endsWith('.svg');
+    const isSvg = typeof cover === 'string' ? cover.endsWith('.svg') : false;
 
     if (!cover) {
         return (
