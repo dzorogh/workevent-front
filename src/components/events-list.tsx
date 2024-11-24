@@ -7,7 +7,7 @@ import Api from "@/lib/api";
 import LoadMoreButton from "@/components/load-more-button";
 import EventCardSkeleton from "@/components/event-card-skeleton";
 import EventsNotFound from "@/components/events-not-found";
-import {EventResource, EventIndexParametersQuery, SearchEventsResourceMeta} from "@/lib/api/types";
+import { EventResource, EventIndexParametersQuery, SearchEventsResourceMeta } from "@/lib/api/types";
 
 type SearchParams = NonNullable<EventIndexParametersQuery>;
 
@@ -20,7 +20,6 @@ export default function EventsList({
     initialMeta: SearchEventsResourceMeta,
     params: SearchParams
 }) {
-    console.log(initialMeta);
     const [events, setEvents] = useState(initialEvents);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -38,7 +37,7 @@ export default function EventsList({
             const response = await Api.GET('/v1/events', {
                 params: {
                     query: {
-                        ...(await params),
+                        params,
                         page: page + 1,
                         per_page: 8,
                     }
@@ -68,16 +67,18 @@ export default function EventsList({
                             <EventCardSkeleton key={`loading-${index}`} />
                         ))}
                     </EventCardGrid>
+
+                    {!isLastPage && (
+                        <div className="flex justify-center">
+                            <LoadMoreButton
+                                onClick={loadMore}
+                            />
+                        </div>
+                    )}
                 </>
             )}
 
-            {!isLastPage && (
-                <div className="flex justify-center">
-                    <LoadMoreButton
-                        onClick={loadMore}
-                    />
-                </div>
-            )}
+
         </div>
     );
 }

@@ -47,8 +47,8 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
   const router = useRouter()
 
   const [date, setDate] = useState<DateRange | undefined>(() => {
-    const from = initialParams.date_from ? new Date(initialParams.date_from as string) : undefined;
-    const to = initialParams.date_to ? new Date(initialParams.date_to as string) : undefined;
+    const from = initialParams.date_from ? new Date(initialParams.date_from * 1000) : undefined;
+    const to = initialParams.date_to ? new Date(initialParams.date_to * 1000) : undefined;
     return from || to ? { from, to } : undefined;
   });
 
@@ -66,8 +66,8 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
     const searchParams: Record<string, string> = {};
 
     if (data.query) searchParams.query = data.query;
-    if (date?.from) searchParams.date_from = date.from.toISOString();
-    if (date?.to) searchParams.date_to = date.to.toISOString();
+    if (date?.from) searchParams.date_from = String(date.from.getTime() / 1000);
+    if (date?.to) searchParams.date_to = String(date.to.getTime() / 1000);
     if (data.industry) searchParams.industry_id = data.industry;
     if (data.city) searchParams.city_id = data.city;
 

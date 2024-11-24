@@ -15,7 +15,7 @@ const formatDates = (event: EventResource) => {
     // return "19 окт - 22 нояб 2025" if dateStart and dateEnd are in different months
 
     const dateStart = new Date(event.start_date);
-    const dateEnd = new Date(event.end_date);
+    const dateEnd = event.end_date ? new Date(event.end_date) : dateStart;
 
     const months = [
         'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',

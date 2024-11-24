@@ -60,7 +60,7 @@ export default async function Home() {
       </div>
       <Recommendations initialEvents={recommendations} initialMeta={recommendationsMeta ?? EMPTY_META} />
       <EventsByIndustry initialIndustries={industries} initialEvents={events} initialMeta={eventsMeta ?? EMPTY_META} />
-      <Subscribe industries={industries} />
+      
     </div>
   );
 }

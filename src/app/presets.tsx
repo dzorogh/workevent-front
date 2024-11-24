@@ -19,7 +19,7 @@ export default async function Presets() {
             <div className="flex flex-wrap gap-2">
                 {presets.map(preset => (
                     <Button variant="outline" asChild key={preset.id}>
-                        <Link href={`/`}>{preset.title}</Link>
+                        <Link href={`/events/${preset.slug}`}>{preset.title}</Link>
                     </Button>
                 ))}
             </div>

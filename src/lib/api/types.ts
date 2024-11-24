@@ -6,3 +6,4 @@ export type EventIndexParametersQuery = operations["event.index"]["parameters"][
 export type EventFormat = components['schemas']['EventFormat'];
 export type IndustryResource = components['schemas']['IndustryResource'];
 export type CityResource = components['schemas']['CityResource'];
+export type PresetResource = components['schemas']['PresetResource'];

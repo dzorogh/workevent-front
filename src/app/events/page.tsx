@@ -1,8 +1,9 @@
 import Api from "@/lib/api";
 import { Suspense } from "react";
-import EventsList from "./events-list";
+import EventsList from "@/components/events-list";
 import Search from "@/components/search";
 import {EventIndexParametersQuery} from "@/lib/api/types";
+import { redirect } from "next/navigation";
 
 type SearchParams = NonNullable<EventIndexParametersQuery>;
 
@@ -28,6 +29,9 @@ export default async function Events({
 }) {
     const initialParams = await searchParams;
 
+    const industries = await Api.GET('/v1/industries').then(res => res.data);
+    const cities = await Api.GET('/v1/cities').then(res => res.data);
+
     const response = await getEvents(initialParams);
     const initialEvents = response.data?.data ?? [];
     const initialMeta = response.data?.meta ?? {
@@ -37,12 +41,13 @@ export default async function Events({
         last_page: 0
     };
 
-    const industries = await Api.GET('/v1/industries').then(res => res.data);
-    const cities = await Api.GET('/v1/cities').then(res => res.data);
-
+    // if preset is defined, redirect to /events/[preset]
+    if (response.data?.presets.length === 1) {
+        redirect(`/events/${response.data?.presets[0].slug}`);
+    }
 
     return (
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-20">
             <Search industries={industries?.data ?? []} cities={cities?.data ?? []} initialParams={initialParams} />
 
             <Suspense>

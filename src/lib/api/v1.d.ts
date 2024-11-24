@@ -218,11 +218,11 @@ export interface components {
             title: string;
             slug: string;
             filters: components["schemas"]["PresetFiltersResource"];
-            events?: components["schemas"]["EventResource"][];
         };
         /** SearchEventsResource */
         SearchEventsResource: {
             data: components["schemas"]["EventResource"][];
+            presets: components["schemas"]["PresetResource"][];
             facets: {
                 [key: string]: string[];
             };
@@ -232,6 +232,7 @@ export interface components {
                 };
             };
             meta: {
+                /** @description explicitly shown for auto-documentation */
                 last_page: number;
                 current_page: number;
                 per_page: number;
@@ -344,8 +345,8 @@ export interface operations {
                 format?: components["schemas"]["EventFormat"];
                 city_id?: number | null;
                 industry_id?: number | null;
-                date_from?: string | null;
-                date_to?: string | null;
+                date_from?: number | null;
+                date_to?: number | null;
                 per_page?: number | null;
                 page?: number | null;
                 is_priority?: "true" | "false" | null;
@@ -493,19 +494,22 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The preset ID */
-                preset: number;
+                /** @description The preset slug */
+                preset: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
+            /** @description `PresetResource` */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": {
+                        data: components["schemas"]["PresetResource"];
+                    };
                 };
             };
             404: components["responses"]["ModelNotFoundException"];

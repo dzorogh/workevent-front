@@ -5,6 +5,9 @@ import Footer from '@/app/footer'
 import Container from '@/components/ui/container'
 import "@/app/globals.css";
 import React from "react";
+import Subscribe from "@/app/subscribe";
+import Api from "@/lib/api";
+
 
 const inter = Inter({
     subsets: ['latin', 'cyrillic'],
@@ -16,11 +19,13 @@ export const metadata: Metadata = {
   description: "Workevent",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const industries = await Api.GET('/v1/industries').then(res => res.data);
+
   return (
     <html lang="en">
       <body
@@ -30,10 +35,14 @@ export default function RootLayout({
           <Header />
         </Container>
 
-        <Container className="py-20">
+        <Container className="pt-20">
           {children}
         </Container>
 
+        <Container className="pt-20 pb-20">
+          <Subscribe industries={industries?.data ?? []} />
+        </Container>
+        
         <Footer />
       </body>
     </html>
