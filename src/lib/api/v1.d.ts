@@ -100,6 +100,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/pages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["page.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/presets": {
         parameters: {
             query?: never;
@@ -206,6 +222,13 @@ export interface components {
                 creator: string | null;
             };
         };
+        /** PageResource */
+        PageResource: {
+            path: string;
+            metadata?: components["schemas"]["MetadataResource"];
+            content: string | null;
+            title: string | null;
+        };
         /** PresetFiltersResource */
         PresetFiltersResource: {
             format: string;
@@ -218,6 +241,7 @@ export interface components {
             title: string;
             slug: string;
             filters: components["schemas"]["PresetFiltersResource"];
+            metadata?: components["schemas"]["MetadataResource"];
         };
         /** SearchEventsResource */
         SearchEventsResource: {
@@ -248,7 +272,7 @@ export interface components {
         /** TariffResource */
         TariffResource: {
             id: number;
-            price: string;
+            price: number;
             description: string | null;
             title: string;
             is_active: boolean;
@@ -443,7 +467,7 @@ export interface operations {
     "metadata.show": {
         parameters: {
             query: {
-                type: "event" | "metadata";
+                type: "event" | "metadata" | "page" | "preset";
                 id: number;
             };
             header?: never;
@@ -464,6 +488,31 @@ export interface operations {
                 };
             };
             404: components["responses"]["NotFoundHttpException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "page.show": {
+        parameters: {
+            query: {
+                path: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `PageResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["PageResource"];
+                    };
+                };
+            };
             422: components["responses"]["ValidationException"];
         };
     };

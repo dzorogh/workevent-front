@@ -19,3 +19,7 @@ export function createEventSlug(title: string, id: string | number): string {
 export function getEventIdFromSlug(slug: string): string {
   return slug.split('-').pop() ?? slug;
 }
+
+export function formatPrice(price: number): string {
+  return price.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB' });
+}

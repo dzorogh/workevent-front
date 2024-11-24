@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import EventsList from "@/components/events-list";
 import Search from "@/components/search";
 import {EventIndexParametersQuery} from "@/lib/api/types";
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 
 type SearchParams = NonNullable<EventIndexParametersQuery>;
 
@@ -43,7 +43,7 @@ export default async function Events({
 
     // if preset is defined, redirect to /events/[preset]
     if (response.data?.presets.length === 1) {
-        redirect(`/events/${response.data?.presets[0].slug}`);
+        permanentRedirect(`/events/${response.data?.presets[0].slug}`);
     }
 
     return (

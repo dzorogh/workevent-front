@@ -14,10 +14,27 @@ const inter = Inter({
     display: 'swap',
 })
 
-export const metadata: Metadata = {
-  title: "Workevent",
-  description: "Workevent",
-};
+const getPage = async () => {
+  const pageResponse = await Api.GET('/v1/pages', {
+    cache: 'force-cache',
+    revalidate: 300,
+    params: {
+      query: {
+        path: '/',
+      }
+    }
+  });
+  return pageResponse.data?.data ?? undefined;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getPage();
+
+  return {
+      title: page?.metadata?.title ?? "Workevent",
+      description: page?.metadata?.description ?? "Workevent",
+  };
+}
 
 export default async function RootLayout({
   children,

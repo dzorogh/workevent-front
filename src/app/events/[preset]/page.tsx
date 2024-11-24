@@ -2,13 +2,14 @@ import Api from "@/lib/api";
 import { Suspense } from "react";
 import EventsList from "@/components/events-list";
 import Search from "@/components/search";
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
+
 import { EventFormat, EventIndexParametersQuery } from "@/lib/api/types";
 import H1 from "@/components/ui/h1";
-import { Metadata } from "next";
+import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
-    params: { preset: string }
+    params: Promise<{ preset: string }>
 }
 
 async function getPreset(slug: string) {
@@ -32,23 +33,23 @@ async function getEvents(presetParams: EventIndexParametersQuery) {
 }
 
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const preset = await getPreset(params.preset);
+export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+    const preset = await getPreset((await params).preset);
+
+    const previousTitle = (await parent).title?.absolute;
+    const title = preset?.metadata?.title ?? preset?.title;
 
     return {
-        title: preset?.title,
-        description: preset?.title,
-        // TODO: get description from API
-        // TODO: use metadata from API
-        // TODO: Add open graph and twitter metadata
+        title: title + ' — ' + previousTitle,
+        description: preset?.metadata?.description ?? preset?.title,
     };
 }
 
 export default async function PresetPage({ params }: Props) {
-    const preset = await getPreset(params.preset);
+    const preset = await getPreset((await params).preset);
 
     if (!preset) {
-        redirect('/events');
+        permanentRedirect('/events');
     }
 
     const presetParams = {
@@ -78,7 +79,7 @@ export default async function PresetPage({ params }: Props) {
                 initialParams={presetParams}
             />
 
-            <H1 className="mt-0">{preset.title}</H1>
+            <H1 className="mt-0">{preset.metadata?.h1 ?? preset.title}</H1>
 
             <Suspense>
                 <EventsList
