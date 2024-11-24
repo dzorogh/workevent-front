@@ -158,19 +158,21 @@ export interface components {
             id: number;
             title: string;
             description: string | null;
-            cover: string | "";
-            gallery: string;
+            cover: string;
+            gallery: string[];
             start_date: string;
             end_date: string;
             format: components["schemas"]["EventFormat"];
+            format_label: string;
             website: string | null;
             sort_order: number;
             city_id: number | null;
             city?: components["schemas"]["CityResource"];
             industry_id: number;
             industry?: components["schemas"]["CityResource"];
-            tags?: components["schemas"]["CityResource"][];
-            metadata?: components["schemas"]["CityResource"];
+            tags?: components["schemas"]["TagResource"][];
+            metadata?: components["schemas"]["MetadataResource"];
+            tariffs?: components["schemas"]["TariffResource"][];
         };
         /** IndustryResource */
         IndustryResource: {
@@ -235,6 +237,21 @@ export interface components {
                 per_page: number;
                 total: number;
             };
+        };
+        /** TagResource */
+        TagResource: {
+            id: number;
+            title: string;
+            events_count?: number;
+        };
+        /** TariffResource */
+        TariffResource: {
+            id: number;
+            price: string;
+            description: string | null;
+            title: string;
+            is_active: boolean;
+            sort_order: number;
         };
     };
     responses: {
@@ -357,12 +374,26 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                event: string;
+                /** @description The event ID */
+                event: number;
             };
             cookie?: never;
         };
         requestBody?: never;
-        responses: never;
+        responses: {
+            /** @description `EventResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["EventResource"];
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
     };
     "eventFormat.index": {
         parameters: {
