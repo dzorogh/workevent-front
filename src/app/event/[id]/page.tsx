@@ -10,6 +10,7 @@ import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
 import { createEventSlug, getEventIdFromSlug } from "@/lib/utils";
 import GallerySection from "@/app/event/[id]/gallery-section";
+import Container from "@/components/ui/container";
 
 type Props = {
     params: Promise<{ id: string }>
@@ -61,7 +62,7 @@ export default async function EventPage({ params }: Props) {
     })
 
     return (
-        <div className="container mx-auto max-w-5xl py-10">
+        <Container>
             <div className="flex flex-col gap-8">
                 {/* Header */}
                 <div className="flex flex-col gap-4">
@@ -166,6 +167,6 @@ export default async function EventPage({ params }: Props) {
                     </div>
                 </div>
             </div>
-        </div>
+        </Container>
     );
 }

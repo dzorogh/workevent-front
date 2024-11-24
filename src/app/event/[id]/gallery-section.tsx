@@ -11,7 +11,7 @@ interface GallerySectionProps {
     eventTitle: string;
 }
 
-const NextJsImageElement = ({ slide }: { slide: { src: string; alt: string }}) => {
+const NextJsImageElement = ({ slide }: { slide: { src: string; alt?: string }}) => {
 
     return (
         <div className="relative w-full h-full">
@@ -39,7 +39,7 @@ export default function GallerySection({ images, eventTitle }: GallerySectionPro
     }));
 
     return (
-        <section className="mt-8">
+        <section>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {images.map((image, index) => (
                     <a key={index} href={image} target="_blank" onClick={(e) => {
