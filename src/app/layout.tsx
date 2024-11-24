@@ -4,14 +4,16 @@ import Header from '@/app/header'
 import Footer from '@/app/footer'
 import Container from '@/components/ui/container'
 import "@/app/globals.css";
-import React from "react";
+import React, { Suspense } from "react";
 import Subscribe from "@/app/subscribe";
 import Api from "@/lib/api";
+import YandexMetrika from "@/components/yandex-metrika";
+import YandexMetrikaCounter from "@/components/yandex-metrika-counter";
 
 
 const inter = Inter({
-    subsets: ['latin', 'cyrillic'],
-    display: 'swap',
+  subsets: ['latin', 'cyrillic'],
+  display: 'swap',
 })
 
 const getPage = async () => {
@@ -31,8 +33,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage();
 
   return {
-      title: page?.metadata?.title ?? "Workevent",
-      description: page?.metadata?.description ?? "Workevent",
+    title: page?.metadata?.title ?? "Workevent",
+    description: page?.metadata?.description ?? "Workevent",
   };
 }
 
@@ -48,6 +50,11 @@ export default async function RootLayout({
       <body
         className={`${inter.className} antialiased`}
       >
+        <YandexMetrikaCounter />
+        <Suspense fallback={<></>}>
+          <YandexMetrika />
+        </Suspense>
+
         <Container className="pt-5">
           <Header />
         </Container>
@@ -59,7 +66,7 @@ export default async function RootLayout({
         <Container className="pt-20 pb-20">
           <Subscribe industries={industries?.data ?? []} />
         </Container>
-        
+
         <Footer />
       </body>
     </html>
