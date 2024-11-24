@@ -2,7 +2,7 @@ import Api from "@/lib/api";
 import { Suspense } from "react";
 import EventsList from "@/components/events-list";
 import Search from "@/components/search";
-import {EventIndexParametersQuery} from "@/lib/api/types";
+import { EventIndexParametersQuery } from "@/lib/api/types";
 import { permanentRedirect } from "next/navigation";
 
 type SearchParams = NonNullable<EventIndexParametersQuery>;
@@ -29,10 +29,8 @@ export default async function Events({
 }) {
     const initialParams = await searchParams;
 
-    const industries = await Api.GET('/v1/industries').then(res => res.data);
-    const cities = await Api.GET('/v1/cities').then(res => res.data);
-
     const response = await getEvents(initialParams);
+
     const initialEvents = response.data?.data ?? [];
     const initialMeta = response.data?.meta ?? {
         total: 0,
@@ -41,10 +39,8 @@ export default async function Events({
         last_page: 0
     };
 
-    // if preset is defined, redirect to /events/[preset]
-    if (response.data?.presets.length === 1) {
-        permanentRedirect(`/events/${response.data?.presets[0].slug}`);
-    }
+    const industries = await Api.GET('/v1/industries').then(res => res.data);
+    const cities = await Api.GET('/v1/cities').then(res => res.data);
 
     return (
         <div className="flex flex-col gap-20">
