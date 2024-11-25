@@ -2,7 +2,9 @@ import Logo from '@/components/icons/logo';
 import Container from '@/components/ui/container';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import WorkeventText from '@/components/icons/footer-brand';
+import footerBg from '@/images/footer.svg';
+import Image from 'next/image';
+
 const menu = [
     [
         {
@@ -53,7 +55,7 @@ export default function Footer() {
         <div className="pt-20 bg-gradient-to-b from-footer-background to-footer-background-dark">
             <Container>
                 <div className="flex flex-col gap-12">
-                    <div className="flex gap-32">
+                    <div className="flex flex-wrap gap-x-32 gap-y-12">
                         <div className="flex flex-col gap-20 justify-between">
                             <div className="flex flex-col gap-10">
                                 <Logo className="*:fill-white" width={60} height={40} />
@@ -66,7 +68,7 @@ export default function Footer() {
                             </div>
                         </div>
                         <div className="flex flex-col gap-20 justify-between">
-                            <div className="flex gap-20 grow">
+                            <div className="flex flex-wrap gap-x-20 gap-y-12 grow">
                                 {menu.map((column, index) => (
                                     <div key={index} className="flex flex-col gap-4">
                                         {column.map((item) => (
@@ -80,7 +82,16 @@ export default function Footer() {
                             </div>
                         </div>
                     </div>
-                    <WorkeventText className="w-full" />
+
+                    <div className="flex justify-center">
+                        <Image
+                            width={1258}
+                            height={167}
+                            src="/footer.svg"
+                            unoptimized={true}
+                            alt="Footer background"
+                        />
+                    </div>
                 </div>
             </Container>
         </div>

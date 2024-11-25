@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 import { IconLoader } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation'
-import {CityResource, IndustryResource, EventIndexParametersQuery} from "@/lib/api/types";
+import { CityResource, IndustryResource, EventIndexParametersQuery } from "@/lib/api/types";
 
 type SearchParams = NonNullable<EventIndexParametersQuery>;
 
@@ -80,8 +80,8 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="">
-        <div className="grid grid-cols-9 gap-4 rounded-lg bg-gradient-to-r from-brand to-brand-dark py-5 px-8 text-brand-foreground font-normal items-end">
-          <div className="flex flex-col gap-2 col-span-2">
+        <div className="flex flex-wrap overflow-x-auto gap-4 rounded-lg bg-gradient-to-r from-brand to-brand-dark py-5 px-8 text-brand-foreground font-normal items-end">
+          <div className="flex flex-col gap-2 w-48">
             <div className="text-lg">Поиск события</div>
             <FormField
               control={form.control}
@@ -91,7 +91,7 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
               )}
             />
           </div>
-          <div className="flex flex-col gap-2 col-span-2">
+          <div className="flex flex-col gap-2 w-48">
             <div className="text-lg">Даты проведения</div>
             <FormField
               control={form.control}
@@ -110,12 +110,12 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
                       <Input
                         {...field}
                         value={
-                            date?.from || date?.to
-                                ? [
-                                    date?.from?.toLocaleDateString('ru', { day: 'numeric', month: 'short', formatMatcher: 'best fit' }) ?? null,
-                                    date?.to?.toLocaleDateString('ru', { day: 'numeric', month: 'short', formatMatcher: 'best fit' }) ?? null
-                                  ].filter(Boolean).join(' - ')
-                                : ''  // Provide empty string as default value
+                          date?.from || date?.to
+                            ? [
+                              date?.from?.toLocaleDateString('ru', { day: 'numeric', month: 'short', formatMatcher: 'best fit' }) ?? null,
+                              date?.to?.toLocaleDateString('ru', { day: 'numeric', month: 'short', formatMatcher: 'best fit' }) ?? null
+                            ].filter(Boolean).join(' - ')
+                            : ''  // Provide empty string as default value
                         }
                         readOnly  // Make it read-only since it's controlled by the calendar
                       />
@@ -136,7 +136,7 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
             />
 
           </div>
-          <div className="flex flex-col gap-2 col-span-2">
+          <div className="flex flex-col gap-2 w-48">
             <div className="text-lg">Отрасль</div>
             <FormField
               control={form.control}
@@ -154,7 +154,7 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
               )}
             />
           </div>
-          <div className="flex flex-col gap-2 col-span-2">
+          <div className="flex flex-col gap-2 w-48">
             <div className="text-lg">Город</div>
             <FormField
               control={form.control}
@@ -172,7 +172,7 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
               )}
             />
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 w-32">
             <Button variant="primary" type="submit">Поиск</Button>
           </div>
         </div>

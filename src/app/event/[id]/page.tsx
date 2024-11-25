@@ -86,141 +86,139 @@ export default async function EventPage({ params }: Props) {
     })
 
     return (
-        <Container>
-            <div className="flex flex-col gap-8">
-                {/* Header */}
-                <div className="flex flex-col gap-6">
-                    <div className="flex flex-col gap-2">
-                        <div className="flex gap-4 text-lg">
+        <div className="flex flex-col gap-8">
+            {/* Header */}
+            <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                    <div className="flex gap-4 text-lg">
+                        <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
+                            <IconCalendar className="w-6 h-6 text-brand" />
+                            <span className="font-medium">
+                                {new Date(event.start_date).toLocaleDateString('ru-RU')} - {new Date(event.end_date).toLocaleDateString('ru-RU')}
+                            </span>
+                        </div>
+                        {event.city && (
                             <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
-                                <IconCalendar className="w-6 h-6 text-brand" />
-                                <span className="font-medium">
-                                    {new Date(event.start_date).toLocaleDateString('ru-RU')} - {new Date(event.end_date).toLocaleDateString('ru-RU')}
-                                </span>
+                                <IconMapPin className="w-6 h-6 text-brand" />
+                                <span className="font-medium">{event.city.title}</span>
                             </div>
-                            {event.city && (
-                                <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
-                                    <IconMapPin className="w-6 h-6 text-brand" />
-                                    <span className="font-medium">{event.city.title}</span>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                    <h1 className="text-4xl font-bold">{event.title}</h1>
-                </div>
-
-                {/* Cover Image */}
-                <div className="flex gap-8">
-                    <div className="max-w-prose grow">
-                        <EventCoverImage
-                            cover={event.cover}
-                            title={event.title}
-                            size="lg"
-                            priority={true}
-                        />
-                    </div>
-
-                    {/* Sidebar */}
-                    <div className="flex min-w-[300px] flex-col justify-between gap-4">
-                        {event.website && (
-                            <Button
-                                variant="primary"
-                                size="lg"
-                                asChild
-                            >
-                                <AppLink
-                                    href={{ pathname: event.website }}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-2"
-                                >
-                                    <IconWorld className="w-5 h-5" />
-                                    Посетить сайт
-                                </AppLink>
-                            </Button>
-                        )}
-
-                        {/* Event Details */}
-                        <div className="bg-gradient-to-r from-brand to-brand-dark rounded-lg p-4 text-white flex flex-col gap-4">
-                            <h3 className="font-semibold">Детали мероприятия</h3>
-                            <div className="flex flex-col gap-2">
-                                {event.format_label && (
-                                    <div className="text-sm">
-                                        <span className="text-muted-foreground">Формат:</span>{' '}
-                                        <span className="capitalize">{event.format_label}</span>
-                                    </div>
-                                )}
-                                {event.industry && (
-                                    <div className="text-sm">
-                                        <span className="text-muted-foreground">Индустрия:</span>{' '}
-                                        <span>{event.industry.title}</span>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Tariffs if available */}
-                            {event.tariffs && event.tariffs.length > 0 && (
-                                <div className="">
-                                    <h4 className="font-semibold mb-3">Стоимость</h4>
-                                    <div className="flex flex-col gap-3">
-                                        {event.tariffs.map(tariff => (
-                                            <div key={tariff.id} className="text-sm">
-                                                <div className="font-medium">{tariff.title}</div>
-                                                <div className="text-white">{formatPrice(tariff.price)}</div>
-
-                                                {tariff.description && (
-                                                    <div className="text-muted-foreground text-xs mt-1">
-                                                        {tariff.description}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-
-                    </div>
-                </div>
-
-                {/* Content */}
-                <div className="grid grid-cols-[1fr_300px] gap-8">
-                    <div className="flex flex-col gap-6">
-                        {/* Tags */}
-                        {event.tags && event.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-2">
-                                {event.tags.map((tag, index) => (
-                                    <Badge
-                                        key={tag.id}
-                                    >
-                                        {tag.title}
-                                    </Badge>
-                                ))}
-                            </div>
-                        )}
-
-                        {/* Description */}
-                        <div className="prose max-w-none">
-                            <Description />
-                        </div>
-
-                        {/* Gallery */}
-                        {event.gallery && (
-                            <GallerySection images={event.gallery} eventTitle={event.title} />
                         )}
                     </div>
                 </div>
-
-                <H2>Похожие мероприятия</H2>
-
-                <EventCardGrid>
-                    {similarEvents.map((event) => (
-                        <EventCard key={event.id} event={event} />
-                    ))}
-                </EventCardGrid>
-
+                <h1 className="text-4xl font-bold">{event.title}</h1>
             </div>
-        </Container>
+
+            {/* Cover Image */}
+            <div className="flex gap-8">
+                <div className="max-w-prose grow">
+                    <EventCoverImage
+                        cover={event.cover}
+                        title={event.title}
+                        size="lg"
+                        priority={true}
+                    />
+                </div>
+
+                {/* Sidebar */}
+                <div className="flex min-w-[300px] flex-col justify-between gap-4">
+                    {event.website && (
+                        <Button
+                            variant="primary"
+                            size="lg"
+                            asChild
+                        >
+                            <AppLink
+                                href={{ pathname: event.website }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2"
+                            >
+                                <IconWorld className="w-5 h-5" />
+                                Посетить сайт
+                            </AppLink>
+                        </Button>
+                    )}
+
+                    {/* Event Details */}
+                    <div className="bg-gradient-to-r from-brand to-brand-dark rounded-lg p-4 text-white flex flex-col gap-4">
+                        <h3 className="font-semibold">Детали мероприятия</h3>
+                        <div className="flex flex-col gap-2">
+                            {event.format_label && (
+                                <div className="text-sm">
+                                    <span className="text-muted-foreground">Формат:</span>{' '}
+                                    <span className="capitalize">{event.format_label}</span>
+                                </div>
+                            )}
+                            {event.industry && (
+                                <div className="text-sm">
+                                    <span className="text-muted-foreground">Индустрия:</span>{' '}
+                                    <span>{event.industry.title}</span>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Tariffs if available */}
+                        {event.tariffs && event.tariffs.length > 0 && (
+                            <div className="">
+                                <h4 className="font-semibold mb-3">Стоимость</h4>
+                                <div className="flex flex-col gap-3">
+                                    {event.tariffs.map(tariff => (
+                                        <div key={tariff.id} className="text-sm">
+                                            <div className="font-medium">{tariff.title}</div>
+                                            <div className="text-white">{formatPrice(tariff.price)}</div>
+
+                                            {tariff.description && (
+                                                <div className="text-muted-foreground text-xs mt-1">
+                                                    {tariff.description}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+
+                </div>
+            </div>
+
+            {/* Content */}
+            <div className="grid grid-cols-[1fr_300px] gap-8">
+                <div className="flex flex-col gap-6">
+                    {/* Tags */}
+                    {event.tags && event.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                            {event.tags.map((tag, index) => (
+                                <Badge
+                                    key={tag.id}
+                                >
+                                    {tag.title}
+                                </Badge>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Description */}
+                    <div className="prose max-w-none">
+                        <Description />
+                    </div>
+
+                    {/* Gallery */}
+                    {event.gallery && (
+                        <GallerySection images={event.gallery} eventTitle={event.title} />
+                    )}
+                </div>
+            </div>
+
+            <H2>Похожие мероприятия</H2>
+
+            <EventCardGrid>
+                {similarEvents.map((event) => (
+                    <EventCard key={event.id} event={event} />
+                ))}
+            </EventCardGrid>
+
+        </div>
     );
 }

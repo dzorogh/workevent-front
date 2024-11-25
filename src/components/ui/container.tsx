@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Container({ children, className }: { children: React.ReactNode, className?: string }) {
     return (
-        <div className={`container max-w-screen-xl mx-auto ${className}`}>
+        <div className={`container max-w-screen-xl mx-auto px-2 md:px-4 ${className}`}>
             {children}
         </div>
     );
