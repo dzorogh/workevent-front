@@ -9,7 +9,7 @@ import Subscribe from "@/app/subscribe";
 import Api from "@/lib/api";
 import YandexMetrika from "@/components/yandex-metrika";
 import YandexMetrikaCounter from "@/components/yandex-metrika-counter";
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
@@ -50,10 +50,7 @@ export default async function RootLayout({
       <body
         className={`${inter.className} antialiased`}
       >
-        <YandexMetrikaCounter />
-        <Suspense fallback={<></>}>
-          <YandexMetrika />
-        </Suspense>
+        
 
         <Container className="pt-5">
           <Header />
@@ -68,6 +65,14 @@ export default async function RootLayout({
         </Container>
 
         <Footer />
+
+        <YandexMetrikaCounter />
+        <Suspense fallback={<></>}>
+          <YandexMetrika />
+        </Suspense>
+        
+        <SpeedInsights />
+
       </body>
     </html>
   );
