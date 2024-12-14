@@ -9,7 +9,6 @@ import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
 import { createEventSlug, getEventIdFromSlug, formatPrice, formatPhone } from "@/lib/utils";
 import GallerySection from "@/app/event/[id]/gallery-section";
-import { Button } from "@/components/ui/button";
 import H2 from "@/components/ui/h2";
 import EventCardGrid from "@/components/event-card-grid";
 import EventCard from "@/components/event-card";

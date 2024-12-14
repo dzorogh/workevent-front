@@ -3,11 +3,12 @@ import { Suspense } from "react";
 import EventsList from "@/components/events-list";
 import Search from "@/components/search";
 import { permanentRedirect } from "next/navigation";
+import { compile, run } from '@mdx-js/mdx'
+import * as runtime from 'react/jsx-runtime'
 
 import { EventFormat, EventIndexParametersQuery } from "@/lib/api/types";
 import H1 from "@/components/ui/h1";
 import { Metadata, ResolvingMetadata } from "next";
-
 type Props = {
     params: Promise<{ preset: string }>
 }
@@ -70,6 +71,17 @@ export default async function PresetPage({ params }: Props) {
     const industries = await Api.GET('/v1/industries').then(res => res.data);
     const cities = await Api.GET('/v1/cities').then(res => res.data);
 
+    // Compile the MDX source code to a function body
+    const code = String(
+        await compile(preset?.description ?? '', { outputFormat: 'function-body' })
+    )
+
+    // Run the compiled code with the runtime and get the default export
+    const { default: Description } = await run(code, {
+        ...runtime,
+        baseUrl: import.meta.url,
+    })
+
     return (
         <div className="flex flex-col gap-10">
 
@@ -88,6 +100,10 @@ export default async function PresetPage({ params }: Props) {
                     params={presetParams}
                 />
             </Suspense>
+
+            <div className="prose max-w-none">
+                <Description />
+            </div>
         </div>
     );
 }

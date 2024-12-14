@@ -244,6 +244,8 @@ export interface components {
             slug: string;
             filters: components["schemas"]["PresetFiltersResource"];
             metadata?: components["schemas"]["MetadataResource"];
+            description: string | null;
+            sort_order: number;
         };
         /** SearchEventsResource */
         SearchEventsResource: {
