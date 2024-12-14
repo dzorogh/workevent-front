@@ -10,6 +10,7 @@ const nextConfig: NextConfig = withBundleAnalyzer({
     cssChunking: 'loose',
     typedRoutes: true,
     ppr: 'incremental',
+    optimizePackageImports: ['transliteration', 'zod', '@radix-ui', 'yet-another-react-lightbox', 'react-day-picker', 'date-fns'],
   },
   images: {
     minimumCacheTTL: 60,

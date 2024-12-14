@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { slugify } from 'transliteration';
+import slugify from 'slugify';
 
 
 export function cn(...inputs: ClassValue[]) {
@@ -8,13 +8,19 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function createEventSlug(title: string, id: string | number): string {
+  slugify.extend({
+    'й': 'y',
+    'Й': 'Й',
+  })
+
   return `${slugify(title, {
-    lowercase: true,
-    separator: '-',
+    lower: true,
+    replacement: '-',
     trim: true,
-    allowedChars: 'a-zA-Z0-9'
+    strict: true,
+    locale: 'ru',
   }).slice(0, 60)}-${id}`;
-} 
+}
 
 export function getEventIdFromSlug(slug: string): string {
   return slug.split('-').pop() ?? slug;
