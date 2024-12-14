@@ -29,7 +29,7 @@ export default function EventsList({
         setEvents(initialEvents);
         setPage(1);
         setIsLastPage(Number(initialMeta.last_page) === 1);
-    }, [params, initialEvents, initialMeta]);
+    }, [params, initialEvents, initialMeta]);   
 
     async function loadMore() {
         setLoading(true);
@@ -37,7 +37,7 @@ export default function EventsList({
             const response = await Api.GET('/v1/events', {
                 params: {
                     query: {
-                        params,
+                        ...params,
                         page: page + 1,
                         per_page: 8,
                     }
