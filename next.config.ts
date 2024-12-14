@@ -7,10 +7,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig: NextConfig = withBundleAnalyzer({
   output: "standalone",
   experimental: {
-    cssChunking: 'loose',
+    cssChunking: true,
     typedRoutes: true,
-    ppr: 'incremental',
-    optimizePackageImports: ['transliteration', 'zod', '@radix-ui', 'yet-another-react-lightbox', 'react-day-picker', 'date-fns'],
+    optimizePackageImports: ['zod', '@radix-ui', 'yet-another-react-lightbox', 'react-day-picker', 'date-fns'],
   },
   images: {
     minimumCacheTTL: 60,
