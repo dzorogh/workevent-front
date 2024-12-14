@@ -52,6 +52,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/events/ids": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["event.allIds"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/event-formats": {
         parameters: {
             query?: never;
@@ -148,6 +164,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/presets/slugs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["preset.allSlugs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -191,6 +223,10 @@ export interface components {
             tags?: components["schemas"]["TagResource"][];
             metadata?: components["schemas"]["MetadataResource"];
             tariffs?: components["schemas"]["TariffResource"][];
+        };
+        /** IdResource */
+        IdResource: {
+            id: string;
         };
         /** IndustryResource */
         IndustryResource: {
@@ -266,6 +302,10 @@ export interface components {
                 per_page: number;
                 total: number;
             };
+        };
+        /** SlugResource */
+        SlugResource: {
+            slug: string;
         };
         /** TagResource */
         TagResource: {
@@ -424,6 +464,28 @@ export interface operations {
             404: components["responses"]["ModelNotFoundException"];
         };
     };
+    "event.allIds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Array of `IdResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["IdResource"][];
+                    };
+                };
+            };
+        };
+    };
     "eventFormat.index": {
         parameters: {
             query?: never;
@@ -566,6 +628,28 @@ export interface operations {
                 };
             };
             404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "preset.allSlugs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Array of `SlugResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SlugResource"][];
+                    };
+                };
+            };
         };
     };
 }

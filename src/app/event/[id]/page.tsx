@@ -18,6 +18,17 @@ type Props = {
     params: Promise<{ id: string }>
 }
 
+export const revalidate = 36000;
+
+export async function generateStaticParams() {
+    const events = await Api.GET('/v1/events/ids')
+        .then(res => res.data?.data || []);
+
+    return events.map((event) => ({
+        id: String(event.id),
+    }))
+}
+
 const getEventData = async (params: Props['params']) => {
     const resolvedParams = await params;
     const numericId = getEventIdFromSlug(resolvedParams.id);

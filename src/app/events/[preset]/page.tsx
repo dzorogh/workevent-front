@@ -9,8 +9,20 @@ import * as runtime from 'react/jsx-runtime'
 import { EventFormat, EventIndexParametersQuery } from "@/lib/api/types";
 import H1 from "@/components/ui/h1";
 import { Metadata, ResolvingMetadata } from "next";
+
 type Props = {
     params: Promise<{ preset: string }>
+}
+
+export const revalidate = 36000;
+
+export async function generateStaticParams() {
+    const presets = await Api.GET('/v1/presets/slugs')
+        .then(res => res.data?.data || []);
+
+    return presets.map((preset) => ({
+        preset: preset.slug,
+    }))
 }
 
 async function getPreset(slug: string) {
