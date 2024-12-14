@@ -21,5 +21,9 @@ export function getEventIdFromSlug(slug: string): string {
 }
 
 export function formatPrice(price: number): string {
-  return price.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB' });
+  return price.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB', minimumFractionDigits: 0 });
+}
+
+export function formatPhone(phone: string): string {
+  return phone.replace(/^(\+7)(\d{3})(\d{3})(\d{2})(\d{2})/, '+7 ($2) $3-$4-$5');
 }

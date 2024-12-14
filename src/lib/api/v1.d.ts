@@ -181,6 +181,8 @@ export interface components {
             format: components["schemas"]["EventFormat"];
             format_label: string;
             website: string | null;
+            phone: string | null;
+            email: string | null;
             sort_order: number;
             city_id: number | null;
             city?: components["schemas"]["CityResource"];

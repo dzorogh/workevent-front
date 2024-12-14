@@ -1,19 +1,19 @@
 import Api from "@/lib/api";
 import { Metadata, ResolvingMetadata } from "next";
-import { IconCalendar, IconMapPin, IconWorld } from "@tabler/icons-react";
+import { IconCalendar, IconMapPin, IconWorld, IconPhone, IconMail } from "@tabler/icons-react";
 import EventCoverImage from "@/components/event-cover-image";
 import { notFound, permanentRedirect } from "next/navigation";
 import AppLink from "@/components/ui/app-link";
 import { Badge } from "@/components/ui/badge";
 import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
-import { createEventSlug, getEventIdFromSlug, formatPrice } from "@/lib/utils";
+import { createEventSlug, getEventIdFromSlug, formatPrice, formatPhone } from "@/lib/utils";
 import GallerySection from "@/app/event/[id]/gallery-section";
-import Container from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import H2 from "@/components/ui/h2";
 import EventCardGrid from "@/components/event-card-grid";
 import EventCard from "@/components/event-card";
+import { Route } from "next";
 
 type Props = {
     params: Promise<{ id: string }>
@@ -121,23 +121,49 @@ export default async function EventPage({ params }: Props) {
 
                 {/* Sidebar */}
                 <div className="flex min-w-[300px] flex-col justify-between gap-4">
-                    {event.website && (
-                        <Button
-                            variant="primary"
-                            size="lg"
-                            asChild
-                        >
-                            <AppLink
-                                href={{ pathname: event.website }}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2"
-                            >
-                                <IconWorld className="w-5 h-5" />
-                                Посетить сайт
-                            </AppLink>
-                        </Button>
-                    )}
+                    <div className="flex flex-col gap-4">
+                        <h3 className="font-semibold">Контакты</h3>
+                        <div className="flex flex-col gap-2">
+                            {event.website && (
+                                <AppLink
+                                    href={event.website as Route}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3"
+                                >
+                                    <IconWorld className="w-8 h-8 text-brand" />
+                                    <div className="flex flex-col items-start">
+                                        <span className="text-sm text-muted-foreground">Сайт</span>
+                                        <span className="text-foreground">{new URL(event.website).hostname}</span>
+                                    </div>
+                                </AppLink>
+                            )}
+                            {event.phone && (
+                                <AppLink
+                                    href={`tel:${event.phone}`}
+                                    className="flex items-center gap-3"
+                                >
+                                    <IconPhone className="w-8 h-8 text-brand" />
+                                    <div className="flex flex-col items-start">
+                                        <span className="text-sm text-muted-foreground">Телефон</span>
+                                        <span className="text-foreground">{formatPhone(event.phone)}</span>
+                                    </div>
+                                </AppLink>
+                            )}
+                            {event.email && (
+                                <AppLink
+                                    href={`mailto:${event.email}`}
+                                    className="flex items-center gap-3"
+                                >
+                                    <IconMail className="w-8 h-8 text-brand" />
+                                    <div className="flex flex-col items-start">
+                                        <span className="text-sm text-muted-foreground">Email</span>
+                                        <span className="text-foreground">{event.email}</span>
+                                    </div>
+                                </AppLink>
+                            )}
+                        </div>
+                    </div>
 
                     {/* Event Details */}
                     <div className="bg-gradient-to-r from-brand to-brand-dark rounded-lg p-4 text-white flex flex-col gap-4">
@@ -155,28 +181,13 @@ export default async function EventPage({ params }: Props) {
                                     <span>{event.industry.title}</span>
                                 </div>
                             )}
-                        </div>
-
-                        {/* Tariffs if available */}
-                        {event.tariffs && event.tariffs.length > 0 && (
-                            <div className="">
-                                <h4 className="font-semibold mb-3">Стоимость</h4>
-                                <div className="flex flex-col gap-3">
-                                    {event.tariffs.map(tariff => (
-                                        <div key={tariff.id} className="text-sm">
-                                            <div className="font-medium">{tariff.title}</div>
-                                            <div className="text-white">{formatPrice(tariff.price)}</div>
-
-                                            {tariff.description && (
-                                                <div className="text-muted-foreground text-xs mt-1">
-                                                    {tariff.description}
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
+                            {event.tariffs && event.tariffs.length > 0 && (
+                                <div className="text-sm">
+                                    <span className="text-muted-foreground">Стоимость:</span>{' от '}
+                                    <span>{formatPrice(event.tariffs.sort((a, b) => a.price - b.price)[0].price)}</span>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
 
 
