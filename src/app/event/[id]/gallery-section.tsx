@@ -21,7 +21,7 @@ const NextJsImageElement = ({ slide }: { slide: { src: string; alt?: string }}) 
                 src={slide.src}
                 loading="eager"
                 draggable={false}
-                quality={100}
+                quality={80}
                 className="object-contain"
                 sizes={`100vw`}
             />

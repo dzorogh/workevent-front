@@ -24,6 +24,7 @@ export default function EventCoverImage({ cover, title, size = 'sm', priority = 
                         onLoad={(e) => (e.target as HTMLImageElement).classList.remove('invisible')}
                         sizes={size === 'sm' ? '300px' : '1600px'}
                         priority={priority}
+                        quality={40}
                         fill />}
 
                     <Image
@@ -33,6 +34,7 @@ export default function EventCoverImage({ cover, title, size = 'sm', priority = 
                         onLoad={(e) => (e.target as HTMLImageElement).classList.remove('invisible')}
                         sizes={size === 'sm' ? '300px' : '1600px'}
                         priority={priority}
+                        quality={80}
                         fill />
                 </>
                 : <div className="flex items-center justify-center absolute inset-0">
