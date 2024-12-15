@@ -17,6 +17,7 @@ export default function EventCoverImage({ cover, title, size = 'sm', priority = 
         <div className="relative aspect-video w-full border-secondary border rounded-lg overflow-hidden bg-muted">
             {cover ?
                 <>
+                    {/* Blurred background image */}
                     {!isSvg && <Image
                         src={cover}
                         alt={title}
@@ -27,6 +28,7 @@ export default function EventCoverImage({ cover, title, size = 'sm', priority = 
                         quality={10}
                         fill />}
 
+                    {/* Main image */}
                     <Image
                         src={cover}
                         alt={title}
