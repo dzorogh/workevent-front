@@ -24,7 +24,7 @@ export default function EventCoverImage({ cover, title, size = 'sm', priority = 
                         onLoad={(e) => (e.target as HTMLImageElement).classList.remove('invisible')}
                         sizes={size === 'sm' ? '300px' : '1600px'}
                         priority={priority}
-                        quality={40}
+                        quality={20}
                         fill />}
 
                     <Image
