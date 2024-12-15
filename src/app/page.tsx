@@ -53,7 +53,7 @@ export default async function Home() {
   const { industries, events, eventsMeta, recommendations, recommendationsMeta, cities } = await getData();
 
   return (
-    <div className="flex flex-col gap-20">
+    <div className="flex flex-col gap-10 md:gap-20">
       <div className="flex flex-col gap-6">
         <Search industries={industries} cities={cities} />
         <Presets />

@@ -81,7 +81,7 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="">
         <div className="flex flex-wrap overflow-x-auto gap-4 rounded-lg bg-gradient-to-r from-brand to-brand-dark py-5 px-8 text-brand-foreground font-normal items-end">
-          <div className="flex flex-col gap-2 w-48">
+          <div className="flex flex-col gap-2 w-full md:w-48">
             <div className="text-lg">Поиск события</div>
             <FormField
               control={form.control}
@@ -91,8 +91,8 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
               )}
             />
           </div>
-          <div className="flex flex-col gap-2 w-48">
-            <div className="text-lg">Даты проведения</div>
+          <div className="flex flex-col gap-2 w-full md:w-48">
+            <div className="md:text-lg">Даты проведения</div>
             <FormField
               control={form.control}
               name="dateRange"
@@ -136,8 +136,8 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
             />
 
           </div>
-          <div className="flex flex-col gap-2 w-48">
-            <div className="text-lg">Отрасль</div>
+          <div className="flex flex-col gap-2 w-full md:w-48">
+            <div className="md:text-lg">Отрасль</div>
             <FormField
               control={form.control}
               name="industry"
@@ -154,8 +154,8 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
               )}
             />
           </div>
-          <div className="flex flex-col gap-2 w-48">
-            <div className="text-lg">Город</div>
+          <div className="flex flex-col gap-2 w-full md:w-48">
+            <div className="md:text-lg">Город</div>
             <FormField
               control={form.control}
               name="city"
@@ -172,7 +172,7 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
               )}
             />
           </div>
-          <div className="flex flex-col gap-2 w-32">
+          <div className="flex flex-col gap-2 w-full md:w-32">
             <Button variant="primary" type="submit">Поиск</Button>
           </div>
         </div>

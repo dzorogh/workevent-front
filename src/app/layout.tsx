@@ -51,11 +51,11 @@ export default async function RootLayout({
       <body
         className={`${inter.className} antialiased`}
       >
-        <Container className="pt-5">
+        <Container className="pt-2 md:pt-5">
           <Header />
         </Container>
 
-        <Container className="pt-20">
+        <Container className="pt-10 md:pt-20">
           {children}
         </Container>
 
