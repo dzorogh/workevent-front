@@ -1,11 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import { DayPicker } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
+import { ru } from "date-fns/locale"
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
@@ -17,6 +18,7 @@ function Calendar({
 }: CalendarProps) {
   return (
     <DayPicker
+      locale={ru}
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       classNames={{
@@ -57,12 +59,8 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        // IconLeft: ({ className, ...props }) => (
-        //   <ChevronLeft className={cn("h-4 w-4", className)} {...props} />
-        // ),
-        // IconRight: ({ className, ...props }) => (
-        //   <ChevronRight className={cn("h-4 w-4", className)} {...props} />
-        // ),
+        // IconLeft: () => <IconChevronLeft className="h-4 w-4" />,
+        // IconRight: () => <IconChevronRight className="h-4 w-4" />,
       }}
       {...props}
     />

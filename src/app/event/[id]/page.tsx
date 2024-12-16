@@ -99,27 +99,25 @@ export default async function EventPage({ params }: Props) {
         <div className="flex flex-col gap-8">
             {/* Header */}
             <div className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                    <div className="flex gap-4 text-lg">
-                        <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
-                            <IconCalendar className="w-6 h-6 text-brand" />
-                            <span className="font-medium">
-                                {new Date(event.start_date).toLocaleDateString('ru-RU')} - {new Date(event.end_date).toLocaleDateString('ru-RU')}
-                            </span>
-                        </div>
-                        {event.city && (
-                            <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
-                                <IconMapPin className="w-6 h-6 text-brand" />
-                                <span className="font-medium">{event.city.title}</span>
-                            </div>
-                        )}
+                <div className="flex gap-x-4 gap-y-2 md:flex-row flex-col md:text-lg">
+                    <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
+                        <IconCalendar className="w-6 h-6 text-brand" />
+                        <span className="font-medium">
+                            {new Date(event.start_date).toLocaleDateString('ru-RU')} - {new Date(event.end_date).toLocaleDateString('ru-RU')}
+                        </span>
                     </div>
+                    {event.city && (
+                        <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
+                            <IconMapPin className="w-6 h-6 text-brand" />
+                            <span className="font-medium">{event.city.title}</span>
+                        </div>
+                    )}
                 </div>
-                <h1 className="text-4xl font-bold">{event.title}</h1>
+                <h1 className="md:text-4xl text-2xl font-bold">{event.title}</h1>
             </div>
 
             {/* Cover Image */}
-            <div className="flex gap-8">
+            <div className="flex flex-col md:flex-row gap-8">
                 <div className="max-w-prose grow">
                     <EventCoverImage
                         cover={event.cover}
@@ -131,7 +129,7 @@ export default async function EventPage({ params }: Props) {
 
                 {/* Sidebar */}
                 <div className="flex min-w-[300px] flex-col justify-between gap-4">
-                    <div className="flex flex-col gap-4">
+                    <div className="bg-gradient-to-r from-brand to-brand-dark rounded-lg p-4 text-white flex flex-col gap-4">
                         <h3 className="font-semibold">Контакты</h3>
                         <div className="flex flex-col gap-2">
                             {event.website && (
@@ -141,10 +139,10 @@ export default async function EventPage({ params }: Props) {
                                     rel="noopener noreferrer"
                                     className="flex items-center gap-3"
                                 >
-                                    <IconWorld className="w-8 h-8 text-brand" />
+                                    <IconWorld className="w-8 h-8 text-secondary" />
                                     <div className="flex flex-col items-start">
                                         <span className="text-sm text-muted-foreground">Сайт</span>
-                                        <span className="text-foreground">{new URL(event.website).hostname}</span>
+                                        <span className="text-secondary">{new URL(event.website).hostname}</span>
                                     </div>
                                 </AppLink>
                             )}
@@ -153,10 +151,10 @@ export default async function EventPage({ params }: Props) {
                                     href={`tel:${event.phone}`}
                                     className="flex items-center gap-3"
                                 >
-                                    <IconPhone className="w-8 h-8 text-brand" />
+                                    <IconPhone className="w-8 h-8 text-secondary" />
                                     <div className="flex flex-col items-start">
                                         <span className="text-sm text-muted-foreground">Телефон</span>
-                                        <span className="text-foreground">{formatPhone(event.phone)}</span>
+                                        <span className="text-secondary">{formatPhone(event.phone)}</span>
                                     </div>
                                 </AppLink>
                             )}
@@ -165,10 +163,10 @@ export default async function EventPage({ params }: Props) {
                                     href={`mailto:${event.email}`}
                                     className="flex items-center gap-3"
                                 >
-                                    <IconMail className="w-8 h-8 text-brand" />
+                                    <IconMail className="w-8 h-8 text-secondary" />
                                     <div className="flex flex-col items-start">
                                         <span className="text-sm text-muted-foreground">Email</span>
-                                        <span className="text-foreground">{event.email}</span>
+                                        <span className="text-secondary">{event.email}</span>
                                     </div>
                                 </AppLink>
                             )}
@@ -205,31 +203,29 @@ export default async function EventPage({ params }: Props) {
             </div>
 
             {/* Content */}
-            <div className="grid grid-cols-[1fr_300px] gap-8">
-                <div className="flex flex-col gap-6">
-                    {/* Tags */}
-                    {event.tags && event.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
-                            {event.tags.map((tag, index) => (
-                                <Badge
-                                    key={tag.id}
-                                >
-                                    {tag.title}
-                                </Badge>
-                            ))}
-                        </div>
-                    )}
-
-                    {/* Description */}
-                    <div className="prose max-w-none">
-                        <Description />
+            <div className="flex flex-col gap-6">
+                {/* Tags */}
+                {event.tags && event.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                        {event.tags.map((tag, index) => (
+                            <Badge
+                                key={tag.id}
+                            >
+                                {tag.title}
+                            </Badge>
+                        ))}
                     </div>
+                )}
 
-                    {/* Gallery */}
-                    {event.gallery && (
-                        <GallerySection images={event.gallery} eventTitle={event.title} />
-                    )}
+                {/* Description */}
+                <div className="prose max-w-none text-sm">
+                    <Description />
                 </div>
+
+                {/* Gallery */}
+                {event.gallery && (
+                    <GallerySection images={event.gallery} eventTitle={event.title} />
+                )}
             </div>
 
             <H2>Похожие мероприятия</H2>

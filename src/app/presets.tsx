@@ -16,11 +16,13 @@ export default async function Presets() {
     return (
         <div>
             <div className="text-lg font-semibold mb-2">Часто ищут</div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 ">
                 {presets.map(preset => (
-                    <Button variant="outline" asChild key={preset.id}>
-                        <Link href={`/events/${preset.slug}`}>{preset.title}</Link>
-                    </Button>
+                    <div className="w-full md:w-auto overflow-x-auto" key={preset.id}>
+                        <Button variant="outline" asChild>
+                            <Link href={`/events/${preset.slug}`}>{preset.title}</Link>
+                        </Button>
+                    </div>
                 ))}
             </div>
         </div>
