@@ -1,25 +1,13 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import slugify from 'slugify';
-
+import { createEventSlug as createEventSlugGlobal } from "./globalUtils.js"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
 export function createEventSlug(title: string, id: string | number): string {
-  slugify.extend({
-    'й': 'y',
-    'Й': 'Й',
-  })
-
-  return `${slugify(title, {
-    lower: true,
-    replacement: '-',
-    trim: true,
-    strict: true,
-    locale: 'ru',
-  }).slice(0, 60)}-${id}`;
+  return createEventSlugGlobal(title, id)
 }
 
 export function getEventIdFromSlug(slug: string): string {
