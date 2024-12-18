@@ -480,7 +480,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["EventResource"];
-                        presets: string;
+                        presets: components["schemas"]["PresetResource"][];
                     };
                 };
             };
