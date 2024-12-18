@@ -13,6 +13,8 @@ import H2 from "@/components/ui/h2";
 import EventCardGrid from "@/components/event-card-grid";
 import EventCard from "@/components/event-card";
 import { Route } from "next";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 type Props = {
     params: Promise<{ id: string }>
@@ -34,9 +36,12 @@ const getEventData = async (params: Props['params']) => {
     const numericId = getEventIdFromSlug(resolvedParams.id);
 
     // First fetch the event
-    const event = await Api.GET(`/v1/events/{event}`, {
+    const responseData = await Api.GET(`/v1/events/{event}`, {
         params: { path: { event: Number(numericId) } }
-    }).then(res => res.data?.data);
+    }).then(res => res.data);
+
+    const event = responseData?.data;
+    const presets = responseData?.presets;
 
     if (!event) {
         notFound();
@@ -63,7 +68,8 @@ const getEventData = async (params: Props['params']) => {
 
     return {
         event,
-        similarEvents: filteredSimilarEvents
+        similarEvents: filteredSimilarEvents,
+        presets
     };
 }
 
@@ -82,7 +88,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 }
 
 export default async function EventPage({ params }: Props) {
-    const { event, similarEvents } = await getEventData(params);
+    const { event, similarEvents, presets } = await getEventData(params);
 
     // Compile the MDX source code to a function body
     const code = String(
@@ -228,14 +234,35 @@ export default async function EventPage({ params }: Props) {
                 )}
             </div>
 
-            <H2>Похожие мероприятия</H2>
+            {/* Similar Events */}
+            {similarEvents.length > 0 && (
+                <>
+                    <H2>Похожие мероприятия</H2>
 
-            <EventCardGrid>
-                {similarEvents.map((event) => (
-                    <EventCard key={event.id} event={event} />
-                ))}
-            </EventCardGrid>
+                    <EventCardGrid>
+                        {similarEvents.map((event) => (
+                            <EventCard key={event.id} event={event} />
+                        ))}
+                    </EventCardGrid>
+                </>
+            )}
 
+            {/* Presets */}
+            {presets && presets.length > 0 && (
+                <>
+                    <H2>Подборки</H2>
+
+                    <div className="flex flex-wrap gap-2">
+                        {presets.map(preset => (
+                            <div className="w-full md:w-auto overflow-x-auto" key={preset.id}>
+                                <Button variant="outline" asChild>
+                                    <Link href={`/events/${preset.slug}`}>{preset.title}</Link>
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
+                </>
+            )}
         </div>
     );
 }

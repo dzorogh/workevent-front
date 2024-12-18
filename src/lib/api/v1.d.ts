@@ -36,22 +36,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/events/{event}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["event.show"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/events/ids": {
         parameters: {
             query?: never;
@@ -60,6 +44,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["event.allIds"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/events/{event}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["event.show"];
         put?: never;
         post?: never;
         delete?: never;
@@ -148,22 +148,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/presets/{preset}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["preset.show"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/presets/slugs": {
         parameters: {
             query?: never;
@@ -172,6 +156,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["preset.allSlugs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/presets/{preset}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["preset.show"];
         put?: never;
         post?: never;
         delete?: never;
@@ -438,32 +438,6 @@ export interface operations {
             422: components["responses"]["ValidationException"];
         };
     };
-    "event.show": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The event ID */
-                event: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description `EventResource` */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["EventResource"];
-                    };
-                };
-            };
-            404: components["responses"]["ModelNotFoundException"];
-        };
-    };
     "event.allIds": {
         parameters: {
             query?: never;
@@ -484,6 +458,33 @@ export interface operations {
                     };
                 };
             };
+        };
+    };
+    "event.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The event ID */
+                event: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `EventResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["EventResource"];
+                        presets: string;
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
         };
     };
     "eventFormat.index": {
@@ -604,6 +605,28 @@ export interface operations {
             };
         };
     };
+    "preset.allSlugs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Array of `SlugResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SlugResource"][];
+                    };
+                };
+            };
+        };
+    };
     "preset.show": {
         parameters: {
             query?: never;
@@ -628,28 +651,6 @@ export interface operations {
                 };
             };
             404: components["responses"]["ModelNotFoundException"];
-        };
-    };
-    "preset.allSlugs": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Array of `SlugResource` */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["SlugResource"][];
-                    };
-                };
-            };
         };
     };
 }
