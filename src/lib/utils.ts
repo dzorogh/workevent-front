@@ -21,3 +21,8 @@ export function formatPrice(price: number): string {
 export function formatPhone(phone: string): string {
   return phone.replace(/^(\+7)(\d{3})(\d{3})(\d{2})(\d{2})/, '+7 ($2) $3-$4-$5');
 }
+
+export function getSeoYear(): number {
+  const month = new Date().getMonth();
+  return month < 10 ? new Date().getFullYear() : new Date().getFullYear() + 1;
+}

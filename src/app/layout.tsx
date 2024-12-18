@@ -32,7 +32,7 @@ const getPage = async () => {
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage();
-
+  
   return {
     title: page?.metadata?.title ?? "Workevent",
     description: page?.metadata?.description ?? "Workevent",

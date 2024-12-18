@@ -5,7 +5,7 @@ import Search from "@/components/search";
 import { permanentRedirect } from "next/navigation";
 import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
-
+import { getSeoYear } from "@/lib/utils";
 import { EventFormat, EventIndexParametersQuery } from "@/lib/api/types";
 import H1 from "@/components/ui/h1";
 import { Metadata, ResolvingMetadata } from "next";
@@ -51,9 +51,10 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
     const previousTitle = (await parent).title?.absolute;
     const title = preset?.metadata?.title ?? preset?.title;
+    const seoYear = getSeoYear();
 
     return {
-        title: title + ' — ' + previousTitle,
+        title: title + ' ' + seoYear + ' — ' + previousTitle,
         description: preset?.metadata?.description ?? preset?.title,
     };
 }
