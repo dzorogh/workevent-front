@@ -9,6 +9,7 @@ import Api from '@/lib/api';
 import EventCardSkeleton from '@/components/event-card-skeleton';
 import H2 from "@/components/ui/h2";
 import {EventResource, IndustryResource, SearchEventsResourceMeta} from "@/lib/api/types";
+import EventsList from '@/components/events-list';
 
 interface EventsByIndustryProps {
     initialIndustries: IndustryResource[];
@@ -17,55 +18,9 @@ interface EventsByIndustryProps {
 }
 
 export default function EventsByIndustry({ initialIndustries, initialEvents, initialMeta }: EventsByIndustryProps) {
-    const [isEventsLoading, setIsEventsLoading] = useState(false);
     const [selectedIndustry, setSelectedIndustry] = useState<number | null>(null);
     const [events, setEvents] = useState<EventResource[]>(initialEvents);
     const [industries] = useState<IndustryResource[]>(initialIndustries);
-    const [isLastPage, setIsLastPage] = useState(initialMeta.current_page === initialMeta.last_page);
-    const [page, setPage] = useState(1);
-    const handleIndustryClick = async (industryId: number | null) => {
-        setIsEventsLoading(true);
-        setSelectedIndustry(industryId);
-        try {
-            setEvents([]);
-            const response = await Api.GET('/v1/events', {
-                params: {
-                    query: {
-                        per_page: 4,
-                        industry_id: industryId,
-                        page: 1
-                    }
-                },
-                cache: 'force-cache',
-                revalidate: false,
-            });
-            setEvents(response.data?.data ?? []);
-            setPage(1);
-            setIsLastPage(response.data?.meta.current_page === response.data?.meta.last_page);
-        } finally {
-            setIsEventsLoading(false);
-        }
-    };
-
-    const handleLoadMore = async () => {
-        setIsEventsLoading(true);
-        try {
-            const response = await Api.GET('/v1/events', {
-                params: {
-                    query: {
-                        per_page: 4,
-                        industry_id: selectedIndustry,
-                        page: page + 1
-                    }
-                }
-            });
-            setEvents(prev => [...prev, ...response.data?.data ?? []]);
-            setPage(prev => prev + 1);
-            setIsLastPage(response.data?.meta.current_page === response.data?.meta.last_page);
-        } finally {
-            setIsEventsLoading(false);
-        }
-    };
 
     return (
         <div className="flex flex-col gap-10">
@@ -75,7 +30,7 @@ export default function EventsByIndustry({ initialIndustries, initialEvents, ini
                     <Button
                         variant={selectedIndustry === null ? "brand" : "muted"}
                         size="sm"
-                        onClick={() => handleIndustryClick(null)}
+                        onClick={() => setSelectedIndustry(null)}
                     >
                         Все
                     </Button>
@@ -84,24 +39,14 @@ export default function EventsByIndustry({ initialIndustries, initialEvents, ini
                             variant={selectedIndustry === industry.id ? "brand" : "muted"}
                             size="sm"
                             key={industry.id}
-                            onClick={() => handleIndustryClick(industry.id)}
+                            onClick={() => setSelectedIndustry(industry.id)}
                         >
                             {industry.title}
                         </Button>
                     ))}
                 </div>
-                <EventCardGrid>
-                    {events?.map((event) => (
-                        <EventCard key={event.id} event={event} />
-                    ))}
 
-                    {isEventsLoading ? (
-                        Array(4).fill(0).map((_, index) => (
-                            <EventCardSkeleton key={index} />
-                        ))
-                    ): ""}
-                </EventCardGrid>
-                {!isLastPage && <LoadMoreButton onClick={handleLoadMore} />}
+                <EventsList initialEvents={events} initialMeta={initialMeta} params={{industry_id: selectedIndustry}} perPage={4} />
             </div>
         </div >
     );

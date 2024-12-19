@@ -111,6 +111,7 @@ export default async function PresetPage({ params }: Props) {
                     initialEvents={initialEvents}
                     initialMeta={initialMeta}
                     params={presetParams}
+                    perPage={8}
                 />
             </Suspense>
 

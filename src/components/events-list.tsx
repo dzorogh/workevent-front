@@ -14,39 +14,48 @@ type SearchParams = NonNullable<EventIndexParametersQuery>;
 export default function EventsList({
     initialEvents,
     initialMeta,
-    params
+    params,
+    perPage
 }: {
     initialEvents: EventResource[],
     initialMeta: SearchEventsResourceMeta,
-    params: SearchParams
+    params: SearchParams,
+    perPage: number
 }) {
-    const [events, setEvents] = useState(initialEvents);
-    const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(false);
-    const [isLastPage, setIsLastPage] = useState(page === Number(initialMeta.last_page));
+    const [events, setEvents] = useState<EventResource[]>(initialEvents);
+    const [previousParams, setPreviousParams] = useState<SearchParams>(params);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [isLastPage, setIsLastPage] = useState<boolean>(currentPage === Number(initialMeta.last_page));
+    const [total, setTotal] = useState<number>(Number(initialMeta.total));
 
-    useEffect(() => {
-        setEvents(initialEvents);
-        setPage(1);
-        setIsLastPage(Number(initialMeta.last_page) === 1);
-    }, [params, initialEvents, initialMeta]);   
+    if (JSON.stringify(params) !== JSON.stringify(previousParams)) {
+        setPreviousParams(params);
+        setIsLastPage(false);
+        setCurrentPage(1);
+        setEvents([]);
+        setTotal(0);
 
-    async function loadMore() {
+        loadEvents();
+    }
+
+    async function loadEvents(loadMore: boolean = false) {
         setLoading(true);
         try {
             const response = await Api.GET('/v1/events', {
                 params: {
                     query: {
                         ...params,
-                        page: page + 1,
-                        per_page: 8,
+                        page: loadMore ? currentPage + 1 : 1,
+                        per_page: perPage,
                     }
                 }
             });
             const newEvents = response.data?.data ?? [];
-            setEvents([...events, ...newEvents]);
-            setPage(Number(response.data?.meta.current_page));
-            console.log(response.data?.meta);
+
+            setEvents(loadMore ? [...events, ...newEvents] : newEvents);
+            setCurrentPage(Number(response.data?.meta.current_page));
+            setTotal(Number(response.data?.meta.total));
             setIsLastPage(Number(response.data?.meta.current_page) === Number(response.data?.meta.last_page));
         } finally {
             setLoading(false);
@@ -55,7 +64,7 @@ export default function EventsList({
 
     return (
         <div className="flex flex-col gap-6">
-            {events.length === 0 ? (
+            {!loading && events.length === 0 ? (
                 <EventsNotFound />
             ) : (
                 <>
@@ -63,15 +72,20 @@ export default function EventsList({
                         {events.map((event) => (
                             <EventCard key={event.id} event={event} />
                         ))}
-                        {loading && Array(8).fill(0).map((_, index) => (
+                        {loading && Array(perPage).fill(0).map((_, index) => (
                             <EventCardSkeleton key={`loading-${index}`} />
                         ))}
                     </EventCardGrid>
 
-                    {!isLastPage && (
+                    {!isLastPage && !loading && (
                         <div className="flex justify-center">
                             <LoadMoreButton
-                                onClick={loadMore}
+                                loadedCount={events.length}
+                                total={total}
+                                perPage={perPage}
+                                onClick={() => {
+                                    loadEvents(true);
+                                }}
                             />
                         </div>
                     )}

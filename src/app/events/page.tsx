@@ -47,7 +47,7 @@ export default async function Events({
             <Search industries={industries?.data ?? []} cities={cities?.data ?? []} initialParams={initialParams} />
 
             <Suspense>
-                <EventsList initialEvents={initialEvents} initialMeta={initialMeta} params={initialParams} />
+                <EventsList initialEvents={initialEvents} initialMeta={initialMeta} params={initialParams} perPage={8} />
             </Suspense>
         </div>
     );
