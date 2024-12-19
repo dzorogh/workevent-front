@@ -72,7 +72,13 @@ export default function Footer() {
                                 {menu.map((column, index) => (
                                     <div key={index} className="flex flex-col gap-4">
                                         {column.map((item) => (
-                                            <Link key={item.title} href={item.href} className="text-brand-foreground text-lg">{item.title}</Link>
+                                            <Link 
+                                                key={item.title} 
+                                                href={{ pathname: item.href }}
+                                                className="text-brand-foreground text-lg"
+                                            >
+                                                {item.title}
+                                            </Link>
                                         ))}
                                     </div>
                                 ))}
