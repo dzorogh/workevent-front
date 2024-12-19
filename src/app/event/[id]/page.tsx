@@ -102,9 +102,9 @@ export default async function EventPage({ params }: Props) {
     })
 
     return (
-        <div className="flex flex-col gap-8">
-            {/* Header */}
-            <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-16">
+            <div className="flex flex-col gap-8">
+                {/* D */}
                 <div className="flex gap-x-4 gap-y-2 md:flex-row flex-col md:text-lg">
                     <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
                         <IconCalendar className="w-6 h-6 text-brand" />
@@ -119,124 +119,200 @@ export default async function EventPage({ params }: Props) {
                         </div>
                     )}
                 </div>
-                <h1 className="md:text-4xl text-2xl font-bold">{event.title}</h1>
-            </div>
 
-            {/* Cover Image */}
-            <div className="flex flex-col md:flex-row gap-8">
-                <div className="max-w-prose grow">
-                    <EventCoverImage
-                        cover={event.cover}
-                        title={event.title}
-                        size="lg"
-                        priority={true}
-                    />
+                {/* Header */}
+                <div className="flex flex-col gap-6">
+
+                    <h1 className="md:text-4xl text-2xl font-bold">{event.title}</h1>
                 </div>
 
-                {/* Sidebar */}
-                <div className="flex min-w-[300px] flex-col justify-between gap-4">
-                    <div className="bg-gradient-to-r from-brand to-brand-dark rounded-lg p-4 text-white flex flex-col gap-4">
-                        <h3 className="font-semibold">Контакты</h3>
-                        <div className="flex flex-col gap-2">
-                            {event.website && (
-                                <AppLink
+                {/* Cover Image */}
+                <div className="flex flex-col md:flex-row gap-8">
+                    <div className="max-w-prose grow">
+                        <EventCoverImage
+                            cover={event.cover}
+                            title={event.title}
+                            size="lg"
+                            priority={true}
+                        />
+                    </div>
+
+                    {/* Sidebar */}
+                    <div className="flex min-w-[300px] flex-col justify-between gap-4">
+                        <div className="bg-gradient-to-r from-brand to-brand-dark rounded-lg p-4 text-white flex flex-col gap-4">
+                            <h3 className="font-semibold">Контакты</h3>
+                            <div className="flex flex-col gap-2">
+                                {event.website && (
+                                    <AppLink
+                                        href={event.website as Route}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-3"
+                                    >
+                                        <IconWorld className="w-8 h-8 text-secondary" />
+                                        <div className="flex flex-col items-start">
+                                            <span className="text-sm text-muted-foreground">Сайт</span>
+                                            <span className="text-secondary">{new URL(event.website).hostname}</span>
+                                        </div>
+                                    </AppLink>
+                                )}
+                                {event.phone && (
+                                    <AppLink
+                                        href={`tel:${event.phone}`}
+                                        className="flex items-center gap-3"
+                                    >
+                                        <IconPhone className="w-8 h-8 text-secondary" />
+                                        <div className="flex flex-col items-start">
+                                            <span className="text-sm text-muted-foreground">Телефон</span>
+                                            <span className="text-secondary">{formatPhone(event.phone)}</span>
+                                        </div>
+                                    </AppLink>
+                                )}
+                                {event.email && (
+                                    <AppLink
+                                        href={`mailto:${event.email}`}
+                                        className="flex items-center gap-3"
+                                    >
+                                        <IconMail className="w-8 h-8 text-secondary" />
+                                        <div className="flex flex-col items-start">
+                                            <span className="text-sm text-muted-foreground">Email</span>
+                                            <span className="text-secondary">{event.email}</span>
+                                        </div>
+                                    </AppLink>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Event Details */}
+                        <div className="bg-gradient-to-r from-brand to-brand-dark rounded-lg p-4 text-white flex flex-col gap-4">
+                            <h3 className="font-semibold">Детали мероприятия</h3>
+                            <div className="flex flex-col gap-2">
+                                {event.format_label && (
+                                    <div className="text-sm">
+                                        <span className="text-muted-foreground">Формат:</span>{' '}
+                                        <span className="capitalize">{event.format_label}</span>
+                                    </div>
+                                )}
+                                {event.industry && (
+                                    <div className="text-sm">
+                                        <span className="text-muted-foreground">Индустрия:</span>{' '}
+                                        <span>{event.industry.title}</span>
+                                    </div>
+                                )}
+                                {event.tariffs && event.tariffs.length > 0 && (
+                                    <div className="text-sm">
+                                        <span className="text-muted-foreground">Стоимость:</span>{' от '}
+                                        <span>{formatPrice(event.tariffs.sort((a, b) => a.price - b.price)[0].price)}</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                {/* Content */}
+                <div className="flex flex-col gap-6">
+                    {/* Tags */}
+                    {event.tags && event.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                            {event.tags.map((tag, index) => (
+                                <Badge
+                                    key={tag.id}
+                                >
+                                    {tag.title}
+                                </Badge>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Description */}
+                    <div className="prose max-w-none text-sm">
+                        <Description />
+                    </div>
+
+
+                    {/* Gallery */}
+                    {event.gallery && (
+                        <GallerySection images={event.gallery} eventTitle={event.title} />
+                    )}
+                </div>
+            </div>
+
+            {/* Contacts Section */}
+            <div className="flex flex-col gap-4 bg-muted p-4 rounded-lg">
+                {/* Dates */}
+                <div className="flex flex-col gap-2">
+                    <span className="text-sm text-muted-foreground">Дата</span>
+                    <span className="text-lg font-bold">{new Date(event.start_date).toLocaleDateString('ru-RU')} - {new Date(event.end_date).toLocaleDateString('ru-RU')}</span>
+                </div>
+
+                {/* Location */}
+                <div className="flex flex-col gap-2">
+                    <span className="text-sm text-muted-foreground">Город</span>
+                    <span className="text-lg font-bold">{event.city?.title}</span>
+                </div>
+
+
+                {/* Contacts */}
+                <div className="flex flex-col gap-2">
+                    <span className="text-sm text-muted-foreground">Контакты организатора</span>
+                    <div className="flex flex-row gap-4">
+                        {event.website && (
+                            <Button
+                                asChild
+                                variant="brand"
+                                size="xl"
+                            >
+                                <Link
+                                    className="flex items-center gap-2"
                                     href={event.website as Route}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-3"
                                 >
-                                    <IconWorld className="w-8 h-8 text-secondary" />
-                                    <div className="flex flex-col items-start">
-                                        <span className="text-sm text-muted-foreground">Сайт</span>
-                                        <span className="text-secondary">{new URL(event.website).hostname}</span>
-                                    </div>
-                                </AppLink>
-                            )}
-                            {event.phone && (
-                                <AppLink
-                                    href={`tel:${event.phone}`}
-                                    className="flex items-center gap-3"
-                                >
-                                    <IconPhone className="w-8 h-8 text-secondary" />
-                                    <div className="flex flex-col items-start">
-                                        <span className="text-sm text-muted-foreground">Телефон</span>
-                                        <span className="text-secondary">{formatPhone(event.phone)}</span>
-                                    </div>
-                                </AppLink>
-                            )}
-                            {event.email && (
-                                <AppLink
-                                    href={`mailto:${event.email}`}
-                                    className="flex items-center gap-3"
-                                >
-                                    <IconMail className="w-8 h-8 text-secondary" />
-                                    <div className="flex flex-col items-start">
-                                        <span className="text-sm text-muted-foreground">Email</span>
-                                        <span className="text-secondary">{event.email}</span>
-                                    </div>
-                                </AppLink>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Event Details */}
-                    <div className="bg-gradient-to-r from-brand to-brand-dark rounded-lg p-4 text-white flex flex-col gap-4">
-                        <h3 className="font-semibold">Детали мероприятия</h3>
-                        <div className="flex flex-col gap-2">
-                            {event.format_label && (
-                                <div className="text-sm">
-                                    <span className="text-muted-foreground">Формат:</span>{' '}
-                                    <span className="capitalize">{event.format_label}</span>
-                                </div>
-                            )}
-                            {event.industry && (
-                                <div className="text-sm">
-                                    <span className="text-muted-foreground">Индустрия:</span>{' '}
-                                    <span>{event.industry.title}</span>
-                                </div>
-                            )}
-                            {event.tariffs && event.tariffs.length > 0 && (
-                                <div className="text-sm">
-                                    <span className="text-muted-foreground">Стоимость:</span>{' от '}
-                                    <span>{formatPrice(event.tariffs.sort((a, b) => a.price - b.price)[0].price)}</span>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-
-                </div>
-            </div>
-
-            {/* Content */}
-            <div className="flex flex-col gap-6">
-                {/* Tags */}
-                {event.tags && event.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                        {event.tags.map((tag, index) => (
-                            <Badge
-                                key={tag.id}
+                                    <IconWorld />
+                                    <span>{new URL(event.website).hostname}</span>
+                                </Link>
+                            </Button>
+                        )}
+                        {event.phone && (
+                            <Button
+                                asChild
+                                variant="brand"
+                                size="xl"
                             >
-                                {tag.title}
-                            </Badge>
-                        ))}
+                                <Link
+                                    className="flex items-center gap-2"
+                                    href={`tel:${event.phone}`}
+                                >
+                                    <IconPhone />
+                                    <span>{formatPhone(event.phone)}</span>
+                                </Link>
+                            </Button>
+                        )}
+                        {event.email && (
+                            <Button
+                                asChild
+                                variant="brand"
+                                size="xl"
+                            >
+                                <Link
+                                    className="flex items-center gap-2"
+                                    href={`mailto:${event.email}`}
+                                >
+                                    <IconMail />
+                                    <span>{event.email}</span>
+                                </Link>
+                            </Button>
+                        )}
                     </div>
-                )}
-
-                {/* Description */}
-                <div className="prose max-w-none text-sm">
-                    <Description />
                 </div>
-
-                {/* Gallery */}
-                {event.gallery && (
-                    <GallerySection images={event.gallery} eventTitle={event.title} />
-                )}
             </div>
 
             {/* Similar Events */}
             {similarEvents.length > 0 && (
-                <>
+                <div className="flex flex-col gap-8">
                     <H2>Похожие мероприятия</H2>
 
                     <EventCardGrid>
@@ -244,12 +320,12 @@ export default async function EventPage({ params }: Props) {
                             <EventCard key={event.id} event={event} />
                         ))}
                     </EventCardGrid>
-                </>
+                </div>
             )}
 
             {/* Presets */}
             {presets && presets.length > 0 && (
-                <>
+                <div className="flex flex-col gap-8">
                     <H2>Подборки</H2>
 
                     <div className="flex flex-wrap gap-2">
@@ -261,7 +337,7 @@ export default async function EventPage({ params }: Props) {
                             </div>
                         ))}
                     </div>
-                </>
+                </div>
             )}
         </div>
     );
