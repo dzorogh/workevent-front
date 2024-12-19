@@ -13,39 +13,39 @@ const menu = [
         },
         {
             title: 'Компании',
-            href: '/companies',
+            href: '/',
         },
         {
             title: 'Спикеры',
-            href: '/speakers',
+            href: '/',
         },
         {
             title: 'Площадки',
-            href: '/venues',
+            href: '/',
         },
     ],
     [
         {
             title: 'Платные услуги',
-            href: '/pricing',
+            href: '/',
         },
         {
             title: 'Обратная связь',
-            href: '/feedback',
+            href: '/',
         },
         {
             title: 'Контакты',
-            href: '/contacts',
+            href: '/',
         },
     ],
     [
         {
             title: 'Личный кабинет',
-            href: '/login',
+            href: '/',
         },
         {
             title: 'Регистрация',
-            href: '/register',
+            href: '/',
         },
     ]
 ]
@@ -72,13 +72,13 @@ export default function Footer() {
                                 {menu.map((column, index) => (
                                     <div key={index} className="flex flex-col gap-4">
                                         {column.map((item) => (
-                                            <Link key={item.href} href="/" className="text-brand-foreground text-lg">{item.title}</Link>
+                                            <Link key={item.title} href={item.href} className="text-brand-foreground text-lg">{item.title}</Link>
                                         ))}
                                     </div>
                                 ))}
                             </div>
                             <div>
-                                <Link href="/privacy" className="text-muted-foreground-dark text-sm">Политика конфиденциальности</Link>
+                                <Link href="/" className="text-muted-foreground-dark text-sm">Политика конфиденциальности</Link>
                             </div>
                         </div>
                     </div>
