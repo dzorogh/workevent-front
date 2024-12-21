@@ -223,6 +223,8 @@ export interface components {
             tags?: components["schemas"]["TagResource"][];
             metadata?: components["schemas"]["MetadataResource"];
             tariffs?: components["schemas"]["TariffResource"][];
+            venue_id: number | null;
+            venue?: components["schemas"]["VenueResource"];
         };
         /** IdResource */
         IdResource: {
@@ -321,6 +323,12 @@ export interface components {
             title: string;
             is_active: boolean;
             sort_order: number;
+        };
+        /** VenueResource */
+        VenueResource: {
+            id: number;
+            title: string;
+            address: string | null;
         };
     };
     responses: {

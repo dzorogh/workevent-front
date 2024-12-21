@@ -241,7 +241,7 @@ export default async function EventPage({ params }: Props) {
             </div>
 
             {/* Contacts Section */}
-            <div className="flex flex-col gap-4 bg-muted p-4 rounded-lg">
+            <div className="flex flex-col gap-6 bg-muted p-4 rounded-lg">
                 {/* Dates */}
                 <div className="flex flex-col gap-2">
                     <span className="text-sm text-muted-foreground">Дата</span>
@@ -254,6 +254,12 @@ export default async function EventPage({ params }: Props) {
                     <span className="text-lg font-bold">{event.city?.title}</span>
                 </div>
 
+                {/* Venue */}
+                <div className="flex flex-col gap-2">
+                    <span className="text-sm text-muted-foreground">Место проведения</span>
+                    <span className="text-lg font-bold">{event.venue?.title}</span>
+                    <span className="text-lg">{event.venue?.address}</span>
+                </div>
 
                 {/* Contacts */}
                 <div className="flex flex-col gap-2">
@@ -309,6 +315,7 @@ export default async function EventPage({ params }: Props) {
                     </div>
                 </div>
             </div>
+
 
             {/* Similar Events */}
             {similarEvents.length > 0 && (
