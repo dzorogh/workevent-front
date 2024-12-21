@@ -156,7 +156,7 @@ export default function Subscribe({ industries }: { industries: IndustryResource
 
                     <div className="text-sm text-muted">
                         Нажимая на кнопку, вы соглашаетесь с{' '}
-                        <Link href="/privacy" className="underline underline-offset-4">
+                        <Link href="/" className="underline underline-offset-4">
                             политикой конфиденциальности
                         </Link>
                     </div>
