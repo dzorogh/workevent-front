@@ -1,12 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import EventCardGrid from '@/components/event-card-grid';
-import LoadMoreButton from '@/components/load-more-button';
 import { Button } from '@/components/ui/button';
-import EventCard from '@/components/event-card';
-import Api from '@/lib/api';
-import EventCardSkeleton from '@/components/event-card-skeleton';
 import H2 from "@/components/ui/h2";
 import {EventResource, IndustryResource, SearchEventsResourceMeta} from "@/lib/api/types";
 import EventsList from '@/components/events-list';
