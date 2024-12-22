@@ -3,9 +3,9 @@
 import Api from "@/lib/api";
 import { EventResource, IndustryResource } from "@/lib/api/types";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect, useMemo } from "react";
+import { useState} from "react";
 import AppLink from "@/components/ui/app-link";
-import { createEventSlug } from "@/lib/utils";
+import { createEventSlug, plural } from "@/lib/utils";
 import { Route } from "next";
 import { EventIndexParametersQuery } from "@/lib/api/types";
 import { Loader2 } from "lucide-react";
@@ -52,28 +52,6 @@ export default function Calendar({ industries, initialEvents, params }: { indust
         }
     }
 
-    // if (selectedIndustry) {
-    //     loadEvents().then(
-    //         (events) => {
-    //             events.forEach((event) => {
-    //                 const month = months.find((month) => new Date(event.start_date).getMonth() === months.indexOf(month));
-    //                 if (month) {
-    //                     month.events.push(event);
-    //                 }
-    //             });
-    //         }
-    //     );
-    // } else {
-    //     initialEvents.forEach((event) => {
-    //         const month = months.find((month) => new Date(event.start_date).getMonth() === months.indexOf(month));
-    //         if (month) {
-    //             month.events.push(event);
-    //         }
-    //     });
-    // }
-
-    console.log({ selectedIndustry, prevSelectedIndustry, loading });
-
     if (selectedIndustry !== prevSelectedIndustry) {
         setPrevSelectedIndustry(selectedIndustry);
 
@@ -117,13 +95,22 @@ export default function Calendar({ industries, initialEvents, params }: { indust
                     {months.map((month) => (
                         <div key={month.name} className="flex flex-col bg-muted p-4 rounded-lg">
                             <div className="flex flex-col gap-2">
-                                <div className="text-lg font-bold">{month.name}</div>
-                                <div className="text-sm text-muted-foreground">
-                                    {month.events.length} мероприятий
+                                <div className="flex justify-between items-center">
+                                    <div className="text-lg font-bold">{month.name}</div>
+                                    <div className="text-sm text-muted-foreground">
+                                        {month.events.length} {plural(['мероприятие', 'мероприятия', 'мероприятий'], month.events.length)}
+                                    </div>
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    {month.events.map((event) => (
-                                        <AppLink key={event.id} href={`/event/${createEventSlug(event.title, event.id)}` as Route} className="overflow-hidden text-ellipsis whitespace-nowrap">{event.title}</AppLink>
+                                    {month.events.sort((a, b) => new Date(a.start_date).getDate() - new Date(b.start_date).getDate()).map((event) => (
+                                        <AppLink key={event.id} href={`/event/${createEventSlug(event.title, event.id)}` as Route} className=" flex gap-2 items-start justify-start">
+                                            <div className="rounded-lg border-brand border w-8 h-8 flex items-center justify-center shrink-0">
+                                                {new Date(event.start_date).getDate()}
+                                            </div>
+                                            <div className="pt-1.5 text-sm font-bold">
+                                                {event.title}
+                                            </div>
+                                        </AppLink>
                                     ))}
                                 </div>
                             </div>
