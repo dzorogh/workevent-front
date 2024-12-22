@@ -68,7 +68,7 @@ export default async function SchedulePage() {
 
     return <div className="flex flex-col gap-6">
         <H1>Расписание мероприятий на 2025 год</H1>
-        <Calendar selectedIndustry={null} industries={industries.data?.data ?? []} initialEvents={events.data?.data ?? []} params={params} />
+        <Calendar industries={industries.data?.data ?? []} initialEvents={events.data?.data ?? []} params={params} />
         <div className="prose max-w-none text-sm">
             <Content />
         </div>
