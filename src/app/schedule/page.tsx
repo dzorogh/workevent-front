@@ -36,7 +36,7 @@ export async function generateMetadata(
     }
 }
 
-export default async function SchedulePage() {
+export default async function SchedulePage({ searchParams }: { searchParams: Promise<{ industry_id?: string }> }) {
     const page = await getPage();
 
     // Compile the MDX source code to a function body
@@ -54,7 +54,8 @@ export default async function SchedulePage() {
     const params = {
         date_from: new Date(2025, 0, 1, 0, 0, 0, 0).getTime() / 1000,
         date_to: new Date(2025, 11, 31, 23, 59, 59).getTime() / 1000,
-        per_page: 100
+        per_page: 100,
+        industry_id: (await searchParams).industry_id ? Number((await searchParams).industry_id) : undefined
     }
     const events = await Api.GET('/v1/events', {
         params: {

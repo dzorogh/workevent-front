@@ -9,14 +9,16 @@ import { createEventSlug, plural } from "@/lib/utils";
 import { Route } from "next";
 import { EventIndexParametersQuery } from "@/lib/api/types";
 import { Loader2 } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 type SearchParams = NonNullable<EventIndexParametersQuery>;
 
 export default function Calendar({ industries, initialEvents, params }: { industries: IndustryResource[], initialEvents: EventResource[], params: SearchParams }) {
+    const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
     const [events, setEvents] = useState<EventResource[]>(initialEvents);
-    const [selectedIndustry, setSelectedIndustry] = useState<number | null>(null);
-    const [prevSelectedIndustry, setPrevSelectedIndustry] = useState<number | null>(null);
+    const [selectedIndustry, setSelectedIndustry] = useState<number | null>(params.industry_id ?? null);
+    const [prevSelectedIndustry, setPrevSelectedIndustry] = useState<number | null>(params.industry_id ?? null);
 
     const months: { name: string; events: EventResource[] }[] = [
         { name: 'Январь', events: [] },
@@ -66,13 +68,22 @@ export default function Calendar({ industries, initialEvents, params }: { indust
         }
     });
 
+    const handleIndustrySelect = (industryId: number | null) => {
+        setSelectedIndustry(industryId);
+        if (industryId !== null) {
+            router.push(`/schedule?industry_id=${industryId}`);
+        } else {
+            router.push(`/schedule`);
+        }
+    };
+
     return (
         <div className="flex flex-col gap-6">
             <div className="flex gap-2 flex-wrap">
                 <Button
                     variant={selectedIndustry === null ? "brand" : "muted"}
                     size="sm"
-                    onClick={() => setSelectedIndustry(null)}
+                    onClick={() => handleIndustrySelect(null)}
                 >
                     Все
                 </Button>
@@ -81,7 +92,7 @@ export default function Calendar({ industries, initialEvents, params }: { indust
                         variant={selectedIndustry === industry.id ? "brand" : "muted"}
                         size="sm"
                         key={industry.id}
-                        onClick={() => setSelectedIndustry(industry.id)}
+                        onClick={() => handleIndustrySelect(industry.id)}
                     >
                         {industry.title}
                     </Button>
