@@ -28,7 +28,6 @@ export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const page = await getPage();
-
     const title = page?.metadata?.title + ' — ' + (await parent).title?.absolute;
 
     return {
@@ -66,7 +65,7 @@ export default async function SchedulePage() {
     });
 
     return <div className="flex flex-col gap-6">
-        <H1>Расписание мероприятий на 2025 год</H1>
+        <H1>{page?.metadata?.h1}</H1>
         <Calendar industries={industries.data?.data ?? []} initialEvents={events.data?.data ?? []} params={params} />
         <div className="prose max-w-none text-sm">
             <Content />

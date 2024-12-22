@@ -3,7 +3,7 @@
 import Api from "@/lib/api";
 import { EventResource, IndustryResource } from "@/lib/api/types";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import AppLink from "@/components/ui/app-link";
 import { createEventSlug } from "@/lib/utils";
 import { Route } from "next";
@@ -13,10 +13,10 @@ import { Loader2 } from "lucide-react";
 type SearchParams = NonNullable<EventIndexParametersQuery>;
 
 export default function Calendar({ industries, initialEvents, params }: { industries: IndustryResource[], initialEvents: EventResource[], params: SearchParams }) {
-    const [events, setEvents] = useState<EventResource[]>(initialEvents);
-    const [previousParams, setPreviousParams] = useState<SearchParams>(params);
     const [loading, setLoading] = useState<boolean>(false);
+    const [events, setEvents] = useState<EventResource[]>(initialEvents);
     const [selectedIndustry, setSelectedIndustry] = useState<number | null>(null);
+    const [prevSelectedIndustry, setPrevSelectedIndustry] = useState<number | null>(null);
 
     const months: { name: string; events: EventResource[] }[] = [
         { name: 'Январь', events: [] },
@@ -33,18 +33,7 @@ export default function Calendar({ industries, initialEvents, params }: { indust
         { name: 'Декабрь', events: [] },
     ];
 
-    if (JSON.stringify(params) !== JSON.stringify(previousParams)) {
-        setPreviousParams(params);
-        setEvents([]);
-
-        loadEvents();
-    }
-
-    useEffect(() => {
-        loadEvents();
-    }, [selectedIndustry]);
-
-    async function loadEvents(loadMore: boolean = false) {
+    async function loadEvents() {
         setLoading(true);
         try {
             const response = await Api.GET('/v1/events', {
@@ -61,6 +50,35 @@ export default function Calendar({ industries, initialEvents, params }: { indust
         } finally {
             setLoading(false);
         }
+    }
+
+    // if (selectedIndustry) {
+    //     loadEvents().then(
+    //         (events) => {
+    //             events.forEach((event) => {
+    //                 const month = months.find((month) => new Date(event.start_date).getMonth() === months.indexOf(month));
+    //                 if (month) {
+    //                     month.events.push(event);
+    //                 }
+    //             });
+    //         }
+    //     );
+    // } else {
+    //     initialEvents.forEach((event) => {
+    //         const month = months.find((month) => new Date(event.start_date).getMonth() === months.indexOf(month));
+    //         if (month) {
+    //             month.events.push(event);
+    //         }
+    //     });
+    // }
+
+    console.log({ selectedIndustry, prevSelectedIndustry, loading });
+
+    if (selectedIndustry !== prevSelectedIndustry) {
+        setPrevSelectedIndustry(selectedIndustry);
+
+        setEvents([]);
+        loadEvents();
     }
 
     events.forEach((event) => {
