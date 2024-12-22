@@ -5,12 +5,6 @@ import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
 import Calendar from "./calendar";
 
-
-type Props = {
-    params: unknown
-    searchParams: unknown
-}
-
 const getPage = async () => {
     const pageResponse = await Api.GET('/v1/pages', {
         cache: 'force-cache',
@@ -25,7 +19,7 @@ const getPage = async () => {
 }
 
 export async function generateMetadata(
-    { params, searchParams }: Props,
+    pageProps: undefined,
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const page = await getPage();
