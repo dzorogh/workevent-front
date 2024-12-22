@@ -3,7 +3,7 @@
 import Api from "@/lib/api";
 import { EventResource, IndustryResource } from "@/lib/api/types";
 import { Button } from "@/components/ui/button";
-import { useState} from "react";
+import { useState } from "react";
 import AppLink from "@/components/ui/app-link";
 import { createEventSlug, plural } from "@/lib/utils";
 import { Route } from "next";
@@ -55,7 +55,7 @@ export default function Calendar({ industries, initialEvents, params }: { indust
     if (selectedIndustry !== prevSelectedIndustry) {
         setPrevSelectedIndustry(selectedIndustry);
 
-        setEvents([]);
+        // setEvents([]);
         loadEvents();
     }
 
