@@ -12,6 +12,10 @@ const menu = [
             href: '/events',
         },
         {
+            title: 'Расписание',
+            href: '/schedule',
+        },
+        {
             title: 'Компании',
             href: '/',
         },
