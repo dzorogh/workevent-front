@@ -103,11 +103,11 @@ export default function Calendar({ industries, initialEvents, params }: { indust
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     {month.events.sort((a, b) => new Date(a.start_date).getDate() - new Date(b.start_date).getDate()).map((event) => (
-                                        <AppLink key={event.id} href={`/event/${createEventSlug(event.title, event.id)}` as Route} className=" flex gap-2 items-start justify-start">
-                                            <div className="rounded-lg border-brand border w-8 h-8 flex items-center justify-center shrink-0">
+                                        <AppLink key={event.id} href={`/event/${createEventSlug(event.title, event.id)}` as Route} className=" flex gap-4 items-start justify-start text-sm font-bold">
+                                            <div className="w-6 flex items-center justify-end shrink-0 text-muted-foreground">
                                                 {new Date(event.start_date).getDate()}
                                             </div>
-                                            <div className="pt-1.5 text-sm font-bold">
+                                            <div className="">
                                                 {event.title}
                                             </div>
                                         </AppLink>
