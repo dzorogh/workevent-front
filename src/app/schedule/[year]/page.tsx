@@ -4,19 +4,25 @@ import { Metadata, ResolvingMetadata } from "next";
 import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
 import Calendar from "./calendar";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 type Props = {
-    params: undefined
-    searchParams: undefined
+    params: {
+        year: string
+    }
+    searchParams: {
+        industry_id?: string
+    }
 }
 
-const getPage = async () => {
+const getPage = async (year: string) => {
     const pageResponse = await Api.GET('/v1/pages', {
         cache: 'force-cache',
         revalidate: 300,
         params: {
             query: {
-                path: '/schedule',
+                path: '/schedule/' + year,
             }
         }
     });
@@ -27,7 +33,7 @@ export async function generateMetadata(
     { params, searchParams }: Props,
     parent: ResolvingMetadata
 ): Promise<Metadata> {
-    const page = await getPage();
+    const page = await getPage(params.year);
     const title = page?.metadata?.title + ' — ' + (await parent).title?.absolute;
 
     return {
@@ -36,8 +42,8 @@ export async function generateMetadata(
     }
 }
 
-export default async function SchedulePage({ searchParams }: { searchParams: Promise<{ industry_id?: string }> }) {
-    const page = await getPage();
+export default async function SchedulePage({ params, searchParams }: Props) {
+    const page = await getPage(params.year);
 
     // Compile the MDX source code to a function body
     const code = String(
@@ -51,23 +57,39 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
     })
 
     const industries = await Api.GET('/v1/industries');
-    const params = {
-        date_from: new Date(2025, 0, 1, 0, 0, 0, 0).getTime() / 1000,
-        date_to: new Date(2025, 11, 31, 23, 59, 59).getTime() / 1000,
+    const requestParams = {
+        date_from: new Date(Number(params.year), 0, 1, 0, 0, 0, 0).getTime() / 1000,
+        date_to: new Date(Number(params.year), 11, 31, 23, 59, 59).getTime() / 1000,
         per_page: 100,
-        industry_id: (await searchParams).industry_id ? Number((await searchParams).industry_id) : undefined
+        industry_id: searchParams?.industry_id ? Number(searchParams.industry_id) : undefined
     }
+
     const events = await Api.GET('/v1/events', {
         params: {
             query: {
-                ...params,
+                ...requestParams,
             }
         }
     });
 
+    const startYear = 2023;
+    const years = Array.from({ length: new Date().getFullYear() - startYear + 3 }, (_, i) => i + startYear);
+
     return <div className="flex flex-col gap-6">
         <H1>{page?.metadata?.h1}</H1>
-        <Calendar industries={industries.data?.data ?? []} initialEvents={events.data?.data ?? []} params={params} />
+        <div className="flex gap-2">
+            {years.map((year) => (
+                <Button
+                    key={year}
+                    variant={year === Number(params.year) ? "brand" : "muted"}
+                    size="sm"
+                    asChild
+                >
+                    <Link href={`/schedule/${year}`}>{year}</Link>
+                </Button>
+            ))}
+        </div>
+        <Calendar industries={industries.data?.data ?? []} initialEvents={events.data?.data ?? []} params={requestParams} year={Number(params.year)} />
         <div className="prose max-w-none text-sm">
             <Content />
         </div>

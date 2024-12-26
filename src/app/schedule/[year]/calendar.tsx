@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 
 type SearchParams = NonNullable<EventIndexParametersQuery>;
 
-export default function Calendar({ industries, initialEvents, params }: { industries: IndustryResource[], initialEvents: EventResource[], params: SearchParams }) {
+export default function Calendar({ year, industries, initialEvents, params }: { year: number, industries: IndustryResource[], initialEvents: EventResource[], params: SearchParams }) {
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
     const [events, setEvents] = useState<EventResource[]>(initialEvents);
@@ -43,11 +43,12 @@ export default function Calendar({ industries, initialEvents, params }: { indust
                     query: {
                         ...params,
                         industry_id: selectedIndustry,
+                        date_from: new Date(year, 0, 1, 0, 0, 0).getTime() / 1000,
+                        date_to: new Date(year, 11, 31, 23, 59, 59).getTime() / 1000,
                     }
                 }
             });
             const newEvents = response.data?.data ?? [];
-
             setEvents(newEvents);
         } finally {
             setLoading(false);
@@ -56,8 +57,6 @@ export default function Calendar({ industries, initialEvents, params }: { indust
 
     if (selectedIndustry !== prevSelectedIndustry) {
         setPrevSelectedIndustry(selectedIndustry);
-
-        // setEvents([]);
         loadEvents();
     }
 
@@ -71,11 +70,12 @@ export default function Calendar({ industries, initialEvents, params }: { indust
     const handleIndustrySelect = (industryId: number | null) => {
         setSelectedIndustry(industryId);
         if (industryId !== null) {
-            router.push(`/schedule?industry_id=${industryId}`);
+            router.push(`/schedule/${year}?industry_id=${industryId}`);
         } else {
-            router.push(`/schedule`);
+            router.push(`/schedule/${year}`);
         }
     };
+
 
     return (
         <div className="flex flex-col gap-6">
@@ -98,6 +98,9 @@ export default function Calendar({ industries, initialEvents, params }: { indust
                     </Button>
                 ))}
             </div>
+
+           
+
             <div className="flex flex-col gap-4 relative">
                 {loading && <div className="flex justify-center  absolute top-0 left-0 right-0 bottom-0 bg-background/90 h-full">
                     <Loader2 className="w-12 h-12 animate-spin mt-[30vh]" />
