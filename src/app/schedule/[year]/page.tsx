@@ -4,8 +4,8 @@ import { Metadata, ResolvingMetadata } from "next";
 import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
 import Calendar from "./calendar";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 type Props = {
     params: {
@@ -22,7 +22,7 @@ const getPage = async (year: string) => {
         revalidate: 300,
         params: {
             query: {
-                path: '/schedule/' + year,
+                path: '/schedule',
             }
         }
     });
@@ -34,7 +34,7 @@ export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const page = await getPage(params.year);
-    const title = page?.metadata?.title + ' — ' + (await parent).title?.absolute;
+    const title = 'Расписание (план) мероприятий на ' + params.year + ' год' + ' — ' + (await parent).title?.absolute;
 
     return {
         title: title,
@@ -76,19 +76,23 @@ export default async function SchedulePage({ params, searchParams }: Props) {
     const years = Array.from({ length: new Date().getFullYear() - startYear + 3 }, (_, i) => i + startYear);
 
     return <div className="flex flex-col gap-6">
-        <H1>{page?.metadata?.h1}</H1>
-        <div className="flex gap-2">
-            {years.map((year) => (
-                <Button
-                    key={year}
-                    variant={year === Number(params.year) ? "brand" : "muted"}
-                    size="sm"
-                    asChild
-                >
-                    <Link href={`/schedule/${year}`}>{year}</Link>
-                </Button>
-            ))}
+        <div className="flex gap-6 items-center justify-between">
+            <H1 className="text-center">План мероприятий на {params.year} год</H1>
+
+            <div className="flex gap-2 flex-wrap">
+                {years.map((year) => (
+                    <Link
+                        key={year}
+                        href={`/schedule/${year}`}
+                        className={cn(year === Number(params.year) && "bg-brand text-brand-foreground", year !== Number(params.year) && "bg-muted text-muted-foreground", "text-3xl px-4 py-2 rounded-lg hover:bg-brand hover:text-brand-foreground transition-all duration-300")}
+                    >
+                        {year}
+                    </Link>
+                ))}
+            </div>
         </div>
+
+
         <Calendar industries={industries.data?.data ?? []} initialEvents={events.data?.data ?? []} params={requestParams} year={Number(params.year)} />
         <div className="prose max-w-none text-sm">
             <Content />
