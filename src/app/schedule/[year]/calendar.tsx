@@ -1,24 +1,11 @@
 'use client';
 
-import Api from "@/lib/api";
-import { EventResource, IndustryResource } from "@/lib/api/types";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { EventResource } from "@/lib/api/types";
 import AppLink from "@/components/ui/app-link";
 import { createEventSlug, plural } from "@/lib/utils";
 import { Route } from "next";
-import { EventIndexParametersQuery } from "@/lib/api/types";
-import { Loader2 } from "lucide-react";
-import { useRouter } from 'next/navigation';
 
-type SearchParams = NonNullable<EventIndexParametersQuery>;
-
-export default function Calendar({ industries, initialEvents, params }: { industries: IndustryResource[], initialEvents: EventResource[], params: SearchParams }) {
-    const router = useRouter();
-    const [loading, setLoading] = useState<boolean>(false);
-    const [events, setEvents] = useState<EventResource[]>(initialEvents);
-    const [selectedIndustry, setSelectedIndustry] = useState<number | null>(params.industry_id ?? null);
-    const [prevSelectedIndustry, setPrevSelectedIndustry] = useState<number | null>(params.industry_id ?? null);
+export default function Calendar({ events }: { events: EventResource[] }) {
 
     const months: { name: string; events: EventResource[] }[] = [
         { name: 'Январь', events: [] },
@@ -35,29 +22,6 @@ export default function Calendar({ industries, initialEvents, params }: { indust
         { name: 'Декабрь', events: [] },
     ];
 
-    async function loadEvents() {
-        setLoading(true);
-        try {
-            const response = await Api.GET('/v1/events', {
-                params: {
-                    query: {
-                        ...params,
-                        industry_id: selectedIndustry,
-                    }
-                }
-            });
-            const newEvents = response.data?.data ?? [];
-            setEvents(newEvents);
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    if (selectedIndustry !== prevSelectedIndustry) {
-        setPrevSelectedIndustry(selectedIndustry);
-        loadEvents();
-    }
-
     events.forEach((event) => {
         const month = months.find((month) => new Date(event.start_date).getMonth() === months.indexOf(month));
         if (month) {
@@ -65,44 +29,9 @@ export default function Calendar({ industries, initialEvents, params }: { indust
         }
     });
 
-    const handleIndustrySelect = (industryId: number | null) => {
-        setSelectedIndustry(industryId);
-        if (industryId !== null) {
-            router.push(`/schedule/${year}?industry_id=${industryId}`);
-        } else {
-            router.push(`/schedule/${year}`);
-        }
-    };
-
-
     return (
         <div className="flex flex-col gap-6">
-            <div className="flex gap-2 flex-wrap">
-                <Button
-                    variant={selectedIndustry === null ? "brand" : "muted"}
-                    size="sm"
-                    onClick={() => handleIndustrySelect(null)}
-                >
-                    Все
-                </Button>
-                {industries.map((industry) => (
-                    <Button
-                        variant={selectedIndustry === industry.id ? "brand" : "muted"}
-                        size="sm"
-                        key={industry.id}
-                        onClick={() => handleIndustrySelect(industry.id)}
-                    >
-                        {industry.title}
-                    </Button>
-                ))}
-            </div>
-
-           
-
             <div className="flex flex-col gap-4 relative">
-                {loading && <div className="flex justify-center  absolute top-0 left-0 right-0 bottom-0 bg-background/90 h-full">
-                    <Loader2 className="w-12 h-12 animate-spin mt-[30vh]" />
-                </div>}
                 <div className="grid grid-cols-1 auto-rows-fr md:grid-cols-3 gap-4">
                     {months.map((month) => (
                         <div key={month.name} className="flex flex-col bg-muted p-4 rounded-lg">

@@ -6,6 +6,8 @@ import * as runtime from 'react/jsx-runtime'
 import Calendar from "./calendar";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Route } from "next";
 
 type Props = {
     params: Promise<{
@@ -16,7 +18,7 @@ type Props = {
     }>
 }
 
-const getPage = async (year: string) => {
+const getPage = async () => {
     const pageResponse = await Api.GET('/v1/pages', {
         cache: 'force-cache',
         revalidate: 300,
@@ -34,7 +36,7 @@ export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const year = (await params).year;
-    const page = await getPage(year);
+    const page = await getPage();
     const title = 'Расписание (план) мероприятий на ' + year + ' год' + ' — ' + (await parent).title?.absolute;
 
     return {
@@ -45,21 +47,11 @@ export async function generateMetadata(
 
 export default async function SchedulePage({ params, searchParams }: Props) {
     const selectedYear = (await params).year;
-    const page = await getPage(selectedYear);
+    const page = await getPage();
     const industryId = (await searchParams).industry_id;
-
-    // Compile the MDX source code to a function body
-    const code = String(
-        await compile(page?.content ?? '', { outputFormat: 'function-body' })
-    )
-
-    // Run the compiled code with the runtime and get the default export
-    const { default: Content } = await run(code, {
-        ...runtime,
-        baseUrl: import.meta.url,
-    })
-
-    const industries = await Api.GET('/v1/industries');
+    const startYear = 2023;
+    const years = Array.from({ length: new Date().getFullYear() - startYear + 3 }, (_, i) => i + startYear);
+    const industries = (await Api.GET('/v1/industries')).data?.data ?? [];
     const requestParams = {
         date_from: new Date(Number(selectedYear), 0, 1, 0, 0, 0, 0).getTime() / 1000,
         date_to: new Date(Number(selectedYear), 11, 31, 23, 59, 59).getTime() / 1000,
@@ -75,8 +67,16 @@ export default async function SchedulePage({ params, searchParams }: Props) {
         }
     });
 
-    const startYear = 2023;
-    const years = Array.from({ length: new Date().getFullYear() - startYear + 3 }, (_, i) => i + startYear);
+    // Compile the MDX source code to a function body
+    const code = String(
+        await compile(page?.content ?? '', { outputFormat: 'function-body' })
+    )
+
+    // Run the compiled code with the runtime and get the default export
+    const { default: Content } = await run(code, {
+        ...runtime,
+        baseUrl: import.meta.url,
+    })
 
     return <div className="flex flex-col gap-6">
         <div className="flex gap-6 items-center justify-between">
@@ -95,7 +95,30 @@ export default async function SchedulePage({ params, searchParams }: Props) {
             </div>
         </div>
 
-        <Calendar industries={industries.data?.data ?? []} initialEvents={events.data?.data ?? []} params={requestParams} />
+        <div className="flex gap-2 flex-wrap">
+                <Button
+                    variant={industryId === undefined ? "brand" : "muted"}
+                    size="sm"
+                >
+                    <Link href={`/schedule/${selectedYear}` as Route}>
+                        Все
+                    </Link>
+                </Button>
+
+                {industries.map((industry) => (
+                    <Button
+                        variant={Number(industryId) === industry.id ? "brand" : "muted"}
+                        size="sm"
+                        key={industry.id}
+                    >
+                        <Link href={`/schedule/${selectedYear}?industry_id=${industry.id}` as Route}>
+                            {industry.title}
+                        </Link>
+                    </Button>
+                ))}
+            </div>
+
+        <Calendar events={events.data?.data ?? []} />
 
         <div className="prose max-w-none text-sm">
             <Content />
