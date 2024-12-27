@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 
 type SearchParams = NonNullable<EventIndexParametersQuery>;
 
-export default function Calendar({ year, industries, initialEvents, params }: { year: number, industries: IndustryResource[], initialEvents: EventResource[], params: SearchParams }) {
+export default function Calendar({ industries, initialEvents, params }: { industries: IndustryResource[], initialEvents: EventResource[], params: SearchParams }) {
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
     const [events, setEvents] = useState<EventResource[]>(initialEvents);
@@ -43,8 +43,6 @@ export default function Calendar({ year, industries, initialEvents, params }: { 
                     query: {
                         ...params,
                         industry_id: selectedIndustry,
-                        date_from: new Date(year, 0, 1, 0, 0, 0).getTime() / 1000,
-                        date_to: new Date(year, 11, 31, 23, 59, 59).getTime() / 1000,
                     }
                 }
             });
