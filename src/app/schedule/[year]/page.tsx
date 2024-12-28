@@ -99,6 +99,7 @@ export default async function SchedulePage({ params, searchParams }: Props) {
                 <Button
                     variant={industryId === undefined ? "brand" : "muted"}
                     size="sm"
+                    asChild
                 >
                     <Link href={`/schedule/${selectedYear}` as Route}>
                         Все
@@ -110,6 +111,7 @@ export default async function SchedulePage({ params, searchParams }: Props) {
                         variant={Number(industryId) === industry.id ? "brand" : "muted"}
                         size="sm"
                         key={industry.id}
+                        asChild
                     >
                         <Link href={`/schedule/${selectedYear}?industry_id=${industry.id}` as Route}>
                             {industry.title}
