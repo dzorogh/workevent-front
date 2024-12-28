@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Route } from "next";
 
+export const revalidate = 36000;
+
 type Props = {
     params: Promise<{
         year: string
@@ -16,6 +18,20 @@ type Props = {
     searchParams: Promise<{
         industry_id?: string
     }>
+}
+
+const startYear = 2024;
+
+const getYears = (startYear: number) => {
+    return Array.from({ length: new Date().getFullYear() - startYear + 3 }, (_, i) => i + startYear);
+}
+
+export async function generateStaticParams() {
+    const years = getYears(startYear);
+
+    return years.map((year) => ({
+        year: year.toString(),
+    }))
 }
 
 const getPage = async () => {
@@ -49,8 +65,7 @@ export default async function SchedulePage({ params, searchParams }: Props) {
     const selectedYear = (await params).year;
     const page = await getPage();
     const industryId = (await searchParams).industry_id;
-    const startYear = 2024;
-    const years = Array.from({ length: new Date().getFullYear() - startYear + 3 }, (_, i) => i + startYear);
+    const years = getYears(startYear);
     const industries = (await Api.GET('/v1/industries')).data?.data ?? [];
     const requestParams = {
         date_from: new Date(Number(selectedYear), 0, 1, 0, 0, 0, 0).getTime() / 1000,
