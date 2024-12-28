@@ -49,7 +49,7 @@ export default async function SchedulePage({ params, searchParams }: Props) {
     const selectedYear = (await params).year;
     const page = await getPage();
     const industryId = (await searchParams).industry_id;
-    const startYear = 2023;
+    const startYear = 2024;
     const years = Array.from({ length: new Date().getFullYear() - startYear + 3 }, (_, i) => i + startYear);
     const industries = (await Api.GET('/v1/industries')).data?.data ?? [];
     const requestParams = {
