@@ -11,6 +11,7 @@ import YandexMetrika from "@/components/yandex-metrika";
 import YandexMetrikaCounter from "@/components/yandex-metrika-counter";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from '@vercel/analytics/next';
+import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
@@ -51,6 +52,8 @@ export default async function RootLayout({
       <body
         className={`${inter.className} antialiased`}
       >
+        <NextTopLoader color="#4a4de3" shadow={false} />
+
         <Container className="pt-2 md:pt-5">
           <Header />
         </Container>
