@@ -24,13 +24,13 @@ const getYears = (startYear: number) => {
     return Array.from({ length: new Date().getFullYear() - startYear + 3 }, (_, i) => i + startYear);
 }
 
-export async function generateStaticParams() {
-    const years = getYears(startYear);
-    const industries = (await Api.GET('/v1/industries/slugs')).data?.data ?? [];
-    const industrySlugs = industries.map((industry) => industry.slug);
+// export async function generateStaticParams() {
+//     const years = getYears(startYear);
+//     const industries = (await Api.GET('/v1/industries/slugs')).data?.data ?? [];
+//     const industrySlugs = industries.map((industry) => industry.slug);
 
-    return years.flatMap((year) => industrySlugs.map((industrySlug) => ({ year: year.toString(), industry: [industrySlug] })));
-}
+//     return years.flatMap((year) => industrySlugs.map((industrySlug) => ({ year: year.toString(), industry: [industrySlug] })));
+// }
 
 const getPage = async () => {
     const pageResponse = await Api.GET('/v1/pages', {
