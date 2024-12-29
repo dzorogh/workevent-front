@@ -74,9 +74,7 @@ export default async function SchedulePage({ params }: Props) {
         }
     })).data?.data : undefined;
 
-    if (!industry && selectedYear && industrySlug) { 
-        permanentRedirect(`/schedule/${selectedYear}`);
-    }
+
 
     const page = await getPage();
     const years = getYears(startYear);
