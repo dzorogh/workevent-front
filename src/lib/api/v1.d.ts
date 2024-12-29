@@ -91,6 +91,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Industries
+         * @description Array of `IndustryResource`
+         */
         get: operations["industry.index"];
         put?: never;
         post?: never;
@@ -107,6 +111,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Industry Slugs
+         * @description Array of industry slugs
+         */
         get: operations["industry.allSlugs"];
         put?: never;
         post?: never;
@@ -123,6 +131,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Industry */
         get: operations["industry.show"];
         put?: never;
         post?: never;
@@ -557,7 +566,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string;
+                    "application/json": {
+                        data: components["schemas"]["IndustryResource"][];
+                    };
                 };
             };
         };
@@ -576,7 +587,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string;
+                    "application/json": {
+                        data: string[];
+                    };
                 };
             };
         };
