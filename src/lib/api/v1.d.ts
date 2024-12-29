@@ -100,6 +100,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/industries/slugs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["industry.allSlugs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/industries/{industry}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["industry.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/metadata": {
         parameters: {
             query?: never;
@@ -234,6 +266,7 @@ export interface components {
         IndustryResource: {
             id: number;
             title: string;
+            slug: string | null;
             events_count?: number;
         };
         /** MetadataResource */
@@ -304,10 +337,6 @@ export interface components {
                 per_page: number;
                 total: number;
             };
-        };
-        /** SlugResource */
-        SlugResource: {
-            slug: string;
         };
         /** TagResource */
         TagResource: {
@@ -401,15 +430,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Array of `CityResource` */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        data: components["schemas"]["CityResource"][];
-                    };
+                    "application/json": string;
                 };
             };
         };
@@ -526,17 +552,59 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Array of `IndustryResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
+                };
+            };
+        };
+    };
+    "industry.allSlugs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
+                };
+            };
+        };
+    };
+    "industry.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The industry slug */
+                industry: string | null;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `IndustryResource` */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["IndustryResource"][];
+                        data: components["schemas"]["IndustryResource"];
                     };
                 };
             };
+            404: components["responses"]["ModelNotFoundException"];
         };
     };
     "metadata.show": {
@@ -600,15 +668,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Array of `PresetResource` */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        data: components["schemas"]["PresetResource"][];
-                    };
+                    "application/json": string;
                 };
             };
         };
@@ -622,15 +687,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Array of `SlugResource` */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        data: components["schemas"]["SlugResource"][];
-                    };
+                    "application/json": string;
                 };
             };
         };

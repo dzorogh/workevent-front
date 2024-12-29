@@ -8,15 +8,15 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Route } from "next";
+import { getIdFromSlug, createSlugWithId } from "@/lib/utils";
+import { permanentRedirect } from "next/navigation";
 
 export const revalidate = 36000;
 
 type Props = {
     params: Promise<{
         year: string
-    }>,
-    searchParams: Promise<{
-        industry_id?: string
+        industry: string
     }>
 }
 
@@ -48,7 +48,7 @@ const getPage = async () => {
 }
 
 export async function generateMetadata(
-    { params, searchParams }: Props,
+    { params }: Props,
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const year = (await params).year;
@@ -61,17 +61,31 @@ export async function generateMetadata(
     }
 }
 
-export default async function SchedulePage({ params, searchParams }: Props) {
+export default async function SchedulePage({ params }: Props) {
     const selectedYear = (await params).year;
+    const industryParams = (await params).industry;
+    const industrySlug = industryParams ? industryParams[0] : undefined;
+
+    const industry = industrySlug ? (await Api.GET('/v1/industries/{industry}', {
+        params: {
+            path: {
+                industry: industrySlug
+            }
+        }
+    })).data?.data : undefined;
+
+    if (!industry && industrySlug) { 
+        permanentRedirect(`/schedule/${selectedYear}`);
+    }
+
     const page = await getPage();
-    const industryId = (await searchParams).industry_id;
     const years = getYears(startYear);
     const industries = (await Api.GET('/v1/industries')).data?.data ?? [];
     const requestParams = {
         date_from: new Date(Number(selectedYear), 0, 1, 0, 0, 0, 0).getTime() / 1000,
         date_to: new Date(Number(selectedYear), 11, 31, 23, 59, 59).getTime() / 1000,
         per_page: 100,
-        industry_id: industryId ? Number(industryId) : undefined
+        industry_id: industry?.id ?? undefined,
     }
 
     const events = await Api.GET('/v1/events', {
@@ -93,47 +107,46 @@ export default async function SchedulePage({ params, searchParams }: Props) {
         baseUrl: import.meta.url,
     })
 
-    return <div className="flex flex-col gap-6">
-        <div className="flex gap-6 items-center justify-between">
-            <H1 className="text-center">План мероприятий на {selectedYear} год</H1>
-
-            <div className="flex gap-2 flex-wrap">
-                {years.map((year) => (
-                    <Link
-                        key={year}
-                        href={`/schedule/${year}`}
-                        className={cn(year === Number(selectedYear) && "bg-brand text-brand-foreground", year !== Number(selectedYear) && "bg-muted text-muted-foreground", "text-3xl px-4 py-2 rounded-lg hover:bg-brand hover:text-brand-foreground transition-all duration-300")}
-                    >
-                        {year}
-                    </Link>
-                ))}
-            </div>
+    return <div className="flex flex-col md:gap-12 gap-6">
+        <div className="flex gap-2 flex-wrap items-center justify-center">
+            {years.map((year) => (
+                <Link
+                    key={year}
+                    href={`/schedule/${year}` as Route}
+                    className={cn(year === Number(selectedYear) && "bg-brand text-brand-foreground", year !== Number(selectedYear) && "bg-muted text-muted-foreground", "text-3xl px-4 py-2 rounded-lg hover:bg-brand hover:text-brand-foreground transition-all duration-300")}
+                >
+                    {year}
+                </Link>
+            ))}
         </div>
 
-        <div className="flex gap-2 flex-wrap">
+        
+        <div className="flex gap-2 flex-wrap items-center justify-center">
+            <Button
+                variant={industrySlug === undefined ? "brand" : "muted"}
+                size="sm"
+                asChild
+            >
+                <Link href={`/schedule/${selectedYear}` as Route}>
+                    Все
+                </Link>
+            </Button>
+
+            {industries.map((industry: any) => (
                 <Button
-                    variant={industryId === undefined ? "brand" : "muted"}
+                    variant={industry.slug === industrySlug ? "brand" : "muted"}
                     size="sm"
+                    key={industry.id}
                     asChild
                 >
-                    <Link href={`/schedule/${selectedYear}` as Route}>
-                        Все
+                    <Link href={`/schedule/${selectedYear}/${industry.slug}` as Route}>
+                        {industry.title}
                     </Link>
                 </Button>
+            ))}
+        </div>
 
-                {industries.map((industry) => (
-                    <Button
-                        variant={Number(industryId) === industry.id ? "brand" : "muted"}
-                        size="sm"
-                        key={industry.id}
-                        asChild
-                    >
-                        <Link href={`/schedule/${selectedYear}?industry_id=${industry.id}` as Route}>
-                            {industry.title}
-                        </Link>
-                    </Button>
-                ))}
-            </div>
+        <H1 className="m-0 text-center">План мероприятий на {selectedYear} год {industry?.title ? `(${industry.title})` : ''}</H1>
 
         <Calendar events={events.data?.data ?? []} />
 

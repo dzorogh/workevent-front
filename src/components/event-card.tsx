@@ -3,7 +3,7 @@ import { IconMapPin } from '@tabler/icons-react';
 import Link from 'next/link';
 import { EventResource } from '@/lib/api/types';
 import { Route } from 'next';
-import { createEventSlug } from '@/lib/utils';
+import { createSlugWithId } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
     
 interface EventCardProps {
@@ -38,7 +38,7 @@ const formatDates = (event: EventResource) => {
 export default function EventCard({ event }: EventCardProps) {
     return (
         <div>
-            <Link href={`/event/${createEventSlug(event.title, event.id)}` as Route} className="block">
+            <Link href={`/event/${createSlugWithId(event.title, event.id)}` as Route} className="block">
                 <div className="flex flex-col gap-5">
                     <div className="relative aspect-video w-full border-secondary border rounded-lg overflow-hidden bg-muted">
                         <EventCoverImage cover={event.cover} title={event.title} />

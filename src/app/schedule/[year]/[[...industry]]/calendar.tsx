@@ -2,7 +2,7 @@
 
 import { EventResource } from "@/lib/api/types";
 import AppLink from "@/components/ui/app-link";
-import { createEventSlug, plural } from "@/lib/utils";
+import { createSlugWithId, plural } from "@/lib/utils";
 import { Route } from "next";
 
 export default function Calendar({ events }: { events: EventResource[] }) {
@@ -44,7 +44,7 @@ export default function Calendar({ events }: { events: EventResource[] }) {
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     {month.events.sort((a, b) => new Date(a.start_date).getDate() - new Date(b.start_date).getDate()).map((event) => (
-                                        <AppLink key={event.id} href={`/event/${createEventSlug(event.title, event.id)}` as Route} className=" flex gap-4 items-start justify-start text-sm font-bold">
+                                        <AppLink key={event.id} href={`/event/${createSlugWithId(event.title, event.id)}` as Route} className=" flex gap-4 items-start justify-start text-sm font-bold">
                                             <div className="w-6 flex items-center justify-end shrink-0 text-muted-foreground">
                                                 {new Date(event.start_date).getDate()}
                                             </div>

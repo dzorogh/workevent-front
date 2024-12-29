@@ -7,7 +7,7 @@ import AppLink from "@/components/ui/app-link";
 import { Badge } from "@/components/ui/badge";
 import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
-import { createEventSlug, getEventIdFromSlug, formatPrice, formatPhone } from "@/lib/utils";
+import { createSlugWithId, getIdFromSlug, formatPrice, formatPhone } from "@/lib/utils";
 import GallerySection from "@/app/event/[id]/gallery-section";
 import H2 from "@/components/ui/h2";
 import EventCardGrid from "@/components/event-card-grid";
@@ -33,7 +33,7 @@ export async function generateStaticParams() {
 
 const getEventData = async (params: Props['params']) => {
     const resolvedParams = await params;
-    const numericId = getEventIdFromSlug(resolvedParams.id);
+    const numericId = getIdFromSlug(resolvedParams.id);
 
     // First fetch the event
     const responseData = await Api.GET(`/v1/events/{event}`, {
@@ -47,7 +47,7 @@ const getEventData = async (params: Props['params']) => {
         notFound();
     }
 
-    const correctSlug = createEventSlug(event.title, numericId);
+    const correctSlug = createSlugWithId(event.title, numericId);
     if (resolvedParams.id !== correctSlug) {
         permanentRedirect(`/event/${correctSlug}`);
     }

@@ -6,11 +6,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function createEventSlug(title: string, id: string | number): string {
+export function createSlugWithId(title: string, id: string | number): string {
   return createEventSlugGlobal(title, id)
 }
 
-export function getEventIdFromSlug(slug: string): string {
+export function getIdFromSlug(slug: string): string {
   return slug.split('-').pop() ?? slug;
 }
 
