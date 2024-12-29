@@ -35,7 +35,6 @@ export async function generateStaticParams() {
 const getPage = async () => {
     const pageResponse = await Api.GET('/v1/pages', {
         cache: 'force-cache',
-        revalidate: 300,
         params: {
             query: {
                 path: '/schedule',
