@@ -8,8 +8,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Route } from "next";
-import { getIdFromSlug, createSlugWithId } from "@/lib/utils";
-import { permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 export const revalidate = 36000;
 
@@ -74,7 +73,9 @@ export default async function SchedulePage({ params }: Props) {
         }
     })).data?.data : undefined;
 
-
+    if (!industry && industrySlug) {
+        notFound();
+    }
 
     const page = await getPage();
     const years = getYears(startYear);
