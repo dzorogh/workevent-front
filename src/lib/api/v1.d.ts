@@ -116,8 +116,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Industry Slugs
-         * @description Array of industry slugs
+         * Preset Slugs
+         * @description Array of preset slugs
          */
         get: operations["industry.allSlugs"];
         put?: never;
@@ -359,6 +359,10 @@ export interface components {
                 per_page: number;
                 total: number;
             };
+        };
+        /** SlugResource */
+        SlugResource: {
+            slug: string;
         };
         /** TagResource */
         TagResource: {
@@ -603,7 +607,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: string[];
+                        data: components["schemas"]["SlugResource"][];
                     };
                 };
             };
@@ -723,7 +727,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: string[];
+                        data: components["schemas"]["SlugResource"][];
                     };
                 };
             };
