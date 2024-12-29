@@ -11,6 +11,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Cities
+         * @description Array of `CityResource`
+         */
         get: operations["city.index"];
         put?: never;
         post?: never;
@@ -180,6 +184,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Presets
+         * @description Array of `PresetResource`
+         */
         get: operations["preset.index"];
         put?: never;
         post?: never;
@@ -196,6 +204,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Preset Slugs
+         * @description Array of preset slugs
+         */
         get: operations["preset.allSlugs"];
         put?: never;
         post?: never;
@@ -212,6 +224,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Preset */
         get: operations["preset.show"];
         put?: never;
         post?: never;
@@ -444,7 +457,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string;
+                    "application/json": {
+                        data: components["schemas"]["CityResource"][];
+                    };
                 };
             };
         };
@@ -686,7 +701,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string;
+                    "application/json": {
+                        data: components["schemas"]["PresetResource"][];
+                    };
                 };
             };
         };
@@ -705,7 +722,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string;
+                    "application/json": {
+                        data: string[];
+                    };
                 };
             };
         };
