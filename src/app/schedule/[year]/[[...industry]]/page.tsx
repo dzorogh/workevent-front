@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Route } from "next";
 import { notFound } from "next/navigation";
 
-export const revalidate = 36000;
 
 type Props = {
     params: Promise<{
