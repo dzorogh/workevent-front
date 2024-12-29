@@ -34,8 +34,6 @@ const getYears = (startYear: number) => {
 const getPage = async (year: string | undefined, industry: string | undefined) => {
     let path = ['schedule', year, industry].filter(Boolean).join('/');
 
-    console.log(path);
-
     const pageResponse = await Api.GET('/v1/pages', {
         cache: 'force-cache',
         params: {
@@ -47,6 +45,16 @@ const getPage = async (year: string | undefined, industry: string | undefined) =
     return pageResponse.data?.data ?? undefined;
 }
 
+const getIndustry = async (industrySlug: string | undefined) => {
+    if (!industrySlug) return undefined;
+
+    const industryResponse = await Api.GET('/v1/industries/{industry}', {
+        params: { path: { industry: industrySlug } }
+    });
+
+    return industryResponse.data?.data ?? undefined;
+}
+
 export async function generateMetadata(
     { params }: Props,
     parent: ResolvingMetadata
@@ -55,12 +63,15 @@ export async function generateMetadata(
     const industryParams = (await params).industry;
     const industrySlug = industryParams ? industryParams[0] : undefined;
 
-
     const page = await getPage(selectedYear, industrySlug);
-    const title = 'Расписание (план) мероприятий на ' + selectedYear + ' год' + ' — ' + (await parent).title?.absolute;
+    const industry = await getIndustry(industrySlug);
+
+    const pageTitle = page ? page.metadata?.title ? page.metadata.title : page.title : 'Расписание (план) мероприятий на ' + selectedYear + ' год ' + (industry?.title ? `(${industry.title})` : '');
+
+    const fullTitle = pageTitle + ' — ' + (await parent).title?.absolute;
 
     return {
-        title: title,
+        title: fullTitle,
         description: page?.metadata?.description
     }
 }
@@ -70,13 +81,7 @@ export default async function SchedulePage({ params }: Props) {
     const industryParams = (await params).industry;
     const industrySlug = industryParams ? industryParams[0] : undefined;
 
-    const industry = industrySlug ? (await Api.GET('/v1/industries/{industry}', {
-        params: {
-            path: {
-                industry: industrySlug
-            }
-        }
-    })).data?.data : undefined;
+    const industry = await getIndustry(industrySlug);
 
     if (!industry && industrySlug) {
         notFound();
@@ -151,7 +156,7 @@ export default async function SchedulePage({ params }: Props) {
             ))}
         </div>
 
-        <H1 className="m-0 text-center">План мероприятий на {selectedYear} год {industry?.title ? `(${industry.title})` : ''}</H1>
+        <H1 className="m-0 text-center">{page?.title ? page.title : 'План мероприятий на ' + selectedYear + ' год' + (industry?.title ? ` (${industry.title})` : '')}</H1>
 
         <Calendar events={events.data?.data ?? []} />
 
