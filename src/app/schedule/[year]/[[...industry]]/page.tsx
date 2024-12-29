@@ -27,9 +27,12 @@ const getYears = (startYear: number) => {
 
 export async function generateStaticParams() {
     const years = getYears(startYear);
+    const industries = (await Api.GET('/v1/industries/slugs')).data?.data ?? [];
+    const industrySlugs = industries.map((industry) => industry.slug);
 
     return years.map((year) => ({
         year: year.toString(),
+        industry: industrySlugs,
     }))
 }
 
