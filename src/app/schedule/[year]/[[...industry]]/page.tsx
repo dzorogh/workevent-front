@@ -10,11 +10,10 @@ import { Button } from "@/components/ui/button";
 import { Route } from "next";
 import { notFound } from "next/navigation";
 
-
 type Props = {
     params: Promise<{
         year: string
-        industry: string
+        industry: string[]
     }>
 }
 
@@ -24,20 +23,24 @@ const getYears = (startYear: number) => {
     return Array.from({ length: new Date().getFullYear() - startYear + 3 }, (_, i) => i + startYear);
 }
 
-// export async function generateStaticParams() {
-//     const years = getYears(startYear);
-//     const industries = (await Api.GET('/v1/industries/slugs')).data?.data ?? [];
-//     const industrySlugs = industries.map((industry) => industry.slug);
+export async function generateStaticParams() {
+    const years = getYears(startYear);
+    const industries = (await Api.GET('/v1/industries/slugs')).data?.data ?? [];
+    const industrySlugs = industries.map((industry) => industry.slug);
 
-//     return years.flatMap((year) => industrySlugs.map((industrySlug) => ({ year: year.toString(), industry: [industrySlug] })));
-// }
+    return years.flatMap((year) => industrySlugs.map((industrySlug) => ({ year: year.toString(), industry: [industrySlug] })));
+}
 
-const getPage = async () => {
+const getPage = async (year: string | undefined, industry: string | undefined) => {
+    let path = ['schedule', year, industry].filter(Boolean).join('/');
+
+    console.log(path);
+
     const pageResponse = await Api.GET('/v1/pages', {
         cache: 'force-cache',
         params: {
             query: {
-                path: '/schedule',
+                path: `/${path}`,
             }
         }
     });
@@ -48,9 +51,13 @@ export async function generateMetadata(
     { params }: Props,
     parent: ResolvingMetadata
 ): Promise<Metadata> {
-    const year = (await params).year;
-    const page = await getPage();
-    const title = 'Расписание (план) мероприятий на ' + year + ' год' + ' — ' + (await parent).title?.absolute;
+    const selectedYear = (await params).year;
+    const industryParams = (await params).industry;
+    const industrySlug = industryParams ? industryParams[0] : undefined;
+
+
+    const page = await getPage(selectedYear, industrySlug);
+    const title = 'Расписание (план) мероприятий на ' + selectedYear + ' год' + ' — ' + (await parent).title?.absolute;
 
     return {
         title: title,
@@ -75,7 +82,8 @@ export default async function SchedulePage({ params }: Props) {
         notFound();
     }
 
-    const page = await getPage();
+    const page = await getPage(selectedYear, industrySlug);
+
     const years = getYears(startYear);
     const industries = (await Api.GET('/v1/industries')).data?.data ?? [];
     const requestParams = {
@@ -117,7 +125,7 @@ export default async function SchedulePage({ params }: Props) {
             ))}
         </div>
 
-        
+
         <div className="flex gap-2 flex-wrap items-center justify-center">
             <Button
                 variant={industrySlug === undefined ? "brand" : "muted"}
