@@ -52,7 +52,7 @@ export default async function RootLayout({
       <body
         className={`${inter.className} antialiased`}
       >
-        <NextTopLoader color="#4a4de3" shadow={false} />
+        <NextTopLoader color="#4a4de3" shadow={false} crawlSpeed={5}  />
 
         <Container className="pt-2 md:pt-5">
           <Header />
