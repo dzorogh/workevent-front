@@ -3,12 +3,11 @@ import Api from "@/lib/api";
 import { Metadata, ResolvingMetadata } from "next";
 import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
-import Calendar from "./calendar";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Route } from "next";
 import { notFound } from "next/navigation";
+import Calendar from "./calendar";
+import Industries from "./industries";
+import Years from "./years";
+import React from 'react';
 
 type Props = {
     params: Promise<{
@@ -17,10 +16,10 @@ type Props = {
     }>
 }
 
-const startYear = 2024;
 
-const getYears = (startYear: number) => {
-    return Array.from({ length: new Date().getFullYear() - startYear + 3 }, (_, i) => i + startYear);
+const getYears = () => {
+    const currentYear = new Date().getFullYear();
+    return [currentYear - 1, currentYear, currentYear + 1];
 }
 
 // export async function generateStaticParams() {
@@ -70,11 +69,16 @@ export async function generateMetadata(
 
     const fullTitle = pageTitle + ' — ' + (await parent).title?.absolute;
 
+
     return {
         title: fullTitle,
         description: page?.metadata?.description
     }
 }
+
+// Wrap the Years and Industries components with React.memo
+const MemoizedYears = React.memo(Years);
+const MemoizedIndustries = React.memo(Industries);
 
 export default async function SchedulePage({ params }: Props) {
     const selectedYear = (await params).year;
@@ -89,7 +93,7 @@ export default async function SchedulePage({ params }: Props) {
 
     const page = await getPage(selectedYear, industrySlug);
 
-    const years = getYears(startYear);
+    const years = getYears();
     const industries = (await Api.GET('/v1/industries')).data?.data ?? [];
     const requestParams = {
         date_from: new Date(Number(selectedYear), 0, 1, 0, 0, 0, 0).getTime() / 1000,
@@ -118,42 +122,11 @@ export default async function SchedulePage({ params }: Props) {
     })
 
     return <div className="flex flex-col md:gap-12 gap-6">
-        <div className="flex gap-2 flex-wrap items-center justify-center">
-            {years.map((year) => (
-                <Link
-                    key={year}
-                    href={`/schedule/${year}` as Route}
-                    className={cn(year === Number(selectedYear) && "bg-brand text-brand-foreground", year !== Number(selectedYear) && "bg-muted text-muted-foreground", "text-3xl px-4 py-2 rounded-lg hover:bg-brand hover:text-brand-foreground transition-all duration-300")}
-                >
-                    {year}
-                </Link>
-            ))}
-        </div>
 
+        <div className="bg-muted rounded-b-3xl rounded-t-lg flex flex-col overflow-hidden">
+            <Years years={years} selectedYear={selectedYear} />
 
-        <div className="flex gap-2 flex-wrap items-center justify-center">
-            <Button
-                variant={industrySlug === undefined ? "brand" : "muted"}
-                size="sm"
-                asChild
-            >
-                <Link href={`/schedule/${selectedYear}` as Route}>
-                    Все
-                </Link>
-            </Button>
-
-            {industries.map((industry: any) => (
-                <Button
-                    variant={industry.slug === industrySlug ? "brand" : "muted"}
-                    size="sm"
-                    key={industry.id}
-                    asChild
-                >
-                    <Link href={`/schedule/${selectedYear}/${industry.slug}` as Route}>
-                        {industry.title}
-                    </Link>
-                </Button>
-            ))}
+            <Industries industries={industries} industrySlug={industrySlug} homeRoute={`/schedule/${selectedYear}`} />
         </div>
 
         <H1 className="m-0 text-center">{page?.title ? page.title : 'План мероприятий на ' + selectedYear + ' год' + (industry?.title ? ` (${industry.title})` : '')}</H1>

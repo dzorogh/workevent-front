@@ -19,7 +19,7 @@ const buttonVariants = cva(
           "ring-1 ring-inset ring-brand bg-background text-brand hover:bg-brand-background-dark active:bg-brand-background-darker",
         secondary:
           "ring-1 ring-inset ring-secondary bg-background text-secondary hover:bg-secondary active:bg-secondary",
-        brand:
+        brand: 
           "text-brand-foreground bg-gradient-to-r from-brand to-brand-dark ",
         muted:
           "ring-1 ring-inset ring-muted-foreground-dark bg-background text-muted-foreground-dark hover:bg-muted active:bg-muted",
@@ -28,7 +28,7 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-9 px-4 py-2 rounded-full ",
-        sm: "h-7 px-4 rounded-full text-xs",
+        sm: "h-7 md:px-4 px-3 rounded-full text-xs",
         lg: "h-10 px-8 rounded-full ",
         xl: "h-12 px-10 rounded-full text-lg [&_svg]:size-6",
         icon: "h-9 w-9 rounded-full ",
