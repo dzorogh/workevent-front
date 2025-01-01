@@ -41,6 +41,10 @@ const menu = [
             title: 'Контакты',
             href: '/',
         },
+        {
+            title: 'Блог',
+            href: '/blog',
+        },
     ],
     [
         {
