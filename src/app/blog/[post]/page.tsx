@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
+import Image from 'next/image'
 
 const getPost = async (id: number) => {
     const response = await Api.GET(`/v1/posts/{post}`, {
@@ -43,7 +44,9 @@ export default async function BlogPostPage({ params }: { params: { post: string 
             <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg">
                 <h1 className="text-4xl font-bold mb-4">{post?.data?.title}</h1>
                 <p className="text-gray-600 mb-4">Опубликовано {new Date(post?.data?.created_at || '').toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                <img src={post?.data?.cover} alt="Blog Post" className="w-full h-64 object-cover rounded-lg mb-4" />
+                <div className="relative aspect-video w-full border-secondary border rounded-lg overflow-hidden bg-muted">
+                    <Image src={post?.data?.cover || ''} alt="Blog Post" sizes="1600px" fill />
+                </div>
                 <div className="prose max-w-none text-md">
                     <Content />
                 </div>
