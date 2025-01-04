@@ -15,6 +15,8 @@ import EventCard from "@/components/event-card";
 import { Route } from "next";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Event, WithContext } from 'schema-dts'
+
 
 type Props = {
     params: Promise<{ id: string }>
@@ -101,10 +103,42 @@ export default async function EventPage({ params }: Props) {
         baseUrl: import.meta.url,
     })
 
+    const jsonLd: WithContext<Event> = {
+        '@context': 'https://schema.org',
+        '@type': 'Event',
+        name: event.title,
+        description: event.description ?? event.title,
+        startDate: event.start_date,
+        endDate: event.end_date,
+        location: event.venue ? {
+            '@type': 'Place',
+            name: event.venue.title,
+            address: event.venue.address ?? event.city?.title,
+        } : event.city ? {
+            '@type': 'Place',
+            name: event.city.title,
+        } : undefined,
+        image: event.cover,
+        url: `https://workevent.ru/event/${createSlugWithId(event.title, event.id)}`,
+        offers: {
+            '@type': 'Offer',
+            price: event.tariffs?.sort((a, b) => a.price - b.price)[0]?.price,
+            priceCurrency: 'RUB',
+        },
+        eventStatus: 'https://schema.org/EventScheduled',
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    }
+
     return (
         <div className="flex flex-col gap-16">
             <div className="flex flex-col gap-8">
-                {/* D */}
+                {/* Add JSON-LD to your page */}
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                />
+
+                {/* Dates */}
                 <div className="flex gap-x-4 gap-y-2 md:flex-row flex-col md:text-lg">
                     <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
                         <IconCalendar className="w-6 h-6 text-brand" />
