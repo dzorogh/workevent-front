@@ -27,9 +27,15 @@ export const revalidate = false;
 export async function generateStaticParams() {
     const years = getYears();
     const industries = (await Api.GET('/v1/industries/slugs')).data?.data ?? [];
-    const industrySlugs = industries.map((industry) => industry.slug);
+    const industrySlugs = [...industries.map((industry) => industry.slug), null];
 
-    return years.flatMap((year) => industrySlugs.map((industrySlug) => ({ year: year.toString(), industry: [industrySlug] })));
+    return years.flatMap(
+        year => industrySlugs.map(
+            industrySlug => (
+                { year: year.toString(), industry: industrySlug ? [industrySlug] : [] }
+            )
+        )
+    );
 }
 
 const getPage = async (year: string | undefined, industry: string | undefined) => {
