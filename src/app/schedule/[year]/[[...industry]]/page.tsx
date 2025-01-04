@@ -22,13 +22,15 @@ const getYears = () => {
     return [currentYear - 1, currentYear, currentYear + 1];
 }
 
-// export async function generateStaticParams() {
-//     const years = getYears(startYear);
-//     const industries = (await Api.GET('/v1/industries/slugs')).data?.data ?? [];
-//     const industrySlugs = industries.map((industry) => industry.slug);
+export const revalidate = false;
 
-//     return years.flatMap((year) => industrySlugs.map((industrySlug) => ({ year: year.toString(), industry: [industrySlug] })));
-// }
+export async function generateStaticParams() {
+    const years = getYears();
+    const industries = (await Api.GET('/v1/industries/slugs')).data?.data ?? [];
+    const industrySlugs = industries.map((industry) => industry.slug);
+
+    return years.flatMap((year) => industrySlugs.map((industrySlug) => ({ year: year.toString(), industry: [industrySlug] })));
+}
 
 const getPage = async (year: string | undefined, industry: string | undefined) => {
     let path = ['schedule', year, industry].filter(Boolean).join('/');

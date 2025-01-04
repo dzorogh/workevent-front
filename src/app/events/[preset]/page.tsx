@@ -14,7 +14,7 @@ type Props = {
     params: Promise<{ preset: string }>
 }
 
-export const revalidate = 36000;
+export const revalidate = false;
 
 export async function generateStaticParams() {
     const presets = await Api.GET('/v1/presets/slugs')

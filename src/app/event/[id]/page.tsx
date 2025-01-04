@@ -20,7 +20,7 @@ type Props = {
     params: Promise<{ id: string }>
 }
 
-export const revalidate = 36000;
+export const revalidate = false;
 
 export async function generateStaticParams() {
     const events = await Api.GET('/v1/events/ids')
