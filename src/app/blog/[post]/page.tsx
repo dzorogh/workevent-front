@@ -7,6 +7,7 @@ import * as runtime from 'react/jsx-runtime'
 import Image from 'next/image'
 import { getIdFromSlug, createSlugWithId } from '@/lib/utils';
 import { notFound, permanentRedirect } from 'next/navigation';
+import H1 from '@/components/ui/h1';
 
 const getPost = async (id: number) => {
     const response = await Api.GET(`/v1/posts/{post}`, {
@@ -53,9 +54,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ post:
                 </Button>
             </div>
 
-            <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg">
-                <h1 className="text-4xl font-bold mb-4">{postData?.data?.title}</h1>
-                <p className="text-gray-600 mb-4">Опубликовано {new Date(postData?.data?.created_at || '').toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+            <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg flex flex-col gap-4">
+                <H1 className="">{postData?.data?.title}</H1>
+                <div className="text-sm text-muted-foreground">Опубликовано {new Date(postData?.data?.created_at || '').toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
                 <div className="relative aspect-video w-full border-secondary border rounded-lg overflow-hidden bg-muted">
                     <Image src={postData?.data?.cover || ''} alt="Blog Post" sizes="1600px" fill />
                 </div>
