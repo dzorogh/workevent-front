@@ -1,5 +1,5 @@
 import React from 'react';
-import Api from '@/lib/api';
+import { Api } from "@/lib/api"
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { compile, run } from '@mdx-js/mdx'

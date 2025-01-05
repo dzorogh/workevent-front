@@ -1,5 +1,5 @@
 import H1 from "@/components/ui/h1";
-import Api from "@/lib/api";
+import { Api } from "@/lib/api";
 import { Metadata, ResolvingMetadata } from "next";
 import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'

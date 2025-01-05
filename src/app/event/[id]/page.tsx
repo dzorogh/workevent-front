@@ -1,4 +1,4 @@
-import Api from "@/lib/api";
+import { Api } from "@/lib/api";
 import { Metadata, ResolvingMetadata } from "next";
 import { IconCalendar, IconMapPin, IconWorld, IconPhone, IconMail } from "@tabler/icons-react";
 import EventCoverImage from "@/components/event-cover-image";

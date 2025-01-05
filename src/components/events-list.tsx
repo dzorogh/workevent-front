@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import EventCard from "@/components/event-card";
 import EventCardGrid from "@/components/event-card-grid";
-import Api from "@/lib/api";
+import { Api } from "@/lib/api";
 import LoadMoreButton from "@/components/load-more-button";
 import EventCardSkeleton from "@/components/event-card-skeleton";
 import EventsNotFound from "@/components/events-not-found";

@@ -1,5 +1,5 @@
 import React from 'react';
-import Api from '@/lib/api';
+import { Api } from "@/lib/api"
 import H1 from '@/components/ui/h1';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -10,6 +10,8 @@ const getPosts = async () => {
     const response = await Api.GET('/v1/posts');
     return response.data;
 }
+
+export const revalidate = false;
 
 export default async function BlogPage() {
     const posts = await getPosts();

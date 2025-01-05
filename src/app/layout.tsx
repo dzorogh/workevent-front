@@ -6,7 +6,7 @@ import Container from '@/components/ui/container'
 import "@/app/globals.css";
 import React, { Suspense } from "react";
 import Subscribe from "@/app/subscribe";
-import Api from "@/lib/api";
+import { Api } from "@/lib/api";
 import YandexMetrika from "@/components/yandex-metrika";
 import YandexMetrikaCounter from "@/components/yandex-metrika-counter";
 import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -17,6 +17,8 @@ const inter = Inter({
   subsets: ['latin', 'cyrillic'],
   display: 'swap',
 })
+
+export const revalidate = false;
 
 const getPage = async () => {
   const pageResponse = await Api.GET('/v1/pages', {

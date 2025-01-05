@@ -1,11 +1,12 @@
-import Api from "@/lib/api";
+import { Api } from "@/lib/api";
 import { Suspense } from "react";
 import EventsList from "@/components/events-list";
 import Search from "@/components/search";
 import { EventIndexParametersQuery } from "@/lib/api/types";
-import { permanentRedirect } from "next/navigation";
 
 type SearchParams = NonNullable<EventIndexParametersQuery>;
+
+export const revalidate = false;
 
 async function getEvents(searchParams: SearchParams) {
     return await Api.GET('/v1/events', {

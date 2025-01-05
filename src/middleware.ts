@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import Api from '@/lib/api'
+import { Api } from "@/lib/api"
 
 export async function middleware(request: NextRequest) {
     const response = await Api.GET('/v1/events', {

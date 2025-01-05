@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Api from '@/lib/api';
+import { Api } from "@/lib/api"
 
 async function getPresets() {
     const response = await Api.GET('/v1/presets');

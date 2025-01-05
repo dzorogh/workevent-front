@@ -1,4 +1,4 @@
-import Api from "@/lib/api";
+import { Api } from "@/lib/api";
 import { Suspense } from "react";
 import EventsList from "@/components/events-list";
 import Search from "@/components/search";

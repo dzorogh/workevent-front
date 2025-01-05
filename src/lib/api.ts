@@ -2,7 +2,7 @@ import { env } from '@/config/env';
 import type { paths } from '@/lib/api/v1';
 import createClient from "openapi-fetch";
 
-const api = createClient<paths>({
+export const Api = createClient<paths>({
   baseUrl: env.apiUrl,
   headers: {
     'Content-Type': 'application/json',
@@ -11,5 +11,3 @@ const api = createClient<paths>({
   },
   cache: 'force-cache'
 })
-
-export default api;

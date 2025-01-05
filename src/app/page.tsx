@@ -2,8 +2,9 @@ import Search from "@/components/search";
 import Presets from "@/app/presets";
 import EventsByIndustry from "@/app/events-by-industry";
 import Recommendations from "@/app/recommendations";
-import Api from "@/lib/api";
-import { Metadata } from "next";
+import { Api } from "@/lib/api";
+
+export const revalidate = false;
 
 async function getData() {
   const [eventsResponse, recommendationsResponse, industriesResponse, citiesResponse] = await Promise.all([

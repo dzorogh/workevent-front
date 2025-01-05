@@ -14,7 +14,7 @@ import { Overlay } from "@/components/ui/overlay";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { IconCaretDownFilled } from "@tabler/icons-react";
-import {IndustryResource} from "@/lib/api/types";
+import { IndustryResource } from "@/lib/api/types";
 
 const FormSchema = z.object({
     industries: z.array(z.string()).min(1, 'Выберите хотя бы одну отрасль'),
