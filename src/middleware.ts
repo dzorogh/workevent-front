@@ -3,6 +3,10 @@ import type { NextRequest } from 'next/server'
 import { Api } from "@/lib/api"
 
 export async function middleware(request: NextRequest) {
+    if (request.nextUrl.searchParams.size === 0) {
+        return NextResponse.next()
+    }
+
     const response = await Api.GET('/v1/events', {
         params: {
             query: {

@@ -11,6 +11,11 @@ const nextConfig: NextConfig = withBundleAnalyzer({
     typedRoutes: true,
     optimizePackageImports: ['zod', '@radix-ui', 'yet-another-react-lightbox', 'react-day-picker', 'date-fns'],
   },
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
   images: {
     minimumCacheTTL: 60,
     remotePatterns: [
