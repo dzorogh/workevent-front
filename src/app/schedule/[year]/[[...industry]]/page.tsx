@@ -42,7 +42,6 @@ const getPage = async (year: string | undefined, industry: string | undefined) =
     let path = ['schedule', year, industry].filter(Boolean).join('/');
 
     const pageResponse = await Api.GET('/v1/pages', {
-        cache: 'force-cache',
         params: {
             query: {
                 path: `/${path}`,

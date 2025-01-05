@@ -20,7 +20,6 @@ const inter = Inter({
 
 const getPage = async () => {
   const pageResponse = await Api.GET('/v1/pages', {
-    cache: 'force-cache',
     params: {
       query: {
         path: '/',

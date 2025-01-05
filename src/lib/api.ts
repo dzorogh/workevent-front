@@ -8,7 +8,8 @@ const api = createClient<paths>({
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
-  }
+  },
+  cache: 'force-cache'
 })
 
 export default api;

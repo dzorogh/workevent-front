@@ -3,10 +3,7 @@ import Link from "next/link";
 import Api from '@/lib/api';
 
 async function getPresets() {
-    const response = await Api.GET('/v1/presets', {
-        cache: 'force-cache',
-        revalidate: false,
-    });
+    const response = await Api.GET('/v1/presets');
     return response.data?.data ?? [];
 }
 

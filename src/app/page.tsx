@@ -8,8 +8,6 @@ import { Metadata } from "next";
 async function getData() {
   const [eventsResponse, recommendationsResponse, industriesResponse, citiesResponse] = await Promise.all([
     Api.GET('/v1/events', {
-      cache: 'force-cache',
-      revalidate: false,
       params: {
         query: {
           per_page: 4
@@ -17,8 +15,6 @@ async function getData() {
       }
     }),
     Api.GET('/v1/events', {
-      cache: 'force-cache',
-      revalidate: false,
       params: {
         query: {
           per_page: 4,
@@ -26,16 +22,8 @@ async function getData() {
         }
       }
     }),
-    Api.GET('/v1/industries',
-      {
-        cache: 'force-cache',
-        revalidate: false,
-      }
-    ),
-    Api.GET('/v1/cities', {
-      cache: 'force-cache',
-      revalidate: false,
-    })
+    Api.GET('/v1/industries'),
+    Api.GET('/v1/cities')
   ]);
   return {
     events: eventsResponse.data?.data ?? [],
