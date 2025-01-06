@@ -44,6 +44,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ post:
         baseUrl: import.meta.url,
     })
 
+    const createdAt = postData?.data?.created_at ? new Date(postData.data.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+
     return (
         <div className="flex flex-col gap-10">
             <div className="flex justify-between items-center">
@@ -56,7 +58,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ post:
 
             <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg flex flex-col gap-4">
                 <H1 className="">{postData?.data?.title}</H1>
-                <div className="text-sm text-muted-foreground">Опубликовано {new Date(postData?.data?.created_at || '').toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+                <div className="text-sm text-muted-foreground">Опубликовано {createdAt}</div>
                 <div className="relative aspect-video w-full border-secondary border rounded-lg overflow-hidden bg-muted">
                     <Image src={postData?.data?.cover || ''} alt="Blog Post" sizes="1600px" fill />
                 </div>
