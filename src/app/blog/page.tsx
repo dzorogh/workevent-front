@@ -27,7 +27,7 @@ export default async function BlogPage() {
                         </div>
                         <div className="flex flex-col gap-4">
                             <h2 className="text-2xl font-semibold mb-0">{post.title}</h2>
-                            <div className="text-sm text-muted-foreground">{new Date(post.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+                            <div className="text-sm text-muted-foreground">{post.created_at ? new Date(post.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Дата неизвестна'}</div>
                             <div>
                                 <Button variant="brand">
                                     Читать
