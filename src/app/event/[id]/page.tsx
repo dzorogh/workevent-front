@@ -16,6 +16,7 @@ import { Route } from "next";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Event, WithContext } from 'schema-dts'
+import removeMarkdown from "remove-markdown";
 
 
 type Props = {
@@ -75,17 +76,37 @@ const getEventData = async (params: Props['params']) => {
     };
 }
 
+const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+
+    // Find the last space before maxLength
+    const lastSpace = text.lastIndexOf(' ', maxLength);
+    // If no space found, just slice at maxLength
+    const slicedText = lastSpace > 0 ? text.slice(0, lastSpace) : text.slice(0, maxLength);
+
+    return `${slicedText}...`;
+};
+
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     const { event } = await getEventData(params);
 
-    console.log(await parent);
     const previousTitle = (await parent).title?.absolute;
+    const title = event?.title + ' — ' + previousTitle;
+    const description = truncateText(removeMarkdown(event?.description ?? ''), 150);
 
     return {
-        title: event?.title + ' — ' + previousTitle,
-        description: event?.description,
-        // TODO: use metadata from API
-        // TODO: Add open graph and twitter metadata
+        title: title,
+        description: description,
+        openGraph: {
+            title: title,
+            description: description,
+            images: [event?.cover],
+        },
+        twitter: {
+            title: title,
+            description: description,
+            images: [event?.cover],
+        }
     };
 }
 

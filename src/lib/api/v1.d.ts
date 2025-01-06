@@ -360,11 +360,11 @@ export interface components {
         PostResource: {
             id: number;
             title: string;
-            content: string;
+            content?: string;
             cover: string | "";
-            created_at: string;
-            updated_at: string;
-            deleted_at: string;
+            created_at: string | null | Record<string, never>;
+            updated_at: string | null | Record<string, never>;
+            deleted_at?: string | null;
         };
         /** PresetFiltersResource */
         PresetFiltersResource: {
