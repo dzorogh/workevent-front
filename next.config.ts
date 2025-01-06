@@ -56,6 +56,15 @@ const nextConfig: NextConfig = withBundleAnalyzer({
 
     return config
   },
+  async redirects() {
+    return [
+      {
+        source: '/schedule',
+        destination: '/schedule/2025',
+        permanent: true,
+      },
+    ]
+  },
 });
 
 export default nextConfig;
