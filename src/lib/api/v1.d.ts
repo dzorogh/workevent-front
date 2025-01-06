@@ -362,9 +362,9 @@ export interface components {
             title: string;
             content?: string;
             cover: string | "";
-            created_at: string | null | Record<string, never>;
-            updated_at: string | null | Record<string, never>;
-            deleted_at?: string | null;
+            created_at?: string;
+            updated_at?: string;
+            deleted_at?: string;
         };
         /** PresetFiltersResource */
         PresetFiltersResource: {
