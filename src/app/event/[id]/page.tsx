@@ -150,6 +150,8 @@ export default async function EventPage({ params }: Props) {
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     }
 
+    const additionalIndustries = event.industries?.filter(industry => industry.id !== event.industry?.id).map(industry => industry.title).join(', ');
+
     return (
         <div className="flex flex-col gap-16">
             <div className="flex flex-col gap-8">
@@ -252,6 +254,7 @@ export default async function EventPage({ params }: Props) {
                                     <div className="text-sm">
                                         <span className="text-muted-foreground">Индустрия:</span>{' '}
                                         <span>{event.industry.title}</span>
+                                        {additionalIndustries && (<>, <span>{additionalIndustries}</span></>)}
                                     </div>
                                 )}
                                 {event.tariffs && event.tariffs.length > 0 && (
@@ -319,12 +322,12 @@ export default async function EventPage({ params }: Props) {
                 {/* Contacts */}
                 <div className="flex flex-col gap-2">
                     <span className="text-sm text-muted-foreground">Контакты организатора</span>
-                    <div className="flex flex-row gap-4">
+                    <div className="flex flex-row gap-x-4 gap-y-2 flex-wrap">
                         {event.website && (
                             <Button
                                 asChild
                                 variant="brand"
-                                size="xl"
+                                size="lg"
                             >
                                 <Link
                                     className="flex items-center gap-2"
@@ -341,7 +344,7 @@ export default async function EventPage({ params }: Props) {
                             <Button
                                 asChild
                                 variant="brand"
-                                size="xl"
+                                size="lg"
                             >
                                 <Link
                                     className="flex items-center gap-2"
@@ -356,7 +359,7 @@ export default async function EventPage({ params }: Props) {
                             <Button
                                 asChild
                                 variant="brand"
-                                size="xl"
+                                size="lg"
                             >
                                 <Link
                                     className="flex items-center gap-2"

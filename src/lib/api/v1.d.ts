@@ -306,6 +306,7 @@ export interface components {
             city?: components["schemas"]["CityResource"];
             industry_id: number;
             industry?: components["schemas"]["CityResource"];
+            industries?: components["schemas"]["IndustryResource"][];
             tags?: components["schemas"]["TagResource"][];
             metadata?: components["schemas"]["MetadataResource"];
             tariffs?: components["schemas"]["TariffResource"][];
