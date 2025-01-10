@@ -203,7 +203,7 @@ export default async function EventPage({ params }: Props) {
                                     <AppLink
                                         href={event.website as Route}
                                         target="_blank"
-                                        rel="noopener noreferrer"
+                                        rel="noopener noreferrer nofollow"
                                         className="flex items-center gap-3"
                                     >
                                         <IconWorld className="w-8 h-8 text-secondary" />
@@ -333,7 +333,7 @@ export default async function EventPage({ params }: Props) {
                                     className="flex items-center gap-2"
                                     href={event.website as Route}
                                     target="_blank"
-                                    rel="noopener noreferrer"
+                                    rel="noopener noreferrer nofollow"
                                 >
                                     <IconWorld />
                                     <span>{new URL(event.website).hostname}</span>
