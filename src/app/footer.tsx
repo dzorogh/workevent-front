@@ -13,7 +13,7 @@ const menu = [
         },
         {
             title: 'Расписание',
-            href: '/schedule',
+            href: '/schedule/2025',
         },
         {
             title: 'Компании',
