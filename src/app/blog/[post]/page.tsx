@@ -8,6 +8,13 @@ import Image from 'next/image'
 import { getIdFromSlug, createSlugWithId } from '@/lib/utils';
 import { notFound, permanentRedirect } from 'next/navigation';
 import H1 from '@/components/ui/h1';
+import { Metadata } from 'next';
+import { truncateText } from '@/lib/utils';
+import removeMarkdown from "remove-markdown";
+
+type Props = {
+    params: Promise<{ post: string }>
+};
 
 const getPost = async (id: number) => {
     const response = await Api.GET(`/v1/posts/{post}`, {
@@ -18,6 +25,18 @@ const getPost = async (id: number) => {
         },
     });
     return response.data;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { post } = await params;
+    const postData = await getPost(Number(getIdFromSlug(post)));
+
+    const description = truncateText(removeMarkdown(postData?.data?.content ?? ''), 150);
+
+    return {
+        title: postData?.data?.title + ' — Workevent',
+        description: description,
+    };
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ post: string }> }) {

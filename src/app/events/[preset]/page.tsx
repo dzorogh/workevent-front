@@ -49,13 +49,13 @@ async function getEvents(presetParams: EventIndexParametersQuery) {
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     const preset = await getPreset((await params).preset);
 
-    const previousTitle = (await parent).title?.absolute;
     const title = preset?.metadata?.title ?? preset?.title;
-    const seoYear = getSeoYear();
+
+    const description = preset?.metadata?.description ?? `Подборка мероприятий «${preset?.title}» на сайте Workevent с поиском по датам`;
 
     return {
-        title: title + ' ' + seoYear + ' — ' + previousTitle,
-        description: preset?.metadata?.description ?? preset?.title,
+        title: title + ' — Workevent',
+        description: description,
     };
 }
 
@@ -104,7 +104,7 @@ export default async function PresetPage({ params }: Props) {
                 initialParams={presetParams}
             />
 
-            <H1 className="mt-0">{preset.metadata?.h1 ?? preset.title}</H1>
+            <H1 className="mt-0">{preset.metadata?.h1 ?? preset.title ?? 'Поиск мероприятий'}</H1>
 
             <Suspense>
                 <EventsList

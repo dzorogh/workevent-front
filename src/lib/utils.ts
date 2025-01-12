@@ -39,3 +39,14 @@ export function plural(forms: string[], n: number): string {
   }
   return forms[idx] || '';
 }
+
+export function truncateText(text: string, maxLength: number) {
+  if (text.length <= maxLength) return text;
+
+  // Find the last space before maxLength
+  const lastSpace = text.lastIndexOf(' ', maxLength);
+  // If no space found, just slice at maxLength
+  const slicedText = lastSpace > 0 ? text.slice(0, lastSpace) : text.slice(0, maxLength);
+
+  return `${slicedText}...`;
+};

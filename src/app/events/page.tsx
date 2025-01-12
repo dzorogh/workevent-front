@@ -3,8 +3,9 @@ import { Suspense } from "react";
 import EventsList from "@/components/events-list";
 import Search from "@/components/search";
 import { EventIndexParametersQuery } from "@/lib/api/types";
-
+import { Metadata } from "next";
 type SearchParams = NonNullable<EventIndexParametersQuery>;
+import H1 from "@/components/ui/h1";
 
 export const revalidate = false;
 
@@ -21,6 +22,22 @@ async function getEvents(searchParams: SearchParams) {
             }
         }
     });
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+    return {
+        title: 'Каталог и поиск мероприятий — Workevent',
+        description: 'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
+        openGraph: {
+            title: 'Каталог мероприятий — Workevent',
+            description: 'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
+            url: `${process.env.NEXT_PUBLIC_SITE_URL}/events`,
+        },
+        twitter: {
+            title: 'Каталог мероприятий — Workevent',
+            description: 'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
+        }
+    }
 }
 
 export default async function Events({
@@ -44,8 +61,10 @@ export default async function Events({
     const cities = await Api.GET('/v1/cities').then(res => res.data);
 
     return (
-        <div className="flex flex-col gap-20">
+        <div className="flex flex-col gap-10">
             <Search industries={industries?.data ?? []} cities={cities?.data ?? []} initialParams={initialParams} />
+
+            <H1 className="mt-0">Поиск мероприятий</H1>
 
             <Suspense>
                 <EventsList initialEvents={initialEvents} initialMeta={initialMeta} params={initialParams} perPage={8} />

@@ -41,6 +41,7 @@ export default function EventCard({ event }: EventCardProps) {
             <Link href={`/event/${createSlugWithId(event.title, event.id)}` as Route} className="block">
                 <div className="flex flex-col gap-5">
                     <EventCoverImage cover={event.cover} title={event.title} />
+
                     <div className="flex flex-col gap-2">
                         <div className="text-muted-foreground-dark">{formatDates(event)}</div>
                         <div className="font-semibold text-lg">{event.title}</div>

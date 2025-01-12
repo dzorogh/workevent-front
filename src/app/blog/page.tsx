@@ -6,6 +6,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { createSlugWithId } from '@/lib/utils';
 import { Route } from 'next';
+import { Metadata } from 'next';
+import EventCoverImage from '@/components/event-cover-image';
 
 const getPosts = async () => {
     const response = await Api.GET('/v1/posts');
@@ -13,6 +15,13 @@ const getPosts = async () => {
 }
 
 export const revalidate = false;
+
+export async function generateMetadata(): Promise<Metadata> {
+    return {
+        title: 'Блог и новости проекта Workevent',
+        description: 'Блог на сайте Workevent. Статьи о деловых мероприятиях, полезные советы для организаторов, отзывы участников, новости и обзоры',
+    };
+}
 
 export default async function BlogPage() {
     const posts = await getPosts();
@@ -23,7 +32,7 @@ export default async function BlogPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {posts?.data?.map(post => (
                     <Link href={`/blog/${createSlugWithId(post.title, post.id)}` as Route} key={post.id} className="rounded-lg flex flex-col gap-4">
-                        <Image src={post.cover} alt={post.title} className="aspect-video object-contain border-secondary border rounded-lg overflow-hidden bg-muted" width={800} height={450} />
+                        <EventCoverImage cover={post.cover} title={post.title} />
 
                         <div className="flex flex-col gap-4">
                             <h2 className="text-2xl font-semibold mb-0">{post.title}</h2>
