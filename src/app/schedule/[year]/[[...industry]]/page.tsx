@@ -72,14 +72,23 @@ export async function generateMetadata(
     const page = await getPage(selectedYear, industrySlug);
     const industry = await getIndustry(industrySlug);
 
-    const pageTitle = page ? page.metadata?.title ? page.metadata.title : page.title : 'Расписание (план) мероприятий на ' + selectedYear + ' год ' + (industry?.title ? `(${industry.title})` : '');
+    const pageTitle = page ? page.metadata?.title ? page.metadata.title : page.title : 'План мероприятий на ' + selectedYear + ' год ' + (industry?.title ? `(${industry.title})` : '');
+    const description = page?.metadata?.description ?? 'Календарь мероприятий на ' + selectedYear + ' год для индустрии "' + (industry?.title ? industry.title : '') + '" на сайте Workevent. План конференций, форумов, выставок, семинаров, тренингов, мастер-классов, лекций, круглых столов, встреч, презентаций, концертов, шоу, фестивалей, спортивных и развлекательных мероприятий';
 
-    const fullTitle = pageTitle + ' — ' + (await parent).title?.absolute;
-
+    const fullTitle = pageTitle + ' — Workevent';
 
     return {
         title: fullTitle,
-        description: page?.metadata?.description
+        description: description,
+        openGraph: {
+            title: fullTitle,
+            description: description,
+            url: `${process.env.NEXT_PUBLIC_SITE_URL}/schedule/${selectedYear}/${industrySlug ? industrySlug : ''}`,
+        },
+        twitter: {
+            title: fullTitle,
+            description: description,
+        }
     }
 }
 
