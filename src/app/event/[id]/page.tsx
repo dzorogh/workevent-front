@@ -87,11 +87,10 @@ const truncateText = (text: string, maxLength: number) => {
     return `${slicedText}...`;
 };
 
-export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { event } = await getEventData(params);
 
-    const previousTitle = (await parent).title?.absolute;
-    const title = event?.title + ' — ' + previousTitle;
+    const title = event?.title + ' — Workevent';
     const description = truncateText(removeMarkdown(event?.description ?? ''), 150);
 
     return {
