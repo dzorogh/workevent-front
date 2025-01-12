@@ -33,9 +33,9 @@ export default function GallerySection({ images, eventTitle }: GallerySectionPro
     const [open, setOpen] = React.useState(false);
     const [imageIndex, setImageIndex] = React.useState(0);
 
-    const slides = images.map(image => ({
+    const slides = images.map((image, index) => ({
         src: image,
-        alt: `${eventTitle} фото`,
+        alt: `${eventTitle} фото ${index + 1}`,
     }));
 
     return (

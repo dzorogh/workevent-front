@@ -103,7 +103,7 @@ export default function Footer() {
                             height={167}
                             src="/footer.svg"
                             unoptimized={true}
-                            alt="Footer background"
+                            alt="Workevent Footer background"
                         />
                     </div>
                 </div>

@@ -71,7 +71,7 @@ export default function Subscribe({ industries }: { industries: IndustryResource
         <div className="flex flex-col gap-8 px-10 py-12 justify-center bg-gradient-to-r from-brand to-brand-dark rounded-lg text-brand-foreground bg-cover bg-center relative">
             <Image
                 src="/subscribe-bg.svg"
-                alt=""
+                alt="Workevent Subscribe background"
                 fill
                 className="absolute !right-0 !left-auto !w-auto top-0 mix-blend-screen z-0"
             />
