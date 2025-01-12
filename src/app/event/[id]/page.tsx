@@ -101,6 +101,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
             title: title,
             description: description,
             images: [event?.cover],
+            url: `${process.env.NEXT_PUBLIC_SITE_URL}/event/${createSlugWithId(event.title, event.id)}`,
         },
         twitter: {
             title: title,
