@@ -5,7 +5,7 @@ import { EventResource } from '@/lib/api/types';
 import { Route } from 'next';
 import { createSlugWithId } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-    
+
 interface EventCardProps {
     event: EventResource;
 }
@@ -40,9 +40,7 @@ export default function EventCard({ event }: EventCardProps) {
         <div>
             <Link href={`/event/${createSlugWithId(event.title, event.id)}` as Route} className="block">
                 <div className="flex flex-col gap-5">
-                    <div className="relative aspect-video w-full border-secondary border rounded-lg overflow-hidden bg-muted">
-                        <EventCoverImage cover={event.cover} title={event.title} />
-                    </div>
+                    <EventCoverImage cover={event.cover} title={event.title} />
                     <div className="flex flex-col gap-2">
                         <div className="text-muted-foreground-dark">{formatDates(event)}</div>
                         <div className="font-semibold text-lg">{event.title}</div>

@@ -11,40 +11,23 @@ interface EventCoverImageProps {
 }
 
 export default function EventCoverImage({ cover, title, size = 'sm', priority = false }: EventCoverImageProps) {
-    const isSvg = typeof cover === 'string' ? cover.endsWith('.svg') : false;
-
     return (
-        <div className="relative aspect-video w-full border-secondary border rounded-lg overflow-hidden bg-muted">
+        <>
             {cover ?
                 <>
-                    {/* Blurred background image */}
-                    {!isSvg && <Image
-                        src={cover}
-                        alt={title}
-                        className="object-cover invisible aspect-video blur scale-125 !-top-0.5"
-                        onLoad={(e) => (e.target as HTMLImageElement).classList.remove('invisible')}
-                        sizes={size === 'sm' ? '300px' : '1600px'}
-                        priority={priority}
-                        quality={10}
-                        fill />}
-
-                    {/* Main image */}
                     <Image
+                        priority={priority}
                         src={cover}
                         alt={title}
-                        className={`${isSvg ? 'p-4' : ''} invisible object-contain`}
-                        onLoad={(e) => (e.target as HTMLImageElement).classList.remove('invisible')}
-                        sizes={size === 'sm' ? '300px' : '1600px'}
-                        priority={priority}
-                        quality={80}
-                        fill />
+                        className="aspect-video object-contain border-secondary border rounded-lg overflow-hidden bg-muted"
+                        width={size === 'sm' ? 16*20 : 16*100}
+                        height={size === 'sm' ? 9*20 : 9*100}
+                    />
                 </>
                 : <div className="flex items-center justify-center absolute inset-0">
                     <Logo className="aspect-video *:fill-border" />
                 </div>
             }
-
-
-        </div>
+        </>
     )
 } 

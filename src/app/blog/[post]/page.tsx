@@ -59,9 +59,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ post:
             <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg flex flex-col gap-4">
                 <H1 className="">{postData?.data?.title}</H1>
                 <div className="text-sm text-muted-foreground">Опубликовано {createdAt}</div>
-                <div className="relative aspect-video w-full border-secondary border rounded-lg overflow-hidden bg-muted">
-                    <Image src={postData?.data?.cover || ''} alt="Blog Post" sizes="1600px" fill />
-                </div>
+                <Image src={postData?.data?.cover} alt={postData?.data?.title} className="aspect-video object-contain border-secondary border rounded-lg overflow-hidden bg-muted" width={800} height={450} />
                 <div className="prose max-w-none text-md">
                     <Content />
                 </div>
