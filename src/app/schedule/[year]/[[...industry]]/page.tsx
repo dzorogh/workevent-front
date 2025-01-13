@@ -92,10 +92,6 @@ export async function generateMetadata(
     }
 }
 
-// Wrap the Years and Industries components with React.memo
-const MemoizedYears = React.memo(Years);
-const MemoizedIndustries = React.memo(Industries);
-
 export default async function SchedulePage({ params }: Props) {
     const selectedYear = (await params).year;
     const industryParams = (await params).industry;
