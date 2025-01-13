@@ -32,7 +32,7 @@ export default function Calendar({ events }: { events: EventResource[] }) {
     return (
         <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4 relative">
-                <div className="grid grid-cols-1 auto-rows-fr md:grid-cols-3 gap-4">
+                <div className="flex flex-col md:grid auto-rows-fr md:grid-cols-3 gap-4">
                     {months.map((month) => (
                         <div key={month.name} className="flex flex-col bg-muted p-4 rounded-lg">
                             <div className="flex flex-col gap-2">
