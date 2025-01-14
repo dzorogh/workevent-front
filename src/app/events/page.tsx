@@ -6,6 +6,7 @@ import { EventIndexParametersQuery } from "@/lib/api/types";
 import { Metadata } from "next";
 type SearchParams = NonNullable<EventIndexParametersQuery>;
 import H1 from "@/components/ui/h1";
+import RedirectIfPreset from "./redirect-if-preset";
 
 export const revalidate = false;
 
@@ -58,12 +59,16 @@ export default async function Events({
         last_page: 0
     };
 
+    const preset = response.data?.presets.length === 1 ? response.data?.presets[0] : undefined;
+
     const industries = await Api.GET('/v1/industries').then(res => res.data);
     const cities = await Api.GET('/v1/cities').then(res => res.data);
 
     return (
         <div className="flex flex-col gap-10">
             <Search industries={industries?.data ?? []} cities={cities?.data ?? []} initialParams={initialParams} />
+
+            <RedirectIfPreset preset={preset} />
 
             <H1 className="mt-0">Поиск мероприятий</H1>
 
