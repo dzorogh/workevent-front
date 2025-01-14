@@ -81,6 +81,7 @@ export async function generateMetadata(
         title: fullTitle,
         description: description,
         openGraph: {
+            type: 'website',
             title: fullTitle,
             description: description,
             url: `${process.env.NEXT_PUBLIC_SITE_URL}/schedule/${selectedYear}/${industrySlug ? industrySlug : ''}`,
