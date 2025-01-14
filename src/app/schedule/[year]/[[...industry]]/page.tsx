@@ -73,7 +73,7 @@ export async function generateMetadata(
     const industry = await getIndustry(industrySlug);
 
     const pageTitle = page ? page.metadata?.title ? page.metadata.title : page.title : 'План мероприятий на ' + selectedYear + ' год ' + (industry?.title ? `(${industry.title})` : '');
-    const description = page?.metadata?.description ?? 'Календарь мероприятий на ' + selectedYear + ' год для индустрии "' + (industry?.title ? industry.title : '') + '" на сайте Workevent. План конференций, форумов, выставок, семинаров, тренингов, мастер-классов, лекций, круглых столов, встреч, презентаций, концертов, шоу, фестивалей, спортивных и развлекательных мероприятий';
+    const description = page?.metadata?.description ?? 'Календарь мероприятий на ' + selectedYear + ' год ' + (industry?.title ? 'для индустрии "' + industry.title + '" ' : '') + 'на сайте Workevent. План конференций, форумов, выставок и других мероприятий.';
 
     const fullTitle = pageTitle + ' — Workevent';
 
