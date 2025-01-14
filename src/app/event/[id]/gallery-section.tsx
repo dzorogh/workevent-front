@@ -5,13 +5,15 @@ import Image from 'next/image';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import EventCoverImage from '@/components/event-cover-image';
+import { cn } from '@/lib/utils';
 
 interface GallerySectionProps {
     images: string[];
     eventTitle: string;
+    size?: 'sm' | 'md' | 'lg';
 }
 
-const NextJsImageElement = ({ slide }: { slide: { src: string; alt?: string }}) => {
+const NextJsImageElement = ({ slide }: { slide: { src: string; alt?: string } }) => {
 
     return (
         <div className="relative w-full h-full">
@@ -29,7 +31,7 @@ const NextJsImageElement = ({ slide }: { slide: { src: string; alt?: string }}) 
     );
 };
 
-export default function GallerySection({ images, eventTitle }: GallerySectionProps) {
+export default function GallerySection({ images, eventTitle, size = 'md' }: GallerySectionProps) {
     const [open, setOpen] = React.useState(false);
     const [imageIndex, setImageIndex] = React.useState(0);
 
@@ -40,14 +42,14 @@ export default function GallerySection({ images, eventTitle }: GallerySectionPro
 
     return (
         <section>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className={cn("grid gap-4", size === 'sm' && 'grid-cols-2 md:grid-cols-4 lg:grid-cols-5', size === 'md' && 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4', size === 'lg' && 'grid-cols-1 md:grid-cols-2 lg:grid-cols-2')}>
                 {images.map((image, index) => (
                     <a key={index} href={image} target="_blank" onClick={(e) => {
                         e.preventDefault();
                         setImageIndex(index);
                         setOpen(true);
                     }}>
-                        <EventCoverImage cover={image} title={`${eventTitle} фото ${index + 1}`} />
+                        <EventCoverImage cover={image} title={`${eventTitle} фото ${index + 1}`} size={size} />
                     </a>
                 ))}
             </div>

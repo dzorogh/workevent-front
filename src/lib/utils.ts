@@ -1,6 +1,9 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { createEventSlug as createEventSlugGlobal } from "./globalUtils.js"
+import { Route } from "next"
+import * as crypto from 'crypto';
+
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -31,11 +34,11 @@ export function plural(forms: string[], n: number): string {
   let idx;
   // @see http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/pluralforms.html
   if (n % 10 === 1 && n % 100 !== 11) {
-      idx = 0; // one
+    idx = 0; // one
   } else if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) {
-      idx = 1; // few
+    idx = 1; // few
   } else {
-      idx = 2; // many
+    idx = 2; // many
   }
   return forms[idx] || '';
 }
@@ -50,3 +53,40 @@ export function truncateText(text: string, maxLength: number) {
 
   return `${slicedText}...`;
 };
+
+const algorithm = 'aes-256-cbc';
+const key = process.env.NEXT_PUBLIC_ENCRYPTION_KEY ?? '';
+const iv = process.env.NEXT_PUBLIC_ENCRYPTION_IV ?? '';
+
+function encrypt(text: string): string {
+  const cipher = crypto.createCipheriv(algorithm, Buffer.from(key, 'hex'), Buffer.from(iv, 'hex'));
+  let encrypted = cipher.update(text, 'utf-8', 'hex');
+  encrypted += cipher.final('hex');
+  return encrypted;
+}
+
+function decrypt(encryptedText: string): string {
+  const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key, 'hex'), Buffer.from(iv, 'hex'));
+  let decrypted = decipher.update(encryptedText, 'hex', 'utf-8');
+  decrypted += decipher.final('utf-8');
+  return decrypted;
+}
+
+export function encodeUrl(url: string, params: Record<string, string>): Route {
+  const urlObject = new URL(url)
+
+  urlObject.searchParams.set("utm_source", "event.ru")
+
+  Object.entries(params).forEach(([key, value]) => {
+    urlObject.searchParams.set(key, value)
+  })
+
+  const encodedUrl = encrypt(urlObject.toString());
+
+  return "/goto/" + encodedUrl as Route
+}
+
+export function decodeUrl(encodedUrl: string): string {
+  const decodedUrl = decrypt(encodedUrl)
+  return decodedUrl
+}

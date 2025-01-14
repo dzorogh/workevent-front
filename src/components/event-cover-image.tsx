@@ -6,7 +6,7 @@ import Logo from '@/components/icons/logo';
 interface EventCoverImageProps {
     cover?: string;
     title: string;
-    size?: 'sm' | 'lg';
+    size?: 'sm' | 'md' | 'lg';
     priority?: boolean;
 }
 
@@ -19,8 +19,8 @@ export default function EventCoverImage({ cover, title, size = 'sm', priority = 
                     priority={priority}
                     src={cover}
                     alt={title}
-                    width={size === 'sm' ? 16 * 20 : 16 * 100}
-                    height={size === 'sm' ? 9 * 20 : 9 * 100}
+                    width={size === 'sm' ? 16 * 20 : size === 'md' ? 16 * 30 : 16 * 100}
+                    height={size === 'sm' ? 9 * 20 : size === 'md' ? 9 * 30 : 9 * 100}
                 />
             </div>
             : <div className="flex items-center justify-center absolute inset-0">

@@ -48,7 +48,7 @@ export default async function RootLayout({
   const industries = await Api.GET('/v1/industries').then(res => res.data);
 
   return (
-    <html lang="en">
+    <html lang="ru">
       <body
         className={`${inter.className} antialiased`}
       >
