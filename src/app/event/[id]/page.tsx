@@ -230,6 +230,14 @@ export default async function EventPage({ params }: Props) {
                                     ))}
                                 </div>
                             )}
+
+                            {additionalIndustries && (
+                                <div className="flex flex-wrap gap-2">
+                                    {additionalIndustries.split(',').map((industry, index) => (
+                                        <Badge key={index}>{industry}</Badge>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
