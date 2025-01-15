@@ -143,6 +143,21 @@ export default async function EventPage({ params }: Props) {
 
     const additionalIndustries = event.industries?.filter(industry => industry.id !== event.industry?.id).map(industry => industry.title).join(', ');
 
+    const googleCalendarRoute = (): Route => {
+        const url = new URL('https://calendar.google.com/calendar/u/0/r/eventedit');
+        url.searchParams.set('text', event.title);
+        url.searchParams.set('dates', `${event.start_date.replace(/-/g, '')}T100000/${event.end_date.replace(/-/g, '')}T180000`);
+        url.searchParams.set('ctz', 'Europe/Moscow');
+        url.searchParams.set('details', removeMarkdown(event.description ?? event.title));
+        url.searchParams.set('location', event.city?.title ?? '' + (event.venue?.title ? `, ${event.venue.address}` : ''));
+        url.searchParams.set('pli', '1');
+        url.searchParams.set('uid', 'workevent' + event.id.toString());
+        url.searchParams.set('sf', 'true');
+        url.searchParams.set('output', 'xml');
+
+        return url.toString() as Route;
+    }
+
     return (
         <div className="flex flex-col gap-16">
             <div className="flex flex-col gap-8">
@@ -176,7 +191,7 @@ export default async function EventPage({ params }: Props) {
                                 <Link href={encodeUrl(event.website, { utm_campaign: 'official_site' })}>Официальный сайт</Link>
                             </Button>
                             <Button variant="brand" asChild>
-                                <Link href={encodeUrl(event.website, { utm_campaign: 'add_to_calendar' })}>Добавить в календарь</Link>
+                                <Link target="_blank" href={googleCalendarRoute()}>Добавить в календарь</Link>
                             </Button>
                         </div>
                     )}
@@ -335,7 +350,7 @@ export default async function EventPage({ params }: Props) {
                 </div>
 
                 {/* Participate Button */}
-                {event.website && ( 
+                {event.website && (
                     <Button variant="primary" size="xl" asChild>
                         <Link href={encodeUrl(event.website, { utm_campaign: 'participate' })}>Участвовать</Link>
                     </Button>
