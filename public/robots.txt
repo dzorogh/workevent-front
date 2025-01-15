@@ -1,12 +1,15 @@
 # *
 User-agent: *
 Allow: /
+Disallow: /goto
+
 Clean-param: utm_source
 Clean-param: utm_medium
 Clean-param: utm_campaign
 Clean-param: utm_content
 Clean-param: utm_term
 Clean-param: ?
+
 
 # Host
 Host: https://workevent.ru
