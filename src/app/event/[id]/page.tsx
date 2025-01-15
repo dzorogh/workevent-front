@@ -324,6 +324,13 @@ export default async function EventPage({ params }: Props) {
                         )}
                     </div>
                 </div>
+
+                {/* Participate Button */}
+                {event.website && ( 
+                    <Button variant="primary" size="xl" asChild>
+                        <Link href={encodeUrl(event.website, { utm_campaign: 'participate' })}>Участвовать</Link>
+                    </Button>
+                )}
             </div>
 
 
