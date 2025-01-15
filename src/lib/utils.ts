@@ -75,7 +75,7 @@ function decrypt(encryptedText: string): string {
 export function encodeUrl(url: string, params: Record<string, string>): Route {
   const urlObject = new URL(url)
 
-  urlObject.searchParams.set("utm_source", "event.ru")
+  urlObject.searchParams.set("utm_source", "workevent.ru")
 
   Object.entries(params).forEach(([key, value]) => {
     urlObject.searchParams.set(key, value)

@@ -163,6 +163,7 @@ export default async function EventPage({ params }: Props) {
                     title={event.title}
                     size="lg"
                     priority={true}
+                    className="lg:px-48"
                 />
 
                 <div className="flex flex-col md:flex-row gap-8">
