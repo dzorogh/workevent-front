@@ -80,7 +80,7 @@ const getEventData = async (params: Props['params']) => {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { event } = await getEventData(params);
 
-    const title = event?.title + ' — Workevent';
+    const title = `${event?.title} — ${event?.city?.title} ${event?.start_date ? new Date(event.start_date).toLocaleDateString('ru-RU', { month: 'long', day: 'numeric', year: 'numeric' }) : ''}`;
     const description = truncateText(removeMarkdown(event?.description ?? ''), 150);
 
     return {
