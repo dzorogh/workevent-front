@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge"
 import { createEventSlug as createEventSlugGlobal } from "./globalUtils.js"
 import { Route } from "next"
 import * as crypto from 'crypto';
-
+import { EventResource } from "./api/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -89,4 +89,29 @@ export function encodeUrl(url: string, params: Record<string, string>): Route {
 export function decodeUrl(encodedUrl: string): string {
   const decodedUrl = decrypt(encodedUrl)
   return decodedUrl
+}
+
+export function formatEventDates(event: EventResource) {
+  // return "19-22 октября 2025" if dateStart and dateEnd are in the same month and year
+  // return "19 окт - 22 нояб 2025" if dateStart and dateEnd are in different months
+
+  const dateStart = new Date(event.start_date);
+  const dateEnd = event.end_date ? new Date(event.end_date) : dateStart;
+
+  const months = [
+      'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+      'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+  ];
+
+  const shortMonths = [
+      'янв', 'фев', 'мар', 'апр', 'мая', 'июня',
+      'июл', 'авг', 'сен', 'окт', 'нояб', 'дек'
+  ];
+
+  if (dateStart.getMonth() === dateEnd.getMonth() &&
+      dateStart.getFullYear() === dateEnd.getFullYear()) {
+      return `${dateStart.getDate()}–${dateEnd.getDate()} ${months[dateStart.getMonth()]} ${dateStart.getFullYear()}`;
+  }
+
+  return `${dateStart.getDate()} ${shortMonths[dateStart.getMonth()]} – ${dateEnd.getDate()} ${shortMonths[dateEnd.getMonth()]} ${dateStart.getFullYear()}`;
 }

@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Event, WithContext } from 'schema-dts'
 import removeMarkdown from "remove-markdown";
-import { truncateText, encodeUrl } from "@/lib/utils";
+import { truncateText, encodeUrl, formatEventDates } from "@/lib/utils";
 
 type Props = {
     params: Promise<{ id: string }>
@@ -162,6 +162,10 @@ export default async function EventPage({ params }: Props) {
         return url.toString() as Route;
     }
 
+    const formatDate = (date: string) => {
+        return new Date(date).toLocaleDateString('ru-RU', { month: 'long', day: 'numeric', year: 'numeric' });
+    }       
+
     return (
         <div className="flex flex-col gap-16">
             <div className="flex flex-col gap-8">
@@ -194,7 +198,7 @@ export default async function EventPage({ params }: Props) {
                             <Button variant="brand" asChild>
                                 <Link href={encodeUrl(event.website, { utm_campaign: 'official_site' })}>Официальный сайт</Link>
                             </Button>
-                            <Button variant="brand" asChild>
+                            <Button variant="brand" asChild>    
                                 <Link target="_blank" href={googleCalendarRoute()}>Добавить в календарь</Link>
                             </Button>
                         </div>
@@ -204,7 +208,7 @@ export default async function EventPage({ params }: Props) {
                             <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
                                 <IconCalendar className="w-6 h-6 text-brand" />
                                 <span className="font-medium">
-                                    {new Date(event.start_date).toLocaleDateString('ru-RU')} - {new Date(event.end_date).toLocaleDateString('ru-RU')}
+                                    {formatEventDates(event)}
                                 </span>
                             </div>
 
@@ -278,8 +282,8 @@ export default async function EventPage({ params }: Props) {
                 {/* Dates */}
                 {event.start_date && event.end_date && (
                     <div className="flex flex-col gap-2">
-                        <span className="text-sm text-muted-foreground">Дата</span>
-                        <span className="text-lg font-bold">{new Date(event.start_date).toLocaleDateString('ru-RU')} - {new Date(event.end_date).toLocaleDateString('ru-RU')}</span>
+                        <span className="text-sm text-muted-foreground">Дата проведения мероприятия</span>
+                        <span className="text-lg font-bold">{formatEventDates(event)}</span>
                     </div>
                 )}
 
@@ -296,6 +300,7 @@ export default async function EventPage({ params }: Props) {
                     <div className="flex flex-col gap-2">
                         <span className="text-sm text-muted-foreground">Место проведения</span>
                         <span className="text-lg font-bold">{event.venue.title}</span>
+                        <span className="">{event.venue.address}</span>
                     </div>
                 )}
 
