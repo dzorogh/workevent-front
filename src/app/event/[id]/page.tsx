@@ -364,6 +364,8 @@ export default async function EventPage({ params }: Props) {
                         <Link href={encodeUrl(event.website, { utm_campaign: 'participate' })}>Участвовать</Link>
                     </Button>
                 )}
+
+                
             </div>
 
 
