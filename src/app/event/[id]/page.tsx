@@ -16,7 +16,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Event, WithContext } from 'schema-dts'
 import removeMarkdown from "remove-markdown";
+import { ShareButtons } from "./share-buttons";
 import { truncateText, encodeUrl, formatEventDates } from "@/lib/utils";
+
 
 type Props = {
     params: Promise<{ id: string }>
@@ -139,7 +141,7 @@ export default async function EventPage({ params }: Props) {
             availability: 'https://schema.org/InStock',
             url: `https://workevent.ru/event/${createSlugWithId(event.title, event.id)}`,
             validFrom: event.start_date,
-            validThrough: event.end_date, 
+            validThrough: event.end_date,
         },
         eventStatus: 'https://schema.org/EventScheduled',
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
@@ -164,7 +166,7 @@ export default async function EventPage({ params }: Props) {
 
     const formatDate = (date: string) => {
         return new Date(date).toLocaleDateString('ru-RU', { month: 'long', day: 'numeric', year: 'numeric' });
-    }       
+    }
 
     return (
         <div className="flex flex-col gap-16">
@@ -198,7 +200,7 @@ export default async function EventPage({ params }: Props) {
                             <Button variant="brand" asChild>
                                 <Link href={encodeUrl(event.website, { utm_campaign: 'official_site' })}>Официальный сайт</Link>
                             </Button>
-                            <Button variant="brand" asChild>    
+                            <Button variant="brand" asChild>
                                 <Link target="_blank" href={googleCalendarRoute()}>Добавить в календарь</Link>
                             </Button>
                         </div>
@@ -365,7 +367,11 @@ export default async function EventPage({ params }: Props) {
                     </Button>
                 )}
 
-                
+                {/* Share Buttons */}
+                <div className="flex flex-col gap-2">
+                    <span className="text-sm text-muted-foreground">Поделиться</span>
+                    <ShareButtons url={`https://workevent.ru/event/${createSlugWithId(event.title, event.id)}`} title={event.title} image={event.cover} />
+                </div>
             </div>
 
 
