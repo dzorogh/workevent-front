@@ -11,7 +11,7 @@ export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
-        <header className="rounded-lg bg-gradient-to-r from-brand to-brand-dark p-[2px]">
+        <header className="rounded-lg bg-gradient-to-r from-primary to-primary-dark p-[2px]">
             <div className={`px-4 py-2 bg-white rounded-md `}>
                 <div className={`flex justify-between items-center gap-4 overflow-x-auto ${!isMenuOpen ? 'rounded-b-md' : 'rounded-b-none'}`}>
                     <Link href="/">
@@ -21,7 +21,7 @@ export default function Header() {
                         <Menu />
                     </div>
                     <div className="md:hidden">
-                        <button className="text-brand flex items-center gap-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                        <button className="text-primary flex items-center gap-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                             {isMenuOpen ? <CloseIcon size={40} /> : <HamburgerMenu size={40} />}
                         </button>
                     </div>

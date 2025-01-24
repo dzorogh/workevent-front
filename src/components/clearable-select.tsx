@@ -34,7 +34,7 @@ interface ClearableSelectProps {
           {value && (
             <Button
               className="w-full px-2"
-              variant="outline"
+              variant="default"
               size="sm"
               onClick={(e) => {
                 e.stopPropagation()

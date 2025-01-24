@@ -9,7 +9,7 @@ export default function Years({ years, selectedYear }: { years: number[], select
                 <Link
                     key={year}
                     href={`/schedule/${year}` as Route}
-                    className={cn(year === Number(selectedYear) && "flex-grow text-center bg-brand text-brand-foreground", year !== Number(selectedYear) && "bg-background ring-1 ring-inset ring-muted-foreground-dark text-muted-foreground", "md:text-3xl text-xl px-4 py-2 rounded-lg hover:bg-brand hover:text-brand-foreground transition-all duration-300")}
+                    className={cn(year === Number(selectedYear) && "flex-grow text-center bg-primary text-primary-foreground", year !== Number(selectedYear) && "bg-background ring-1 ring-inset ring-muted-foreground-dark text-muted-foreground", "md:text-3xl text-xl px-4 py-2 rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300")}
                 >
                     {year}
                 </Link>

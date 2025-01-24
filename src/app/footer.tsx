@@ -67,7 +67,7 @@ export default function Footer() {
                         <div className="flex flex-col gap-20 justify-between">
                             <div className="flex flex-col gap-10">
                                 <Logo className="*:fill-white" width={60} height={40} />
-                                <Button variant="primary">
+                                <Button variant="success">
                                     Добавить мероприятие
                                 </Button>
                             </div>
@@ -83,7 +83,7 @@ export default function Footer() {
                                             <Link 
                                                 key={item.title} 
                                                 href={{ pathname: item.href }}
-                                                className="text-brand-foreground text-lg"
+                                                className="text-primary-foreground text-lg"
                                             >
                                                 {item.title}
                                             </Link>

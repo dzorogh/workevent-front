@@ -20,7 +20,7 @@ export default function EventCard({ event }: EventCardProps) {
                     <div className="flex flex-col gap-2">
                         <div className="text-muted-foreground-dark">{formatEventDates(event)}</div>
                         <div className="font-semibold text-lg">{event.title}</div>
-                        <div className="font-normal text-md text-brand-darker flex gap-1">
+                        <div className="font-normal text-md text-primary-darker flex gap-1">
                             <IconMapPin className="w-5 h-5 mr-0.5" /> {event.city?.title}
                         </div>
                         <div>

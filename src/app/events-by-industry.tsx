@@ -23,7 +23,7 @@ export default function EventsByIndustry({ initialIndustries, initialEvents, ini
             <div className="flex flex-col gap-5">
                 <div className="flex gap-2 flex-wrap">
                     <Button
-                        variant={selectedIndustry === null ? "brand" : "muted"}
+                        variant={selectedIndustry === null ? "primary" : "muted"}
                         size="sm"
                         onClick={() => setSelectedIndustry(null)}
                     >
@@ -31,7 +31,7 @@ export default function EventsByIndustry({ initialIndustries, initialEvents, ini
                     </Button>
                     {industries?.map((industry) => (
                         <Button
-                            variant={selectedIndustry === industry.id ? "brand" : "muted"}
+                            variant={selectedIndustry === industry.id ? "primary" : "muted"}
                             size="sm"
                             key={industry.id}
                             onClick={() => setSelectedIndustry(industry.id)}

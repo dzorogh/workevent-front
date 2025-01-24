@@ -26,7 +26,7 @@ function Calendar({
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       classNames={{
-        chevron: "fill-brand",
+        chevron: "fill-primary",
         caption_label: "",
         day: "rounded-full relative p-0 text-center text-sm focus-within:relative focus-within:z-20 aria-selected:bg-muted data-[outside]:opacity-50 data-[outside]:text-muted-foreground",
         day_button: "h-8 w-8 flex items-center justify-center",
@@ -42,8 +42,8 @@ function Calendar({
         nav: "absolute top-4 left-0 right-0",
         button_next: "absolute right-4",
         button_previous: "absolute left-4",
-        range_end: "bg-gradient-to-r from-brand to-brand-dark text-brand-foreground",
-        range_start: "bg-gradient-to-r from-brand to-brand-dark text-brand-foreground",
+        range_end: "bg-gradient-to-r from-primary to-primary-dark text-primary-foreground",
+        range_start: "bg-gradient-to-r from-primary to-primary-dark text-primary-foreground",
         // root: "",
         weeks: "flex flex-col gap-1",
         week: "grid grid-cols-7 gap-1",
@@ -76,10 +76,10 @@ function Calendar({
         //   buttonVariants({ variant: "ghost" }),
         //   "h-8 w-8 p-0 font-normal aria-selected:opacity-100 rounded-full font-light"
         // ),
-        // day_range_start: "day-range-start bg-gradient-to-r from-brand to-brand-dark ",
-        // day_range_end: "day-range-end bg-gradient-to-r from-brand to-brand-dark ",
+        // day_range_start: "day-range-start bg-gradient-to-r from-primary to-primary-dark ",
+        // day_range_end: "day-range-end bg-gradient-to-r from-primary to-primary-dark ",
         // day_selected:
-        //   "text-brand-foreground hover:bg-brand hover:text-brand-foreground focus:bg-brand focus:text-brand-foreground",
+        //   "text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
         // day_today: "bg-accent text-accent-foreground",
         // day_outside:
         //   "day-outside text-muted-foreground aria-selected:bg-accent/50 aria-selected:text-muted-foreground",

@@ -10,17 +10,15 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:bg-primary/90",
+          "ring-1 ring-inset ring-primary bg-background text-primary hover:bg-primary-background-dark active:bg-primary-background-darker",
         primary:
-          "rounded-full bg-primary text-primary-foreground hover:bg-primary-dark active:bg-primary-darker transition-colors",
+          "bg-gradient-to-r from-primary to-primary-dark text-primary-foreground ",
+        success:
+          "bg-success text-success-foreground hover:bg-success-dark active:bg-success-darker",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline:
-          "ring-1 ring-inset ring-brand bg-background text-brand hover:bg-brand-background-dark active:bg-brand-background-darker",
         secondary:
           "ring-1 ring-inset ring-secondary bg-background text-secondary hover:bg-secondary active:bg-secondary",
-        brand: 
-          "text-brand-foreground bg-gradient-to-r from-brand to-brand-dark ",
         muted:
           "ring-1 ring-inset ring-muted-foreground-dark bg-background text-muted-foreground-dark hover:bg-muted active:bg-muted",
         ghost: "hover:bg-accent hover:text-accent-foreground",

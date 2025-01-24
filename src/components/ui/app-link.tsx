@@ -21,7 +21,7 @@ export default function AppLink<T extends string>({
 }: AppLinkProps<T>) {
     return (
         <Link href={href} target={target} rel={rel} className={cn(
-            "text-brand hover:text-brand-dark font-medium transition-colors",
+            "text-primary hover:text-primary-dark font-medium transition-colors",
             className
         )}>
             {children}

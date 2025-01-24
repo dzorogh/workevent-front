@@ -9,7 +9,7 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "rounded-full border font-normal border-brand px-4 h-7 text-brand text-xs inline-flex items-center justify-center",
+          "rounded-full border font-normal border-primary px-4 h-7 text-primary text-xs inline-flex items-center justify-center",
       },
     },
     defaultVariants: {

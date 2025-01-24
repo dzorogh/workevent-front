@@ -16,7 +16,7 @@ export default async function Presets() {
             <div className="flex flex-wrap gap-2 ">
                 {presets.map(preset => (
                     <div className="w-full md:w-auto overflow-x-auto" key={preset.id}>
-                        <Button variant="outline" asChild>
+                        <Button variant="default" asChild>
                             <Link href={`/events/${preset.slug}`}>{preset.title}</Link>
                         </Button>
                     </div>

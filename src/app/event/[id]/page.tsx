@@ -18,6 +18,14 @@ import { Event, WithContext } from 'schema-dts'
 import removeMarkdown from "remove-markdown";
 import { ShareButtons } from "./share-buttons";
 import { truncateText, encodeUrl, formatEventDates } from "@/lib/utils";
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 
 type Props = {
@@ -170,6 +178,26 @@ export default async function EventPage({ params }: Props) {
 
     return (
         <div className="flex flex-col gap-16">
+
+            <div>
+                {/* Breadcrumbs */}
+                <Breadcrumb>
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/">Главная</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/events">Мероприятия</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>{event.title}</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
+            </div>
+
             <div className="flex flex-col gap-8">
                 {/* JSON-LD */}
                 <script
@@ -194,13 +222,13 @@ export default async function EventPage({ params }: Props) {
                 <div className="flex flex-col md:flex-row gap-8">
                     {event.website && (
                         <div className="flex flex-col gap-4 min-w-[300px]">
-                            <Button variant="brand" asChild size="xl">
+                            <Button variant="primary" asChild size="xl">
                                 <Link href={encodeUrl(event.website, { utm_campaign: 'participate' })}>Участвовать</Link>
                             </Button>
-                            <Button variant="brand" asChild>
+                            <Button variant="primary" asChild>
                                 <Link href={encodeUrl(event.website, { utm_campaign: 'official_site' })}>Официальный сайт</Link>
                             </Button>
-                            <Button variant="brand" asChild>
+                            <Button variant="primary" asChild>
                                 <Link target="_blank" href={googleCalendarRoute()}>Добавить в календарь</Link>
                             </Button>
                         </div>
@@ -208,7 +236,7 @@ export default async function EventPage({ params }: Props) {
                     <div className="flex flex-col gap-4 justify-between">
                         <div className="flex flex-wrap gap-x-4 gap-y-2 md:flex-row flex-col md:text-lg">
                             <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
-                                <IconCalendar className="w-6 h-6 text-brand" />
+                                <IconCalendar className="w-6 h-6 text-primary" />
                                 <span className="font-medium">
                                     {formatEventDates(event)}
                                 </span>
@@ -216,28 +244,28 @@ export default async function EventPage({ params }: Props) {
 
                             {event.city && (
                                 <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
-                                    <IconMapPin className="w-6 h-6 text-brand" />
+                                    <IconMapPin className="w-6 h-6 text-primary" />
                                     <span className="font-medium">{event.city.title}</span>
                                 </div>
                             )}
 
                             {event.industry && (
                                 <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
-                                    <IconBriefcase className="w-6 h-6 text-brand" />
+                                    <IconBriefcase className="w-6 h-6 text-primary" />
                                     <span className="font-medium">{event.industry.title}</span>
                                 </div>
                             )}
 
                             {event.tariffs && event.tariffs.length > 0 && (
                                 <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
-                                    <IconCoin className="w-6 h-6 text-brand" />
+                                    <IconCoin className="w-6 h-6 text-primary" />
                                     <span className="font-medium">{'от '}{formatPrice(event.tariffs.sort((a, b) => a.price - b.price)[0].price)}</span>
                                 </div>
                             )}
 
                             {event.format_label && (
                                 <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
-                                    <IconStar className="w-6 h-6 text-brand" />
+                                    <IconStar className="w-6 h-6 text-primary" />
                                     <span className="font-medium">{event.format_label}</span>
                                 </div>
                             )}
@@ -313,7 +341,7 @@ export default async function EventPage({ params }: Props) {
                         {event.website && (
                             <Button
                                 asChild
-                                variant="brand"
+                                variant="primary"
                                 size="lg"
                             >
                                 <Link
@@ -330,7 +358,7 @@ export default async function EventPage({ params }: Props) {
                         {event.phone && (
                             <Button
                                 asChild
-                                variant="brand"
+                                variant="primary"
                                 size="lg"
                             >
                                 <Link
@@ -345,7 +373,7 @@ export default async function EventPage({ params }: Props) {
                         {event.email && (
                             <Button
                                 asChild
-                                variant="brand"
+                                variant="primary"
                                 size="lg"
                             >
                                 <Link
@@ -362,7 +390,7 @@ export default async function EventPage({ params }: Props) {
 
                 {/* Participate Button */}
                 {event.website && (
-                    <Button variant="primary" size="xl" asChild>
+                    <Button variant="success" size="xl" asChild>
                         <Link href={encodeUrl(event.website, { utm_campaign: 'participate' })}>Участвовать</Link>
                     </Button>
                 )}

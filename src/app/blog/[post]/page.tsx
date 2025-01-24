@@ -68,7 +68,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ post:
     return (
         <div className="flex flex-col gap-10">
             <div className="flex justify-between items-center">
-                <Button variant="brand" asChild>
+                <Button variant="primary" asChild>
                     <Link href="/blog">
                         Назад к блогу
                     </Link>

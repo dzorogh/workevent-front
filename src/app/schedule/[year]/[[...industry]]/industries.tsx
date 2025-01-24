@@ -29,7 +29,7 @@ export default function Industries({ industries, industrySlug, homeRoute }: { in
     return (
         <div className="flex gap-2 items-center md:flex-wrap overflow-x-auto p-2">
             <Button
-                variant={industrySlug === undefined ? "brand" : "muted"}
+                variant={industrySlug === undefined ? "primary" : "muted"}
                 size="sm"
                 asChild
             >
@@ -41,7 +41,7 @@ export default function Industries({ industries, industrySlug, homeRoute }: { in
             {industries.map((industry: any) => (
                 <Button
                     id={industry.slug}
-                    variant={industry.slug === industrySlug ? "brand" : "muted"}
+                    variant={industry.slug === industrySlug ? "primary" : "muted"}
                     size="sm"
                     key={industry.id}
                     asChild
