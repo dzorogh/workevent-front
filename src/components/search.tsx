@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 import { IconLoader } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation'
-import { CityResource, IndustryResource, EventIndexParametersQuery } from "@/lib/api/types";
+import { CityResource, IndustryResource, EventIndexParametersQuery } from "@/lib/types";
 
 type SearchParams = NonNullable<EventIndexParametersQuery>;
 

@@ -4,14 +4,20 @@ import React from 'react';
 import Image from 'next/image';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import EventCoverImage from '@/components/event-cover-image';
-import { cn } from '@/lib/utils';
 
 interface GallerySectionProps {
     images: string[];
     eventTitle: string;
     size?: 'sm' | 'md' | 'lg';
 }
+
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from "@/components/ui/carousel"
 
 const NextJsImageElement = ({ slide }: { slide: { src: string; alt?: string } }) => {
 
@@ -42,17 +48,28 @@ export default function GallerySection({ images, eventTitle, size = 'md' }: Gall
 
     return (
         <section>
-            <div className={cn("grid gap-4", size === 'sm' && 'grid-cols-2 md:grid-cols-4 lg:grid-cols-5', size === 'md' && 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4', size === 'lg' && 'grid-cols-1 md:grid-cols-2 lg:grid-cols-2')}>
-                {images.map((image, index) => (
-                    <a key={index} href={image} target="_blank" onClick={(e) => {
-                        e.preventDefault();
-                        setImageIndex(index);
-                        setOpen(true);
-                    }}>
-                        <EventCoverImage cover={image} title={`${eventTitle} фото ${index + 1}`} size={size} />
-                    </a>
-                ))}
-            </div>
+            <Carousel>
+                <CarouselContent className="w">
+                    {images.map((image, index) => (
+                        <CarouselItem key={index} className="basis-[21%]">
+                            <a key={index} href={image} target="_blank" onClick={(e) => {
+                                e.preventDefault();
+                                setImageIndex(index);
+                                setOpen(true);
+                            }}>
+                                <Image
+                                    src={image}
+                                    alt={`${eventTitle} фото ${index + 1}`}
+                                    width={400}
+                                    height={400}
+                                    className="rounded-sm"
+                                />
+                            </a>
+
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+            </Carousel>
 
             <Lightbox
                 open={open}

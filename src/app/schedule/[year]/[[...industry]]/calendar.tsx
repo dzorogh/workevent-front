@@ -1,6 +1,6 @@
 'use client';
 
-import { EventResource } from "@/lib/api/types";
+import { EventResource } from "@/lib/types";
 import AppLink from "@/components/ui/app-link";
 import { createSlugWithId, plural } from "@/lib/utils";
 import { Route } from "next";

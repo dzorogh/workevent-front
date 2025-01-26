@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge"
 import { createEventSlug as createEventSlugGlobal } from "./globalUtils.js"
 import { Route } from "next"
 import * as crypto from 'crypto';
-import { EventResource } from "./api/types";
+import { EventResource } from "./types.js";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -110,8 +110,8 @@ export function formatEventDates(event: EventResource) {
 
   if (dateStart.getMonth() === dateEnd.getMonth() &&
       dateStart.getFullYear() === dateEnd.getFullYear()) {
-      return `${dateStart.getDate()}–${dateEnd.getDate()} ${months[dateStart.getMonth()]} ${dateStart.getFullYear()}`;
+      return `${dateStart.getDate()}-${dateEnd.getDate()} ${months[dateStart.getMonth()]} ${dateStart.getFullYear()}`;
   }
 
-  return `${dateStart.getDate()} ${shortMonths[dateStart.getMonth()]} – ${dateEnd.getDate()} ${shortMonths[dateEnd.getMonth()]} ${dateStart.getFullYear()}`;
+  return `${dateStart.getDate()} ${shortMonths[dateStart.getMonth()]} - ${dateEnd.getDate()} ${shortMonths[dateEnd.getMonth()]} ${dateStart.getFullYear()}`;
 }

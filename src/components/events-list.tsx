@@ -7,7 +7,7 @@ import { Api } from "@/lib/api";
 import LoadMoreButton from "@/components/load-more-button";
 import EventCardSkeleton from "@/components/event-card-skeleton";
 import EventsNotFound from "@/components/events-not-found";
-import { EventResource, EventIndexParametersQuery, SearchEventsResourceMeta } from "@/lib/api/types";
+import { EventResource, EventIndexParametersQuery, SearchEventsResourceMeta } from "@/lib/types";
 
 type SearchParams = NonNullable<EventIndexParametersQuery>;
 

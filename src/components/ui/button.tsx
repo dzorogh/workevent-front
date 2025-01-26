@@ -10,24 +10,24 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "ring-1 ring-inset ring-primary bg-background text-primary hover:bg-primary-background-dark active:bg-primary-background-darker",
+          "ring-1 ring-inset ring-primary bg-background text-primary hover:bg-primary-dark hover:border-primary-dark hover:ring-primary-dark hover:text-white active:bg-primary-darker",
         primary:
-          "bg-gradient-to-r from-primary to-primary-dark text-primary-foreground ",
+          "!ring-0 bg-gradient-to-r from-primary to-primary-dark text-primary-foreground hover:from-primary-dark hover:to-primary-darker",
         success:
-          "bg-success text-success-foreground hover:bg-success-dark active:bg-success-darker",
+          "!ring-0 bg-success text-success-foreground hover:bg-success-dark active:bg-success-darker",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "!ring-0 bg-destructive text-destructive-foreground hover:bg-destructive/90",
         secondary:
           "ring-1 ring-inset ring-secondary bg-background text-secondary hover:bg-secondary active:bg-secondary",
         muted:
           "ring-1 ring-inset ring-muted-foreground-dark bg-background text-muted-foreground-dark hover:bg-muted active:bg-muted",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        ghost: "!ring-0 hover:bg-accent hover:text-accent-foreground",
+        link: "!ring-0 text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-4 py-2 rounded-full ",
+        default: "h-9 px-6 py-2 rounded-full text-sm",
         sm: "h-7 md:px-4 px-3 rounded-full text-xs",
-        lg: "h-10 px-8 rounded-full ",
+        lg: "h-10 px-8 rounded-full text-sm ring-2",
         xl: "h-12 px-10 rounded-full text-lg [&_svg]:size-6",
         icon: "h-9 w-9 rounded-full ",
       },

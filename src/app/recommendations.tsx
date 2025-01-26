@@ -1,5 +1,5 @@
 import H2 from '@/components/ui/h2';
-import {EventResource, SearchEventsResourceMeta} from '@/lib/api/types';
+import {EventResource, SearchEventsResourceMeta} from '@/lib/types';
 import EventsList from '@/components/events-list';
 
 interface RecommendationsProps {

@@ -1,6 +1,6 @@
 'use client';
 
-import { PresetResource } from "@/lib/api/types";
+import { PresetResource } from "@/lib/types";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Route } from "next";

@@ -1,13 +1,10 @@
 import { Api } from "@/lib/api";
-import { Metadata, ResolvingMetadata } from "next";
-import { IconCalendar, IconMapPin, IconWorld, IconPhone, IconMail, IconBriefcase, IconCoin, IconStar } from "@tabler/icons-react";
-import EventCoverImage from "@/components/event-cover-image";
+import { Metadata } from "next";
+import { IconWorld, IconPhone, IconMail } from "@tabler/icons-react";
 import { notFound, permanentRedirect } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
 import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
 import { createSlugWithId, getIdFromSlug, formatPrice, formatPhone } from "@/lib/utils";
-import GallerySection from "@/app/event/[id]/gallery-section";
 import H2 from "@/components/ui/h2";
 import EventCardGrid from "@/components/event-card-grid";
 import EventCard from "@/components/event-card";
@@ -17,16 +14,34 @@ import Link from "next/link";
 import { Event, WithContext } from 'schema-dts'
 import removeMarkdown from "remove-markdown";
 import { ShareButtons } from "./share-buttons";
+import AppLink from "@/components/ui/app-link";
 import { truncateText, encodeUrl, formatEventDates } from "@/lib/utils";
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { z } from "zod";
+import LocationMap from "./location-map";
+import Breadcrumbs from "./breadcrumbs";
+import Info from "./info";
+import Images from "./images";
+import SectionTitle from "./section-title";
+import { Location } from "@/lib/types";
 
+
+
+const getLocation = async (location: string): Promise<Location> => {
+    console.log(location)
+
+    const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${location}&limit=1&format=json`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+
+    const data = await response.json()
+
+    return data[0]
+}
 
 type Props = {
     params: Promise<{ id: string }>
@@ -85,8 +100,6 @@ const getEventData = async (params: Props['params']) => {
     };
 }
 
-
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { event } = await getEventData(params);
 
@@ -113,6 +126,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function EventPage({ params }: Props) {
     const { event, similarEvents, presets } = await getEventData(params);
+
+    const location = await getLocation(event.venue?.address || '');
 
     // Compile the MDX source code to a function body
     const code = String(
@@ -157,154 +172,61 @@ export default async function EventPage({ params }: Props) {
 
     const additionalIndustries = event.industries?.filter(industry => industry.id !== event.industry?.id).map(industry => industry.title).join(', ');
 
-    const googleCalendarRoute = (): Route => {
-        const url = new URL('https://calendar.google.com/calendar/u/0/r/eventedit');
-        url.searchParams.set('text', event.title);
-        url.searchParams.set('dates', `${event.start_date.replace(/-/g, '')}T100000/${event.end_date.replace(/-/g, '')}T180000`);
-        url.searchParams.set('ctz', 'Europe/Moscow');
-        url.searchParams.set('details', removeMarkdown(event.description ?? event.title));
-        url.searchParams.set('location', event.city?.title ?? '' + (event.venue?.title ? `, ${event.venue.address}` : ''));
-        url.searchParams.set('pli', '1');
-        url.searchParams.set('uid', 'workevent' + event.id.toString());
-        url.searchParams.set('sf', 'true');
-        url.searchParams.set('output', 'xml');
+    const formSchema = z.object({
+        name: z.string().min(3, { message: 'Имя должно содержать минимум 3 символа' }),
+        email: z.string().email({ message: 'Некорректный email' }),
+        phone: z.string().min(10, { message: 'Телефон должен содержать минимум 10 символов' }),
+        comment: z.string().optional(),
+    });
 
-        return url.toString() as Route;
-    }
 
-    const formatDate = (date: string) => {
-        return new Date(date).toLocaleDateString('ru-RU', { month: 'long', day: 'numeric', year: 'numeric' });
-    }
 
     return (
-        <div className="flex flex-col gap-16">
 
-            <div>
-                {/* Breadcrumbs */}
-                <Breadcrumb>
-                    <BreadcrumbList>
-                        <BreadcrumbItem>
-                            <BreadcrumbLink href="/">Главная</BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                            <BreadcrumbLink href="/events">Мероприятия</BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                            <BreadcrumbPage>{event.title}</BreadcrumbPage>
-                        </BreadcrumbItem>
-                    </BreadcrumbList>
-                </Breadcrumb>
+        <div className="flex flex-col gap-10">
+            {/* JSON-LD */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+
+            {/* Breadcrumbs */}
+            <Breadcrumbs event={event} />
+
+            {/* Product Card */}
+            <div className="flex gap-8">
+                <Images event={event} />
+                <Info event={event} />
             </div>
 
-            <div className="flex flex-col gap-8">
-                {/* JSON-LD */}
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-                />
+            {/* Description */}
+            <div className="prose max-w-prose">
+                <SectionTitle title="О мероприятии" />
+                <Description />
+            </div>
 
-                {/* Header */}
-                <div className="flex flex-col gap-6">
-                    <h1 className="md:text-4xl text-2xl font-bold">{event.title}</h1>
+            {/* Map */}
+            {location && <div className="flex flex-col gap-6" id="map">
+                <SectionTitle title="Местоположение" />
+                <LocationMap location={location} event={event} />
+            </div>} 
+
+            {/* Form */}
+            <div className="flex flex-col gap-6 bg-secondary px-10 py-8 rounded-lg max-w-[1000px]">
+                <SectionTitle title="Оставьте заявку на участие" />
+
+                <div className="flex gap-2">
+                    <Input placeholder="ФИО" />
+                    <Input placeholder="Электронная почта" />
+                    <Input placeholder="Телефон" />
                 </div>
 
-                {/* Cover Image */}
-                <EventCoverImage
-                    cover={event.cover}
-                    title={event.title}
-                    size="lg"
-                    priority={true}
-                    className="lg:px-48"
-                />
+                <Textarea placeholder="Комментарий" />
 
-                <div className="flex flex-col md:flex-row gap-8">
-                    {event.website && (
-                        <div className="flex flex-col gap-4 min-w-[300px]">
-                            <Button variant="primary" asChild size="xl">
-                                <Link href={encodeUrl(event.website, { utm_campaign: 'participate' })}>Участвовать</Link>
-                            </Button>
-                            <Button variant="primary" asChild>
-                                <Link href={encodeUrl(event.website, { utm_campaign: 'official_site' })}>Официальный сайт</Link>
-                            </Button>
-                            <Button variant="primary" asChild>
-                                <Link target="_blank" href={googleCalendarRoute()}>Добавить в календарь</Link>
-                            </Button>
-                        </div>
-                    )}
-                    <div className="flex flex-col gap-4 justify-between">
-                        <div className="flex flex-wrap gap-x-4 gap-y-2 md:flex-row flex-col md:text-lg">
-                            <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
-                                <IconCalendar className="w-6 h-6 text-primary" />
-                                <span className="font-medium">
-                                    {formatEventDates(event)}
-                                </span>
-                            </div>
-
-                            {event.city && (
-                                <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
-                                    <IconMapPin className="w-6 h-6 text-primary" />
-                                    <span className="font-medium">{event.city.title}</span>
-                                </div>
-                            )}
-
-                            {event.industry && (
-                                <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
-                                    <IconBriefcase className="w-6 h-6 text-primary" />
-                                    <span className="font-medium">{event.industry.title}</span>
-                                </div>
-                            )}
-
-                            {event.tariffs && event.tariffs.length > 0 && (
-                                <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
-                                    <IconCoin className="w-6 h-6 text-primary" />
-                                    <span className="font-medium">{'от '}{formatPrice(event.tariffs.sort((a, b) => a.price - b.price)[0].price)}</span>
-                                </div>
-                            )}
-
-                            {event.format_label && (
-                                <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
-                                    <IconStar className="w-6 h-6 text-primary" />
-                                    <span className="font-medium">{event.format_label}</span>
-                                </div>
-                            )}
-                        </div>
-
-                        <div>
-                            {/* Tags */}
-                            {event.tags && event.tags.length > 0 && (
-                                <div className="flex flex-wrap gap-2">
-                                    {event.tags.map((tag, index) => (
-                                        <Badge
-                                            key={tag.id}
-                                        >
-                                            {tag.title}
-                                        </Badge>
-                                    ))}
-                                </div>
-                            )}
-
-                            {additionalIndustries && (
-                                <div className="flex flex-wrap gap-2">
-                                    {additionalIndustries.split(',').map((industry, index) => (
-                                        <Badge key={index}>{industry}</Badge>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                <div className="text-xs text-muted-foreground-dark">Нажимая на кнопку, вы соглашаетесь с <AppLink href={`/privacy-policy` as Route} variant="underline">политикой конфиденциальности</AppLink></div>
+                <div className="flex">
+                    <Button variant="primary">Оставить заявку</Button>
                 </div>
-
-                {/* Description */}
-                <div className="prose max-w-prose">
-                    <Description />
-                </div>
-
-                {/* Gallery */}
-                {event.gallery && (
-                    <GallerySection images={event.gallery} eventTitle={event.title} size="lg" />
-                )}
             </div>
 
             {/* Contacts Section */}
@@ -424,7 +346,7 @@ export default async function EventPage({ params }: Props) {
                     <div className="flex flex-wrap gap-2">
                         {presets.map(preset => (
                             <div className="w-full md:w-auto overflow-x-auto" key={preset.id}>
-                                <Button variant="outline" asChild>
+                                <Button variant="default" asChild>
                                     <Link href={`/events/${preset.slug}`}>{preset.title}</Link>
                                 </Button>
                             </div>

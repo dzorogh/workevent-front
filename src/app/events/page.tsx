@@ -2,7 +2,7 @@ import { Api } from "@/lib/api";
 import { Suspense } from "react";
 import EventsList from "@/components/events-list";
 import Search from "@/components/search";
-import { EventIndexParametersQuery } from "@/lib/api/types";
+import { EventIndexParametersQuery } from "@/lib/types";
 import { Metadata } from "next";
 type SearchParams = NonNullable<EventIndexParametersQuery>;
 import H1 from "@/components/ui/h1";

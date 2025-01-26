@@ -1,7 +1,7 @@
 import EventCoverImage from '@/components/event-cover-image';
 import { IconMapPin } from '@tabler/icons-react';
 import Link from 'next/link';
-import { EventResource } from '@/lib/api/types';
+import { EventResource } from '@/lib/types';
 import { Route } from 'next';
 import { createSlugWithId, formatEventDates } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';

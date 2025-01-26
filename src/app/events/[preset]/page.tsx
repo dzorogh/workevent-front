@@ -6,7 +6,7 @@ import { permanentRedirect } from "next/navigation";
 import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
 import { getSeoYear } from "@/lib/utils";
-import { EventFormat, EventIndexParametersQuery } from "@/lib/api/types";
+import { EventFormat, EventIndexParametersQuery } from "@/lib/types";
 import H1 from "@/components/ui/h1";
 import { Metadata, ResolvingMetadata } from "next";
 

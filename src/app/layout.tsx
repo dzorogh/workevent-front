@@ -34,7 +34,7 @@ const getPage = async () => {
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage();
-  
+
   return {
     title: page?.metadata?.title ?? "Workevent",
     description: page?.metadata?.description ?? "Workevent",
@@ -50,17 +50,20 @@ export default async function RootLayout({
 
   return (
     <html lang="ru">
+      <head>
+        <script src="https://api-maps.yandex.ru/v3/?apikey=0301c3d7-80e8-4b68-8a4b-78a4665094f6&lang=ru_RU"></script>
+      </head>
       <GoogleTagManager gtmId="GTM-PN9DXRLD" />
       <body
         className={`${inter.className} antialiased`}
       >
-        <NextTopLoader color="#4a4de3" shadow={false} crawlSpeed={5}  />
+        <NextTopLoader color="#4a4de3" shadow={false} crawlSpeed={5} />
 
         <Container className="pt-2 md:pt-5">
           <Header />
         </Container>
 
-        <Container className="pt-10 md:pt-20">
+        <Container className="pt-4 md:pt-8">
           {children}
         </Container>
 
@@ -74,7 +77,7 @@ export default async function RootLayout({
         <Suspense fallback={<></>}>
           <YandexMetrika />
         </Suspense>
-        
+
         <SpeedInsights />
         <Analytics />
       </body>

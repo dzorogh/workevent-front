@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Route } from "next";
 import Link from "next/link";
-import { IndustryResource } from "@/lib/api/types";
+import { IndustryResource } from "@/lib/types";
 import { useEffect } from "react";
 
 export default function Industries({ industries, industrySlug, homeRoute }: { industries: IndustryResource[], industrySlug: string | undefined, homeRoute: string }) {
