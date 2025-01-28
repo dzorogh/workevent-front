@@ -1,9 +1,12 @@
 interface SectionTitleProps {
-    title: string
+    title?: string
+    children?: React.ReactNode
 }
 
-export default function SectionTitle({ title }: SectionTitleProps) {
+export default function SectionTitle({ title, children }: SectionTitleProps) {
     return (
-        <h2 className="text-xl font-semibold">{title}</h2>
+        <div className="flex flex-col gap-2">
+            <h2 className="text-xl font-semibold">{title}{children}</h2>
+        </div>
     )
 }

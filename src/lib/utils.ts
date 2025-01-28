@@ -91,6 +91,10 @@ export function decodeUrl(encodedUrl: string): string {
   return decodedUrl
 }
 
+export function formatDate(date: string): string {
+  return new Date(date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
 export function formatEventDates(event: EventResource) {
   // return "19-22 октября 2025" if dateStart and dateEnd are in the same month and year
   // return "19 окт - 22 нояб 2025" if dateStart and dateEnd are in different months

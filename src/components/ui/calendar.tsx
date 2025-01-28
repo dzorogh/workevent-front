@@ -24,7 +24,7 @@ function Calendar({
     <DayPicker
       locale={ru}
       showOutsideDays={showOutsideDays}
-      className={cn("p-3", className)}
+      className={cn("p-3 relative", className)}
       classNames={{
         chevron: "fill-primary",
         caption_label: "",
@@ -34,14 +34,14 @@ function Calendar({
         // dropdown_root: "",
         // dropdowns: "",
         // footer: "",
-        // month: "",
+        month: "grow",
         month_caption: "text-sm font-medium capitalize text-center h-8 flex items-center justify-center",
         month_grid: "month-grid w-full border-collapse space-y-1 ",
         months: "flex flex-col sm:flex-row gap-4",
         months_dropdown: "",
         nav: "absolute top-4 left-0 right-0",
-        button_next: "absolute right-4",
-        button_previous: "absolute left-4",
+        button_next: "absolute right-4 disabled:opacity-0",
+        button_previous: "absolute left-4 disabled:opacity-0",
         range_end: "bg-gradient-to-r from-primary to-primary-dark text-primary-foreground",
         range_start: "bg-gradient-to-r from-primary to-primary-dark text-primary-foreground",
         // root: "",

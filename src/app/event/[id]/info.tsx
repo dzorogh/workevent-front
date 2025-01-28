@@ -6,6 +6,8 @@ import { formatEventDates, formatPrice } from "@/lib/utils";
 import { Route } from "next";
 import removeMarkdown from "remove-markdown";
 import InfoLabel from "./info-label";
+import Tags from "./tags";
+import { encodeUrl } from "@/lib/utils";
 
 interface InfoProps {
     event: EventResource
@@ -27,21 +29,16 @@ export default function Info({ event }: InfoProps) {
         return url.toString() as Route;
     }
 
+    const additionalIndustries = event.industries?.filter(industry => industry.id !== event.industry?.id).map(industry => industry.title).join(', ');
+
+
     return (
         <div className="flex flex-col gap-6 w-1/2 pt-2">
             <h1 className="md:text-3xl text-2xl font-semibold">{event.title}</h1>
 
             {/* Tags */}
             {event.tags && event.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                    {event.tags.map((tag, index) => (
-                        <Badge
-                            key={tag.id}
-                        >
-                            {tag.title}
-                        </Badge>
-                    ))}
-                </div>
+                <Tags tags={event.tags} />
             )}
 
             {/* Additional info */}
@@ -85,14 +82,14 @@ export default function Info({ event }: InfoProps) {
                 {event.industry && (
                     <div className="flex flex-col gap-2">
                         <InfoLabel label="Отрасль" />
-                        <div className="font-semibold">{event.industry.title}</div>
+                        <div className="font-semibold">{event.industry.title}{additionalIndustries ? `, ${additionalIndustries}` : ''}</div>
                     </div>
                 )}
             </div>
 
             <div className="flex gap-4 max-w-[550px]">
                 <Button variant="primary" size="lg" asChild className="basis-1/2">
-                    <Link href={googleCalendarRoute()}>Принять участие</Link>
+                    <Link href={encodeUrl(event.website ?? '', { utm_campaign: 'participate' }) as Route}>Принять участие</Link>
                 </Button>
                 <Button variant="default" size="lg" asChild className="basis-1/2">
                     <Link href={googleCalendarRoute()}>Добавить в календарь</Link>

@@ -1,6 +1,7 @@
 import {components, operations} from './api/v1';
 
 export type EventResource = components['schemas']['EventResource'];
+export type TagResource = components['schemas']['TagResource'];
 export type SearchEventsResourceMeta = components["schemas"]["SearchEventsResource"]["meta"]
 export type EventIndexParametersQuery = operations["event.index"]["parameters"]["query"]
 export type EventFormat = components['schemas']['EventFormat'];

@@ -14,19 +14,17 @@ import Link from "next/link";
 import { Event, WithContext } from 'schema-dts'
 import removeMarkdown from "remove-markdown";
 import { ShareButtons } from "./share-buttons";
-import AppLink from "@/components/ui/app-link";
 import { truncateText, encodeUrl, formatEventDates } from "@/lib/utils";
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { z } from "zod";
 import LocationMap from "./location-map";
 import Breadcrumbs from "./breadcrumbs";
 import Info from "./info";
 import Images from "./images";
 import SectionTitle from "./section-title";
 import { Location } from "@/lib/types";
-
-
+import Form from "./form";
+import Tags from "./tags";
+import Contacts from "./contacts";
+import CalendarComponent from "./calendar";
 
 const getLocation = async (location: string): Promise<Location> => {
     console.log(location)
@@ -127,7 +125,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function EventPage({ params }: Props) {
     const { event, similarEvents, presets } = await getEventData(params);
 
-    const location = await getLocation(event.venue?.address || '');
+    const location = await getLocation(event.venue?.address || event.city?.title || '');
 
     // Compile the MDX source code to a function body
     const code = String(
@@ -170,20 +168,12 @@ export default async function EventPage({ params }: Props) {
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     }
 
-    const additionalIndustries = event.industries?.filter(industry => industry.id !== event.industry?.id).map(industry => industry.title).join(', ');
-
-    const formSchema = z.object({
-        name: z.string().min(3, { message: 'Имя должно содержать минимум 3 символа' }),
-        email: z.string().email({ message: 'Некорректный email' }),
-        phone: z.string().min(10, { message: 'Телефон должен содержать минимум 10 символов' }),
-        comment: z.string().optional(),
-    });
 
 
 
     return (
 
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-16">
             {/* JSON-LD */}
             <script
                 type="application/ld+json"
@@ -200,135 +190,51 @@ export default async function EventPage({ params }: Props) {
             </div>
 
             {/* Description */}
-            <div className="prose max-w-prose">
-                <SectionTitle title="О мероприятии" />
-                <Description />
+            <div className="flex gap-8">
+                <div className="flex flex-col gap-6 ">
+                    <SectionTitle>О мероприятии</SectionTitle>
+                    <div className="prose max-w-prose">
+                        <Description />
+                    </div>
+                </div>
+                <div className="flex flex-col gap-6 grow">
+                    <SectionTitle>Дата мероприятия</SectionTitle>
+                    <CalendarComponent event={event} />
+                </div>
             </div>
 
             {/* Map */}
             {location && <div className="flex flex-col gap-6" id="map">
-                <SectionTitle title="Местоположение" />
+                <SectionTitle>Местоположение</SectionTitle>
                 <LocationMap location={location} event={event} />
-            </div>} 
+            </div>}
 
             {/* Form */}
             <div className="flex flex-col gap-6 bg-secondary px-10 py-8 rounded-lg max-w-[1000px]">
-                <SectionTitle title="Оставьте заявку на участие" />
-
-                <div className="flex gap-2">
-                    <Input placeholder="ФИО" />
-                    <Input placeholder="Электронная почта" />
-                    <Input placeholder="Телефон" />
-                </div>
-
-                <Textarea placeholder="Комментарий" />
-
-                <div className="text-xs text-muted-foreground-dark">Нажимая на кнопку, вы соглашаетесь с <AppLink href={`/privacy-policy` as Route} variant="underline">политикой конфиденциальности</AppLink></div>
-                <div className="flex">
-                    <Button variant="primary">Оставить заявку</Button>
-                </div>
+                <SectionTitle>Оставьте заявку на участие</SectionTitle>
+                <Form />
             </div>
 
-            {/* Contacts Section */}
-            <div className="flex flex-col gap-6 bg-muted p-4 rounded-lg">
-                {/* Dates */}
-                {event.start_date && event.end_date && (
-                    <div className="flex flex-col gap-2">
-                        <span className="text-sm text-muted-foreground">Дата проведения мероприятия</span>
-                        <span className="text-lg font-bold">{formatEventDates(event)}</span>
-                    </div>
-                )}
-
-                {/* Location */}
-                {event.city && (
-                    <div className="flex flex-col gap-2">
-                        <span className="text-sm text-muted-foreground">Город</span>
-                        <span className="text-lg font-bold">{event.city.title}</span>
-                    </div>
-                )}
-
-                {/* Venue */}
-                {event.venue && (
-                    <div className="flex flex-col gap-2">
-                        <span className="text-sm text-muted-foreground">Место проведения</span>
-                        <span className="text-lg font-bold">{event.venue.title}</span>
-                        <span className="">{event.venue.address}</span>
-                    </div>
-                )}
-
-                {/* Contacts */}
-                <div className="flex flex-col gap-2">
-                    <span className="text-sm text-muted-foreground">Контакты организатора</span>
-                    <div className="flex flex-row gap-x-4 gap-y-2 flex-wrap">
-                        {event.website && (
-                            <Button
-                                asChild
-                                variant="primary"
-                                size="lg"
-                            >
-                                <Link
-                                    className="flex items-center gap-2"
-                                    href={event.website as Route}
-                                    target="_blank"
-                                    rel="noopener noreferrer nofollow"
-                                >
-                                    <IconWorld />
-                                    <span>{new URL(event.website).hostname}</span>
-                                </Link>
-                            </Button>
-                        )}
-                        {event.phone && (
-                            <Button
-                                asChild
-                                variant="primary"
-                                size="lg"
-                            >
-                                <Link
-                                    className="flex items-center gap-2"
-                                    href={`tel:${event.phone}`}
-                                >
-                                    <IconPhone />
-                                    <span>{formatPhone(event.phone)}</span>
-                                </Link>
-                            </Button>
-                        )}
-                        {event.email && (
-                            <Button
-                                asChild
-                                variant="primary"
-                                size="lg"
-                            >
-                                <Link
-                                    className="flex items-center gap-2"
-                                    href={`mailto:${event.email}`}
-                                >
-                                    <IconMail />
-                                    <span>{event.email}</span>
-                                </Link>
-                            </Button>
-                        )}
-                    </div>
+            {/* Tags */}
+            {event.tags && event.tags.length > 0 && (
+                <div className="flex flex-col gap-6">
+                    <SectionTitle>Темы мероприятия</SectionTitle>
+                    <Tags tags={event.tags} />
                 </div>
+            )}
 
-                {/* Participate Button */}
-                {event.website && (
-                    <Button variant="success" size="xl" asChild>
-                        <Link href={encodeUrl(event.website, { utm_campaign: 'participate' })}>Участвовать</Link>
-                    </Button>
-                )}
-
-                {/* Share Buttons */}
-                <div className="flex flex-col gap-2">
-                    <span className="text-sm text-muted-foreground">Поделиться</span>
-                    <ShareButtons url={`https://workevent.ru/event/${createSlugWithId(event.title, event.id)}`} title={event.title} image={event.cover} />
+            {/* Contacts */}
+            {event.tags && event.tags.length > 0 && (
+                <div className="flex flex-col gap-6">
+                    <SectionTitle>Контакты организатора</SectionTitle>
+                    <Contacts event={event} />
                 </div>
-            </div>
-
+            )}
 
             {/* Similar Events */}
             {similarEvents.length > 0 && (
-                <div className="flex flex-col gap-8">
-                    <H2>Похожие мероприятия</H2>
+                <div className="flex flex-col gap-6">
+                    <SectionTitle>Похожие мероприятия</SectionTitle>
 
                     <EventCardGrid>
                         {similarEvents.map((event) => (
@@ -340,14 +246,14 @@ export default async function EventPage({ params }: Props) {
 
             {/* Presets */}
             {presets && presets.length > 0 && (
-                <div className="flex flex-col gap-8">
-                    <H2>Подборки</H2>
+                <div className="flex flex-col gap-6">
+                    <SectionTitle>Подборки</SectionTitle>
 
                     <div className="flex flex-wrap gap-2">
                         {presets.map(preset => (
                             <div className="w-full md:w-auto overflow-x-auto" key={preset.id}>
                                 <Button variant="default" asChild>
-                                    <Link href={`/events/${preset.slug}`}>{preset.title}</Link>
+                                    <Link href={`/events/${preset.slug}` as Route}>{preset.title}</Link>
                                 </Button>
                             </div>
                         ))}
