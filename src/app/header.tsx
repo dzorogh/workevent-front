@@ -1,35 +1,30 @@
 'use client'
 
 import Logo from "@/components/icons/logo";
-import Menu from "@/app/menu";
-import Auth from "@/components/auth";
+import MenuDesktop from "./menu-desktop";
+import MenuMobile from "./menu-mobile";
 import Link from "next/link";
 import { useState } from "react";
-import { Menu as HamburgerMenu, X as CloseIcon } from "lucide-react";
+import Burger from "@/components/icons/burger.svg";
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
-        <header className="rounded-lg bg-gradient-to-r from-primary to-primary-dark p-[2px]">
-            <div className={`px-4 py-2 bg-white rounded-md `}>
+        <header className="rounded-lg md:bg-gradient-to-r md:from-primary md:to-primary-dark md:p-[2px]">
+            <div className={`md:px-4 py-2 bg-white rounded-md `}>
                 <div className={`flex justify-between items-center gap-4 overflow-x-auto ${!isMenuOpen ? 'rounded-b-md' : 'rounded-b-none'}`}>
-                    <Link href="/">
+                    <Link href={{ pathname: "/" }}>
                         <Logo />
-                    </Link>
+                    </Link> 
                     <div className="hidden md:flex">
-                        <Menu />
+                        <MenuDesktop />
                     </div>
                     <div className="md:hidden">
-                        <button className="text-primary flex items-center gap-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                            {isMenuOpen ? <CloseIcon size={40} /> : <HamburgerMenu size={40} />}
-                        </button>
+                        <Burger onClick={() => setIsMenuOpen(!isMenuOpen)} />
                     </div>
-                    <Auth />
                 </div>
-                <div className={`md:hidden rounded-b-lg transition-all duration-300 ease-in-out ${isMenuOpen ? 'mt-4 max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-                    <Menu isMobile={true} />
-                </div>
+                {isMenuOpen && <MenuMobile setIsMenuOpen={setIsMenuOpen} />}
             </div>
 
         </header>

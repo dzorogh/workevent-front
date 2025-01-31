@@ -16,16 +16,16 @@ interface ContactsProps {
 }
 
 export default function Contacts({ event }: ContactsProps) {
-    return <div className="px-10 py-8 rounded-lg bg-secondary">
+    return <div className="md:px-10 px-4 py-8 md:rounded-lg bg-secondary -mx-4 md:mx-0 md:w-full">
         <div className="flex flex-col gap-6">
             <div className="text-primary-dark font-semibold">{event.title}</div>
-            <div className="flex gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
                 {event.website && <ContactsItem link={encodeUrl(event.website, { utm_campaign: 'participate' }) as Route} icon={<Image src={Globe} alt="Globe" width={40} height={40} />} text={new URL(event.website).hostname} />}
                 {event.email && <ContactsItem link={`mailto:${event.email}`} icon={<Image src={Mail} alt="Mail" width={40} height={40} />} text={event.email} />}
                 {event.phone && <ContactsItem link={`tel:${event.phone}`} icon={<Image src={Phone} alt="Phone" width={40} height={40} />} text={formatPhone(event.phone)} />}
             </div>
-            <div className="flex gap-4">
-                <Button variant="primary" size="lg" asChild className="px-12">
+            <div className="flex flex-col md:flex-row gap-4">
+                <Button variant="primary" size="lg" asChild className="px-12 h-12">
                     <Link href={`/event/${event.id}/form` as Route}>Принять участие</Link>
                 </Button>
 

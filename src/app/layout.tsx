@@ -74,11 +74,13 @@ export default async function RootLayout({
         <Footer />
 
         <YandexMetrikaCounter />
+
         <Suspense fallback={<></>}>
           <YandexMetrika />
         </Suspense>
 
         <SpeedInsights />
+        
         <Analytics />
       </body>
     </html>

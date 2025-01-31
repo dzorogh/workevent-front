@@ -28,8 +28,8 @@ function Calendar({
       classNames={{
         chevron: "fill-primary",
         caption_label: "",
-        day: "rounded-full relative p-0 text-center text-sm focus-within:relative focus-within:z-20 aria-selected:bg-muted data-[outside]:opacity-50 data-[outside]:text-muted-foreground",
-        day_button: "h-8 w-8 flex items-center justify-center",
+        day: "rounded-full aspect-square relative p-0 text-center text-sm focus-within:relative focus-within:z-20 aria-selected:bg-muted data-[outside]:opacity-50 data-[outside]:text-muted-foreground flex items-center justify-center",
+        day_button: "flex items-center justify-center",
         // dropdown: "",
         // dropdown_root: "",
         // dropdowns: "",

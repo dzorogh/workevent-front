@@ -8,12 +8,14 @@ import removeMarkdown from "remove-markdown";
 import InfoLabel from "./info-label";
 import Tags from "./tags";
 import { encodeUrl } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 interface InfoProps {
     event: EventResource
+    className?: string
 }
 
-export default function Info({ event }: InfoProps) {
+export default function Info({ event, className }: InfoProps) {
     const googleCalendarRoute = (): Route => {
         const url = new URL('https://calendar.google.com/calendar/u/0/r/eventedit');
         url.searchParams.set('text', event.title);
@@ -33,8 +35,8 @@ export default function Info({ event }: InfoProps) {
 
 
     return (
-        <div className="flex flex-col gap-6 w-1/2 pt-2">
-            <h1 className="md:text-3xl text-2xl font-semibold">{event.title}</h1>
+        <div className={cn("flex flex-col gap-6 pt-2", className)}>
+            <h1 className="md:text-3xl text-xl font-semibold">{event.title}</h1>
 
             {/* Tags */}
             {event.tags && event.tags.length > 0 && (
@@ -87,11 +89,11 @@ export default function Info({ event }: InfoProps) {
                 )}
             </div>
 
-            <div className="flex gap-4 max-w-[550px]">
-                <Button variant="primary" size="lg" asChild className="basis-1/2">
+            <div className="flex flex-col md:flex-row gap-4 max-w-[550px]">
+                <Button variant="primary" size="lg" asChild className="md:basis-1/2 w-full">
                     <Link href={encodeUrl(event.website ?? '', { utm_campaign: 'participate' }) as Route}>Принять участие</Link>
                 </Button>
-                <Button variant="default" size="lg" asChild className="basis-1/2">
+                <Button variant="default" size="lg" asChild className="md:basis-1/2 w-full">
                     <Link href={googleCalendarRoute()}>Добавить в календарь</Link>
                 </Button>
             </div>

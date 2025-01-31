@@ -5,7 +5,7 @@ import MapMarkerPng from '@/components/icons/map-marker.png'
 import InfoLabel from './info-label'
 import { EventResource } from '@/lib/types'
 import React from "react";
-import Map, {Marker} from 'react-map-gl';
+import Map, {Marker, NavigationControl} from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css'; 
 
 export default function LocationMap({ location, event }: { location: Location, event: EventResource }) {
@@ -22,7 +22,7 @@ export default function LocationMap({ location, event }: { location: Location, e
                 </div>
             </div>
 
-            <div className="w-full h-[500px] bg-muted rounded-lg overflow-hidden">
+            <div className=" h-[500px] bg-muted md:rounded-lg overflow-hidden -mx-4 md:mx-0 md:w-full">
                 <Map
                     mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
                     initialViewState={{
@@ -37,6 +37,7 @@ export default function LocationMap({ location, event }: { location: Location, e
                         'ru': 'ru',
                     }}
                 >
+                    <NavigationControl />
                     <Marker longitude={Number(location.lon)} latitude={Number(location.lat)} anchor="bottom" >
                         <img src={MapMarkerPng.src} width={60} height={60} />
                     </Marker>

@@ -173,7 +173,7 @@ export default async function EventPage({ params }: Props) {
 
     return (
 
-        <div className="flex flex-col gap-16">
+        <div className="flex flex-col md:gap-16 gap-8">
             {/* JSON-LD */}
             <script
                 type="application/ld+json"
@@ -184,13 +184,13 @@ export default async function EventPage({ params }: Props) {
             <Breadcrumbs event={event} />
 
             {/* Product Card */}
-            <div className="flex gap-8">
-                <Images event={event} />
-                <Info event={event} />
+            <div className="flex flex-col md:flex-row md:gap-8 gap-4">
+                <Images event={event} className="md:basis-1/2" />
+                <Info event={event} className="md:basis-1/2" />
             </div>
 
             {/* Description */}
-            <div className="flex gap-8">
+            <div className="flex flex-col md:flex-row gap-8">
                 <div className="flex flex-col gap-6 ">
                     <SectionTitle>О мероприятии</SectionTitle>
                     <div className="prose max-w-prose">
@@ -210,8 +210,8 @@ export default async function EventPage({ params }: Props) {
             </div>}
 
             {/* Form */}
-            <div className="flex flex-col gap-6 bg-secondary px-10 py-8 rounded-lg max-w-[1000px]">
-                <SectionTitle>Оставьте заявку на участие</SectionTitle>
+            <div className="flex flex-col gap-6 -mx-4 md:mx-0 bg-secondary md:px-10 px-4 md:py-8 py-12 md:rounded-lg -mt-8 md:mt-0 max-w-[1000px]">
+                <SectionTitle className="text-center md:text-left">Оставьте заявку на участие</SectionTitle>
                 <Form />
             </div>
 

@@ -1,14 +1,13 @@
 'use client';
 
-import React from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
+import { EventResource } from '@/lib/types';
 
-interface GallerySectionProps {
-    images: string[];
-    eventTitle: string;
-    size?: 'sm' | 'md' | 'lg';
+interface GallerySectionProps { 
+    event: EventResource;
 }
 
 import {
@@ -37,32 +36,43 @@ const NextJsImageElement = ({ slide }: { slide: { src: string; alt?: string } })
     );
 };
 
-export default function GallerySection({ images, eventTitle, size = 'md' }: GallerySectionProps) {
-    const [open, setOpen] = React.useState(false);
-    const [imageIndex, setImageIndex] = React.useState(0);
+export default function GallerySection({ event }: GallerySectionProps) {
+    const [open, setOpen] = useState(false);
+    const [imageIndex, setImageIndex] = useState(0);
 
-    const slides = images.map((image, index) => ({
-        src: image,
-        alt: `${eventTitle} фото ${index + 1}`,
-    }));
+    const slides = [
+        {
+            src: event.cover,
+            alt: `${event.title} обложка мероприятия`,
+            className: "md:hidden"
+        }
+    ]
+
+    event.gallery.forEach((image, index) => {
+        slides.push({
+            src: image,
+            alt: `${event.title} фото с мероприятия ${index + 1}`,
+            className: ""
+        });
+    });
 
     return (
         <section>
             <Carousel>
                 <CarouselContent className="w">
-                    {images.map((image, index) => (
-                        <CarouselItem key={index} className="basis-[21%]">
-                            <a key={index} href={image} target="_blank" onClick={(e) => {
+                    {slides.map((slide, index) => (
+                        <CarouselItem key={index} className={`${slide.className} md:basis-[22%] basis-[90%]`}>
+                            <a key={index} href={slide.src} target="_blank" onClick={(e) => {
                                 e.preventDefault();
                                 setImageIndex(index);
                                 setOpen(true);
                             }}>
                                 <Image
-                                    src={image}
-                                    alt={`${eventTitle} фото ${index + 1}`}
+                                    src={slide.src}
+                                    alt={slide.alt}
                                     width={400}
                                     height={400}
-                                    className="rounded-sm"
+                                    className="rounded-sm aspect-video bg-white object-contain border border-border"
                                 />
                             </a>
 

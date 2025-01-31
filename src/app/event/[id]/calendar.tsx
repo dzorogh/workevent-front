@@ -23,7 +23,7 @@ export default function CalendarComponent({ event }: CalendarComponentProps) {
             </div>
         </div>
 
-        <div className=" border-2 border-primary rounded-lg p-4 max-w-[340px]">
+        <div className=" border-2 border-primary rounded-lg max-w-[340px]">
             <Calendar 
                 mode="range" 
                 month={new Date(event.start_date)} 

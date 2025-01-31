@@ -1,11 +1,13 @@
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { EventResource } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 interface BreadcrumbsProps {
     event: EventResource
+    className?: string
 }
 
-export default function Breadcrumbs({ event }: BreadcrumbsProps) {
+export default function Breadcrumbs({ event, className }: BreadcrumbsProps) {
     return (
         <Breadcrumb>
             <BreadcrumbList>

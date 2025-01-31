@@ -4,22 +4,23 @@ import GallerySection from "./gallery-section";
 
 interface ImagesProps {
     event: EventResource
+    className?: string;
 }
 
-export default function Images({ event }: ImagesProps) {
+export default function Images({ event, className }: ImagesProps) {
     return (
-        <div className="flex flex-col gap-8 w-1/2">
-            <div className="sticky top-4">
+        <div className={`flex flex-col gap-8 ${className}`}>
+            <div className="md:sticky top-4">
                 <Image
                     priority={true}
                     src={event.cover}
                     alt={event.title}
                     width={1000}
                     height={500}
-                    className="rounded-lg"
+                    className="rounded-lg hidden md:block"
                 />
 
-                <GallerySection images={event.gallery} eventTitle={event.title} size="lg" />
+                <GallerySection event={event}  />
             </div>
         </div>
     )

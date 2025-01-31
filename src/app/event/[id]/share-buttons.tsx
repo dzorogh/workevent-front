@@ -44,7 +44,7 @@ import {
 
     return (
         <>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 items-center md:justify-start justify-center">
                 <TelegramShareButton url={url} title={title} >
                     <TelegramIcon size={size} round={true} />
                 </TelegramShareButton>
