@@ -7,6 +7,7 @@ import { EventResource } from '@/lib/types'
 import React from "react";
 import Map, {Marker, NavigationControl} from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css'; 
+import Image from 'next/image';
 
 export default function LocationMap({ location, event }: { location: Location, event: EventResource }) {
     return (
@@ -39,7 +40,7 @@ export default function LocationMap({ location, event }: { location: Location, e
                 >
                     <NavigationControl />
                     <Marker longitude={Number(location.lon)} latitude={Number(location.lat)} anchor="bottom" >
-                        <img src={MapMarkerPng.src} width={60} height={60} />
+                        <Image src={MapMarkerPng} width={60} height={60} alt="Map marker" />
                     </Marker>
                 </Map>
             </div>

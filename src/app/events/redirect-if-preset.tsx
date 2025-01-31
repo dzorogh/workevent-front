@@ -11,7 +11,7 @@ export default function RedirectIfPreset({ preset }: { preset: PresetResource | 
         if (preset) {
             router.push(`/events/${preset.slug}` as Route);
         }
-    }, [preset]);
+    }, [preset, router]);
 
     return <></>;
 }

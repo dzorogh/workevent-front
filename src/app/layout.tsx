@@ -50,9 +50,6 @@ export default async function RootLayout({
 
   return (
     <html lang="ru">
-      <head>
-        <script src="https://api-maps.yandex.ru/v3/?apikey=0301c3d7-80e8-4b68-8a4b-78a4665094f6&lang=ru_RU"></script>
-      </head>
       <GoogleTagManager gtmId="GTM-PN9DXRLD" />
       <body
         className={`${inter.className} antialiased`}
