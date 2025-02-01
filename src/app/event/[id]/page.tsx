@@ -1,11 +1,9 @@
 import { Api } from "@/lib/api";
 import { Metadata } from "next";
-import { IconWorld, IconPhone, IconMail } from "@tabler/icons-react";
 import { notFound, permanentRedirect } from "next/navigation";
 import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
-import { createSlugWithId, getIdFromSlug, formatPrice, formatPhone } from "@/lib/utils";
-import H2 from "@/components/ui/h2";
+import { createSlugWithId, getIdFromSlug } from "@/lib/utils";
 import EventCardGrid from "@/components/event-card-grid";
 import EventCard from "@/components/event-card";
 import { Route } from "next";
@@ -13,8 +11,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Event, WithContext } from 'schema-dts'
 import removeMarkdown from "remove-markdown";
-import { ShareButtons } from "./share-buttons";
-import { truncateText, encodeUrl, formatEventDates } from "@/lib/utils";
+import { truncateText } from "@/lib/utils";
 import LocationMap from "./location-map";
 import Breadcrumbs from "./breadcrumbs";
 import Info from "./info";
@@ -25,7 +22,8 @@ import Form from "./form";
 import Tags from "./tags";
 import Contacts from "./contacts";
 import CalendarComponent from "./calendar";
-
+import AppLink from "@/components/ui/app-link";
+import Description from "./description";
 const getLocation = async (location: string): Promise<Location> => {
     console.log(location)
 
@@ -133,7 +131,7 @@ export default async function EventPage({ params }: Props) {
     )
 
     // Run the compiled code with the runtime and get the default export
-    const { default: Description } = await run(code, {
+    const { default: DescriptionMDX } = await run(code, {
         ...runtime,
         baseUrl: import.meta.url,
     })
@@ -168,9 +166,6 @@ export default async function EventPage({ params }: Props) {
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     }
 
-
-
-
     return (
 
         <div className="flex flex-col md:gap-16 gap-8">
@@ -193,9 +188,9 @@ export default async function EventPage({ params }: Props) {
             <div className="flex flex-col md:flex-row gap-8">
                 <div className="flex flex-col gap-6 ">
                     <SectionTitle>О мероприятии</SectionTitle>
-                    <div className="prose max-w-prose">
-                        <Description />
-                    </div>
+                    <Description>
+                        <DescriptionMDX />
+                    </Description>
                 </div>
                 <div className="flex flex-col gap-6 grow">
                     <SectionTitle>Дата мероприятия</SectionTitle>
