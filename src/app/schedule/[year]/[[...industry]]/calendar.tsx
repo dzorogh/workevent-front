@@ -4,6 +4,7 @@ import { EventResource } from "@/lib/types";
 import AppLink from "@/components/ui/app-link";
 import { createSlugWithId, plural } from "@/lib/utils";
 import { Route } from "next";
+import Link from "next/link";
 
 export default function Calendar({ events }: { events: EventResource[] }) {
 
@@ -34,24 +35,24 @@ export default function Calendar({ events }: { events: EventResource[] }) {
             <div className="flex flex-col gap-4 relative">
                 <div className="flex flex-col md:grid auto-rows-fr md:grid-cols-3 gap-4">
                     {months.map((month) => (
-                        <div key={month.name} className="flex flex-col bg-muted p-4 rounded-lg">
-                            <div className="flex flex-col gap-2">
+                        <div key={month.name} className="flex flex-col border border-border p-8 rounded-lg">
+                            <div className="flex flex-col gap-4">
                                 <div className="flex justify-between items-center">
-                                    <div className="text-lg font-bold">{month.name}</div>
-                                    <div className="text-sm text-muted-foreground">
+                                    <div className="text-xl font-semibold">{month.name}</div>
+                                    <div className="text-sm text-muted-foreground font-normal">
                                         {month.events.length} {plural(['мероприятие', 'мероприятия', 'мероприятий'], month.events.length)}
                                     </div>
                                 </div>
-                                <div className="flex flex-col gap-2">
+                                <div className="flex flex-col ">
                                     {month.events.sort((a, b) => new Date(a.start_date).getDate() - new Date(b.start_date).getDate()).map((event) => (
-                                        <AppLink key={event.id} href={`/event/${createSlugWithId(event.title, event.id)}` as Route} className=" flex gap-4 items-start justify-start text-sm font-bold">
-                                            <div className="w-6 flex items-center justify-end shrink-0 text-muted-foreground">
+                                        <Link key={event.id} href={`/event/${createSlugWithId(event.title, event.id)}` as Route} className="border-b last:border-b-0 border-border py-2 flex gap-4 justify-start items-baseline">
+                                            <div className="w-4 flex shrink-0 text-muted-foreground-dark text-sm">
                                                 {new Date(event.start_date).getDate()}
                                             </div>
                                             <div className="">
                                                 {event.title}
                                             </div>
-                                        </AppLink>
+                                        </Link>
                                     ))}
                                 </div>
                             </div>
