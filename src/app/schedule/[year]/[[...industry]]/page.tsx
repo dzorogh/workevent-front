@@ -8,7 +8,7 @@ import Calendar from "./calendar";
 import Industries from "./industries";
 import Years from "./years";
 import React from 'react';
-
+import Description from "@/components/description";
 type Props = {
     params: Promise<{
         year: string
@@ -146,9 +146,12 @@ export default async function SchedulePage({ params }: Props) {
 
         <Calendar events={events.data?.data ?? []} />
 
-        <div className="prose max-w-none text-sm">
-            <Content />
-        </div>
+        <Description>
+            <div className="prose max-w-none text-sm">
+                <Content />
+            </div>
+        </Description>
+
 
     </div>
 } 

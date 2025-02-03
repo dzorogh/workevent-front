@@ -23,7 +23,7 @@ import Tags from "./tags";
 import Contacts from "./contacts";
 import CalendarComponent from "./calendar";
 import AppLink from "@/components/ui/app-link";
-import Description from "./description";
+import Description from "../../../components/description";
 const getLocation = async (location: string): Promise<Location> => {
     console.log(location)
 
