@@ -73,6 +73,8 @@ function decrypt(encryptedText: string): string {
 }
 
 export function encodeUrl(url: string, params: Record<string, string>): Route {
+  if (!url) return "/";
+
   const urlObject = new URL(url)
 
   urlObject.searchParams.set("utm_source", "workevent.ru")

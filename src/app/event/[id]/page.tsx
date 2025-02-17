@@ -17,7 +17,7 @@ import Breadcrumbs from "./breadcrumbs";
 import Info from "./info";
 import Images from "./images";
 import SectionTitle from "./section-title";
-import { Location } from "@/lib/types";
+import { Location } from "@/lib/types"; 
 import Form from "./form";
 import Tags from "./tags";
 import Contacts from "./contacts";
