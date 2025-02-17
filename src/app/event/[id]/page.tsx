@@ -27,7 +27,12 @@ import Description from "../../../components/description";
 const getLocation = async (location: string): Promise<Location> => {
     console.log(location)
 
-    const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${location}&limit=1&format=json`, {
+    const url = new URL(`https://nominatim.openstreetmap.org/search`)
+    url.searchParams.set('q', location.trim())
+    url.searchParams.set('limit', '1')
+    url.searchParams.set('format', 'json')
+
+    const response = await fetch(url.toString(), {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

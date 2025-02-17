@@ -25,7 +25,7 @@ export default function EventForm() {
 
             <Textarea placeholder="Комментарий" />
 
-            <div className="text-xs text-muted-foreground-dark">Нажимая на кнопку, вы соглашаетесь с <AppLink href={`/privacy-policy` as Route} variant="underline">политикой конфиденциальности</AppLink></div>
+            <div className="text-xs text-muted-foreground-dark">Нажимая на кнопку, вы соглашаетесь с <AppLink href={`/` as Route} variant="underline">политикой конфиденциальности</AppLink></div>
             
             <div className="flex">
                 <Button variant="primary">Оставить заявку</Button>

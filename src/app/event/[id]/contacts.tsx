@@ -26,7 +26,7 @@ export default function Contacts({ event }: ContactsProps) {
             </div>
             <div className="flex flex-col md:flex-row gap-4">
                 <Button variant="primary" size="lg" asChild className="px-12 h-12">
-                    <Link href={`/event/${event.id}/form` as Route}>Принять участие</Link>
+                    <Link href={encodeUrl(event.website ?? '', { utm_campaign: 'participate' }) as Route}>Принять участие</Link>
                 </Button>
 
                 <ShareButtons url={`https://workevent.ru/event/${createSlugWithId(event.title, event.id)}`} title={event.title} image={event.cover} size={42} />
