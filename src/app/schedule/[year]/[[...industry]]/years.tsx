@@ -1,18 +1,23 @@
 import { Route } from "next";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export default function Years({ years, selectedYear }: { years: number[], selectedYear: string }) {
     return (
-        <div className="flex p-2 gap-2 flex-wrap items-center justify-center">
+        <div className="flex gap-2">
             {years.map((year) => (
-                <Link
+                <Button
+                    id={year.toString()}
+                    variant={year === Number(selectedYear) ? "primary" : "muted"}
+                    size="sm"
                     key={year}
-                    href={`/schedule/${year}` as Route}
-                    className={cn(year === Number(selectedYear) && "flex-grow text-center bg-primary text-primary-foreground", year !== Number(selectedYear) && "bg-background ring-1 ring-inset ring-muted-foreground-dark text-muted-foreground", "md:text-3xl text-xl px-4 py-2 rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300")}
+                    asChild
                 >
-                    {year}
-                </Link>
+                    <Link href={`/schedule/${year}` as Route}>
+                        {year}
+                    </Link>
+                </Button>
             ))}
         </div>
     )

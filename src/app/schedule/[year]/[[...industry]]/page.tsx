@@ -9,6 +9,8 @@ import Industries from "./industries";
 import Years from "./years";
 import React from 'react';
 import Description from "@/components/description";
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
+
 type Props = {
     params: Promise<{
         year: string
@@ -19,7 +21,7 @@ type Props = {
 
 const getYears = () => {
     const currentYear = new Date().getFullYear();
-    return [currentYear - 1, currentYear, currentYear + 1];
+    return [currentYear, currentYear + 1];
 }
 
 export const revalidate = false;
@@ -134,23 +136,50 @@ export default async function SchedulePage({ params }: Props) {
         baseUrl: import.meta.url,
     })
 
+    const title = page?.title ? page.title : 'План мероприятий на ' + selectedYear + ' год' + (industry?.title ? ` (${industry.title})` : '');
+
     return <div className="flex flex-col md:gap-12 gap-6">
+        <Breadcrumb>
+            <BreadcrumbList>
+                <BreadcrumbItem>
+                    <BreadcrumbLink href="/">Главная</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                    <BreadcrumbPage>{title}</BreadcrumbPage>
+                </BreadcrumbItem>
+            </BreadcrumbList>
+        </Breadcrumb>
 
-        <div className="bg-muted rounded-b-3xl rounded-t-lg flex flex-col overflow-hidden">
-            <Years years={years} selectedYear={selectedYear} />
+        <h1 className="text-xl font-bold">{title}</h1>
 
-            <Industries industries={industries} industrySlug={industrySlug} homeRoute={`/schedule/${selectedYear}`} />
+        <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex flex-col gap-2">
+                <div className="font-bold">
+                    Отрасль
+                </div>
+
+                <Industries industries={industries} industrySlug={industrySlug} homeRoute={`/schedule/${selectedYear}`} />
+
+            </div>
+
+            <div className="flex flex-col gap-2">
+                <div className="font-bold">
+                    Год
+                </div>
+
+                <Years years={years} selectedYear={selectedYear} />
+
+            </div>
         </div>
-
-        <H1 className="m-0 text-center">{page?.title ? page.title : 'План мероприятий на ' + selectedYear + ' год' + (industry?.title ? ` (${industry.title})` : '')}</H1>
 
         <Calendar events={events.data?.data ?? []} />
 
-        <Description>
+        {page?.content && <Description>
             <div className="prose max-w-none text-sm">
                 <Content />
             </div>
-        </Description>
+        </Description>}
 
 
     </div>

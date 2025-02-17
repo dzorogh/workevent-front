@@ -27,7 +27,7 @@ export default function Industries({ industries, industrySlug, homeRoute }: { in
     }, [industrySlug]);
 
     return (
-        <div className="flex gap-2 items-center md:flex-wrap overflow-x-auto p-2">
+        <div className="flex gap-2 items-center md:flex-wrap overflow-x-auto">
             <Button
                 variant={industrySlug === undefined ? "primary" : "muted"}
                 size="sm"
