@@ -4,6 +4,7 @@ import { createEventSlug as createEventSlugGlobal } from "./globalUtils.js"
 import { Route } from "next"
 import * as crypto from 'crypto';
 import { EventResource } from "./types.js";
+import {date} from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -113,6 +114,10 @@ export function formatEventDates(event: EventResource) {
       'янв', 'фев', 'мар', 'апр', 'мая', 'июня',
       'июл', 'авг', 'сен', 'окт', 'нояб', 'дек'
   ];
+
+  if (dateStart === dateEnd) {
+    return `${dateStart.getDate()} ${shortMonths[dateStart.getMonth()]} ${dateStart.getFullYear()}`;
+  }
 
   if (dateStart.getMonth() === dateEnd.getMonth() &&
       dateStart.getFullYear() === dateEnd.getFullYear()) {

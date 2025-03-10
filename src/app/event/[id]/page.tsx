@@ -17,7 +17,7 @@ import Breadcrumbs from "./breadcrumbs";
 import Info from "./info";
 import Images from "./images";
 import SectionTitle from "./section-title";
-import { Location } from "@/lib/types"; 
+import { Location } from "@/lib/types";
 import Form from "./form";
 import Tags from "./tags";
 import Contacts from "./contacts";
@@ -31,6 +31,7 @@ const getLocation = async (location: string): Promise<Location> => {
     url.searchParams.set('q', location.trim())
     url.searchParams.set('limit', '1')
     url.searchParams.set('format', 'json')
+
 
     const response = await fetch(url.toString(), {
         method: "GET",
