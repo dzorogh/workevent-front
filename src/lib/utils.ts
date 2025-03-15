@@ -115,8 +115,8 @@ export function formatEventDates(event: EventResource) {
       'июл', 'авг', 'сен', 'окт', 'нояб', 'дек'
   ];
 
-  if (dateStart === dateEnd) {
-    return `${dateStart.getDate()} ${shortMonths[dateStart.getMonth()]} ${dateStart.getFullYear()}`;
+  if (dateStart.getFullYear() === dateEnd.getFullYear() && dateStart.getMonth() === dateEnd.getMonth() && dateStart.getDate() === dateEnd.getDate()) {
+    return `${dateStart.getDate()} ${months[dateStart.getMonth()]} ${dateStart.getFullYear()}`;
   }
 
   if (dateStart.getMonth() === dateEnd.getMonth() &&
