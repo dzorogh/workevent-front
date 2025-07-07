@@ -10,10 +10,11 @@ export default function Description({ children }: { children: React.ReactNode })
             <div className={`prose max-w-prose ${showMore ? 'max-h-[none]' : 'max-h-[400px] overflow-y-hidden'}`}>
                 {children}
             </div>
-            {!showMore && <div className="h-16 bg-gradient-to-b from-transparent to-background absolute bottom-0 left-0 w-full"></div>}
+            {!showMore && children && <div className="h-16 bg-gradient-to-b from-transparent to-background absolute bottom-0 left-0 w-full"></div>}
+            {!children && <div className="text-muted-foreground">Описание отсутствует</div>}
         </div>
 
-        {!showMore && <div>
+        {!showMore && children && <div>
             <button onClick={(e) => {
                 e.preventDefault()
                 setShowMore(!showMore)

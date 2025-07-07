@@ -133,7 +133,7 @@ export default async function EventPage({ params }: Props) {
 
     // Compile the MDX source code to a function body
     const code = String(
-        await compile(event?.description ?? '', { outputFormat: 'function-body' })
+        await compile('', { outputFormat: 'function-body' })
     )
 
     // Run the compiled code with the runtime and get the default export
@@ -192,13 +192,13 @@ export default async function EventPage({ params }: Props) {
 
             {/* Description */}
             <div className="flex flex-col md:flex-row gap-8">
-                <div className="flex flex-col gap-6 ">
+                <div className="flex flex-col gap-6 grow max-w-prose">
                     <SectionTitle>О мероприятии</SectionTitle>
                     <Description>
                         <DescriptionMDX />
                     </Description>
                 </div>
-                <div className="flex flex-col gap-6 grow">
+                <div className="flex flex-col gap-6">
                     <SectionTitle>Дата мероприятия</SectionTitle>
                     <CalendarComponent event={event} />
                 </div>
