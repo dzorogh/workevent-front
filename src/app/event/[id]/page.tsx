@@ -23,7 +23,7 @@ import Tags from "./tags";
 import Contacts from "./contacts";
 import CalendarComponent from "./calendar";
 import Description from "../../../components/description";
-const getLocation = async (location: string): Promise<Location> => {
+const getLocation = async (location: string): Promise<Location | null> => {
     console.log(location)
 
     const url = new URL(`https://nominatim.openstreetmap.org/search`)
@@ -60,22 +60,7 @@ const getLocation = async (location: string): Promise<Location> => {
     } catch (error) {
         console.error('Error fetching location:', error)
         // Возвращаем базовый объект локации в случае ошибки
-        return {
-            lat: '0',
-            lon: '0',
-            display_name: location,
-            place_id: 0,
-            licence: '',
-            osm_type: '',
-            osm_id: 0,
-            boundingbox: ['0', '0', '0', '0'],
-            class: '',
-            type: '',
-            place_rank: 0,
-            importance: 0,
-            addresstype: '',
-            name: location
-        }
+        return null;
     }
 }
 
@@ -160,10 +145,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 }
 
+const prepareAddress = (address: string, city: string) => {
+    const addressString = address || city
+    // remove special characters and ' д ' because it breaks the search
+    return addressString.replace(/[^a-zA-Z0-9а-яА-Я\s]/g, '').replace(' д ', ' ')
+}
+
 export default async function EventPage({ params }: Props) {
     const { event, similarEvents, presets } = await getEventData(params);
 
-    const location = await getLocation(event.venue?.address || event.city?.title || '');
+
+    const preparedAddress = prepareAddress(event.venue?.address ?? '', event.city?.title ?? '');
+    const location = await getLocation(preparedAddress);
+    console.log({preparedAddress})
 
     // Compile the MDX source code to a function body
     const code = String(
