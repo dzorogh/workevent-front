@@ -22,7 +22,6 @@ import Form from "./form";
 import Tags from "./tags";
 import Contacts from "./contacts";
 import CalendarComponent from "./calendar";
-import AppLink from "@/components/ui/app-link";
 import Description from "../../../components/description";
 const getLocation = async (location: string): Promise<Location> => {
     console.log(location)
@@ -32,17 +31,52 @@ const getLocation = async (location: string): Promise<Location> => {
     url.searchParams.set('limit', '1')
     url.searchParams.set('format', 'json')
 
+    try {
+        const response = await fetch(url.toString(), {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
 
-    const response = await fetch(url.toString(), {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    })
+        if (!response.ok) {
+            console.error('HTTP error! status:', {
+                url: response.url,
+                status: response.status,
+                statusText: response.statusText,    
+                contentType: response.headers.get('content-type'),
+                body: (await response.text()).substring(0, 200) // Первые 200 символов для отладки
+            })
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
 
-    const data = await response.json()
+        const data = await response.json()
 
-    return data[0]
+        if (!data || !Array.isArray(data) || data.length === 0) {
+            throw new Error('No location data found')
+        }
+
+        return data[0]
+    } catch (error) {
+        console.error('Error fetching location:', error)
+        // Возвращаем базовый объект локации в случае ошибки
+        return {
+            lat: '0',
+            lon: '0',
+            display_name: location,
+            place_id: 0,
+            licence: '',
+            osm_type: '',
+            osm_id: 0,
+            boundingbox: ['0', '0', '0', '0'],
+            class: '',
+            type: '',
+            place_rank: 0,
+            importance: 0,
+            addresstype: '',
+            name: location
+        }
+    }
 }
 
 type Props = {
