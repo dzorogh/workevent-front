@@ -161,7 +161,7 @@ export default async function EventPage({ params }: Props) {
 
     // Compile the MDX source code to a function body
     const code = String(
-        await compile('', { outputFormat: 'function-body' })
+        await compile(event.description ?? '', { outputFormat: 'function-body' })
     )
 
     // Run the compiled code with the runtime and get the default export
