@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import type { Configuration } from "webpack";
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
@@ -6,10 +7,27 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig: NextConfig = withBundleAnalyzer({
   output: "standalone",
+  typedRoutes: true,
   experimental: {
     cssChunking: true,
-    typedRoutes: true,
     optimizePackageImports: ['zod', '@radix-ui', 'yet-another-react-lightbox', 'react-day-picker', 'date-fns'],
+  },
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
+  },
+  webpack: (config: Configuration) => {
+    if (config.module && config.module.rules) {
+      config.module.rules.push({
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+      });
+    }
+    return config;
   },
   logging: {
     fetches: {
@@ -29,33 +47,7 @@ const nextConfig: NextConfig = withBundleAnalyzer({
       },
     ],
   },
-  webpack(config: NextConfig) {
-    // Grab the existing rule that handles SVG imports
-    const fileLoaderRule = config.module.rules.find((rule: any) =>
-      rule.test?.test?.('.svg'),
-    )
 
-    config.module.rules.push(
-      // Reapply the existing rule, but only for svg imports ending in ?url
-      {
-        ...fileLoaderRule,
-        test: /\.svg$/i,
-        resourceQuery: /url/, // *.svg?url
-      },
-      // Convert all other *.svg imports to React components
-      {
-        test: /\.svg$/i,
-        issuer: fileLoaderRule.issuer,
-        resourceQuery: { not: [...fileLoaderRule.resourceQuery.not, /url/] }, // exclude if *.svg?url
-        use: ['@svgr/webpack'],
-      },
-    )
-
-    // Modify the file loader rule to ignore *.svg, since we have it handled now.
-    fileLoaderRule.exclude = /\.svg$/i
-
-    return config
-  },
   async redirects() {
     return [
       {

@@ -80,7 +80,7 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="">
-        <div className="flex flex-wrap overflow-x-auto gap-4 rounded-lg bg-gradient-to-r from-primary to-primary-dark md:py-5 py-4 md:px-8 px-4 text-primary-foreground font-normal items-end">
+        <div className="flex flex-wrap overflow-x-auto gap-4 rounded-lg bg-linear-to-r from-primary to-primary-dark md:py-5 py-4 md:px-8 px-4 text-primary-foreground font-normal items-end">
           <div className="flex flex-col gap-2 w-full md:w-48">
             <div className="md:text-lg text-sm">Поиск события</div>
             <FormField

@@ -6,5 +6,5 @@ export default async function GotoPage({ params }: { params: Promise<{ id: strin
 
     const url = decodeUrl(id)
 
-    permanentRedirect(url)
+    permanentRedirect(url as any)
 }
