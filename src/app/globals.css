@@ -1,9 +1,95 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-html {
-  font-size: 17px;
+@plugin 'tailwindcss-animate';
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 2px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-dark: hsl(var(--primary-dark));
+  --color-primary-darker: hsl(var(--primary-darker));
+
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-foreground-dark: hsl(var(--primary-foreground-dark));
+
+  --color-primary-background: hsl(var(--primary-background));
+  --color-primary-background-dark: hsl(var(--primary-background-dark));
+  --color-primary-background-darker: hsl(var(--primary-background-darker));
+
+  --color-footer-background: hsl(var(--footer-background));
+  --color-footer-background-dark: hsl(var(--footer-background-dark));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-muted-foreground-dark: hsl(var(--muted-foreground-dark));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+  --color-success-dark: hsl(var(--success-dark));
+  --color-success-darker: hsl(var(--success-darker));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+
+  --color-input: hsl(var(--input));
+  --color-input-foreground: hsl(var(--input-foreground));
+  --color-input-muted-foreground: hsl(var(--input-muted-foreground));
+
+  --color-ring: hsl(var(--ring));
+
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@layer utilities {
+  html {
+    font-size: 17px;
+  }
 }
 
 @layer base {

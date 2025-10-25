@@ -60,7 +60,7 @@ const menu = [
 
 export default function Footer() {
     return (
-        <div className="pt-20 bg-gradient-to-b from-footer-background to-footer-background-dark">
+        <div className="pt-20 bg-linear-to-b from-footer-background to-footer-background-dark">
             <Container>
                 <div className="flex flex-col gap-12">
                     <div className="flex flex-wrap gap-x-32 gap-y-12">

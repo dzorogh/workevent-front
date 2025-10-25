@@ -15,7 +15,7 @@ const Textarea = React.forwardRef<
         "text-input-foreground transition-colors " +
         "file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-input-foreground " +
         "placeholder:text-muted-foreground " +
-        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus:outline-primary " +
+        "focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary focus:outline-primary " +
         "disabled:cursor-not-allowed disabled:opacity-50  " +
         "md:text-sm",
         className

@@ -79,7 +79,7 @@ export default function CalendarMonth({month}: { month: Month }) {
                         ))}
                     </div>
                     {(isLoading || (isExpandable && !isExpanded)) && <div
-                        className="h-16 bg-gradient-to-b from-transparent to-background absolute bottom-0 left-0 w-full"></div>}
+                        className="h-16 bg-linear-to-b from-transparent to-background absolute bottom-0 left-0 w-full"></div>}
                 </div>
 
                 <div className={`flex flex-col md:h-4 ${isExpandable ? 'flex' : 'hidden md:flex'}`}>
