@@ -1,0 +1,37 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ${{ secrets.SSH_PATH }}
+            
+            # Получение последних изменений
+            git pull origin main
+            
+            # Сборка нового образа без кэша
+            docker compose build --no-cache 
+            
+            # Rolling update без остановки сервиса
+            docker compose up -d --no-deps
+            
+            # Очистка старых образов после успешного обновления
+            docker image prune -f
+
