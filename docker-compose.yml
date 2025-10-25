@@ -1,0 +1,33 @@
+services:  # Workevent frontend application
+  workevent-app:
+    container_name: workevent-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "${PORT:-3000}:3000"
+    env_file:
+      - .env
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    networks:
+      - npm
+
+  # Cron service for automatic revalidation and other tasks
+  workevent-cron:
+    image: alpine:latest
+    container_name: workevent-cron
+    restart: always
+    depends_on:
+      - workevent-app
+    volumes:
+      - ./cron-scripts.sh:/cron-scripts.sh:ro
+    command: sh /cron-scripts.sh
+    networks:
+      - npm
+
+networks:
+    npm:
+      external: true
+      name: npm
