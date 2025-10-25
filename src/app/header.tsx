@@ -5,7 +5,7 @@ import MenuDesktop from "./menu-desktop";
 import MenuMobile from "./menu-mobile";
 import Link from "next/link";
 import { useState } from "react";
-import Burger from "@/components/icons/burger.svg";
+import Burger from "@/components/icons/burger";
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
