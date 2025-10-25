@@ -28,7 +28,7 @@ function Calendar({
       classNames={{
         chevron: "fill-primary",
         caption_label: "",
-        day: "rounded-full aspect-square relative p-0 text-center text-sm focus-within:relative focus-within:z-20 aria-selected:bg-muted data-[outside]:opacity-50 data-[outside]:text-muted-foreground flex items-center justify-center",
+        day: "rounded-full aspect-square relative p-0 text-center text-sm focus-within:relative focus-within:z-20 aria-selected:bg-muted data-outside:opacity-50 data-outside:text-muted-foreground flex items-center justify-center",
         day_button: "flex items-center justify-center",
         // dropdown: "",
         // dropdown_root: "",
@@ -42,8 +42,8 @@ function Calendar({
         nav: "absolute top-4 left-0 right-0",
         button_next: "absolute right-4 disabled:opacity-0",
         button_previous: "absolute left-4 disabled:opacity-0",
-        range_end: "bg-gradient-to-r from-primary to-primary-dark text-primary-foreground",
-        range_start: "bg-gradient-to-r from-primary to-primary-dark text-primary-foreground",
+        range_end: "bg-linear-to-r from-primary to-primary-dark text-primary-foreground",
+        range_start: "bg-linear-to-r from-primary to-primary-dark text-primary-foreground",
         // root: "",
         weeks: "flex flex-col gap-1",
         week: "grid grid-cols-7 gap-1",
@@ -76,8 +76,8 @@ function Calendar({
         //   buttonVariants({ variant: "ghost" }),
         //   "h-8 w-8 p-0 font-normal aria-selected:opacity-100 rounded-full font-light"
         // ),
-        // day_range_start: "day-range-start bg-gradient-to-r from-primary to-primary-dark ",
-        // day_range_end: "day-range-end bg-gradient-to-r from-primary to-primary-dark ",
+        // day_range_start: "day-range-start bg-linear-to-r from-primary to-primary-dark ",
+        // day_range_end: "day-range-end bg-linear-to-r from-primary to-primary-dark ",
         // day_selected:
         //   "text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
         // day_today: "bg-accent text-accent-foreground",
