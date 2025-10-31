@@ -10,7 +10,7 @@ interface ImagesProps {
 export default function Images({ event, className }: ImagesProps) {
     return (
         <div className={`flex flex-col gap-8 ${className}`}>
-            <div className="md:sticky top-4">
+            <div className="md:sticky top-4 flex flex-col gap-4">
                 <Image
                     priority={true}
                     src={event.cover}

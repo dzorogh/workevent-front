@@ -58,7 +58,7 @@ export default async function Home() {
         </div>
         <Presets />
       </div>
-      <Recommendations initialEvents={recommendations} initialMeta={recommendationsMeta ?? EMPTY_META} />
+      {recommendations.length > 0 && <Recommendations initialEvents={recommendations} initialMeta={recommendationsMeta ?? EMPTY_META} />}
       <EventsByIndustry initialIndustries={industries} initialEvents={events} initialMeta={eventsMeta ?? EMPTY_META} />
     </div>
   );

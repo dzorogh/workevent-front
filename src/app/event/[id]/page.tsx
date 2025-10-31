@@ -253,7 +253,7 @@ export default async function EventPage({ params }: Props) {
             )}
 
             {/* Contacts */}
-            {event.tags && event.tags.length > 0 && (
+            {(event.website || event.email || event.phone) && (
                 <div className="flex flex-col gap-6">
                     <SectionTitle>Контакты организатора</SectionTitle>
                     <Contacts event={event} />
