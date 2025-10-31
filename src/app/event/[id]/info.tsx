@@ -91,10 +91,10 @@ export default function Info({ event, className }: InfoProps) {
 
             <div className="flex flex-col md:flex-row gap-4 max-w-[550px]">
                 <Button variant="primary" size="lg" asChild className="md:basis-1/2 w-full">
-                    <Link href={encodeUrl(event.website ?? '', { utm_campaign: 'participate' }) as Route}>Принять участие</Link>
+                    <Link target="_blank" href={encodeUrl(event.website ?? '', { utm_campaign: 'participate' }) as Route}>Принять участие</Link>
                 </Button>
                 <Button variant="default" size="lg" asChild className="md:basis-1/2 w-full">
-                    <Link href={googleCalendarRoute()}>Добавить в календарь</Link>
+                    <Link target="_blank" href={googleCalendarRoute()}>Добавить в календарь</Link>
                 </Button>
             </div>
         </div>
