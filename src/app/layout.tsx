@@ -13,6 +13,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from '@vercel/analytics/next';
 import NextTopLoader from "nextjs-toploader";
 import { GoogleTagManager } from '@next/third-parties/google'
+import CookieBanner from "@/components/cookie-banner";
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
@@ -77,7 +78,7 @@ export default async function RootLayout({
         </Suspense>
 
         <SpeedInsights />
-        
+        <CookieBanner />
         <Analytics />
       </body>
     </html>
