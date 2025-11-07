@@ -53,7 +53,6 @@ export default async function Home() {
     <div className="flex flex-col gap-10 md:gap-20">
       <div className="flex flex-col gap-6">
         <div>
-          <h1 className="text-lg font-semibold mb-2">Поиск мероприятий</h1>
           <Search industries={industries} cities={cities} />
         </div>
         <Presets />

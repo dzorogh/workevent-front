@@ -12,7 +12,7 @@ export default async function Presets() {
 
     return (
         <div>
-            <div className="text-lg font-semibold mb-2">Часто ищут</div>
+            <div className="text-md font-semibold mb-2">Часто ищут</div>
             <div className="flex flex-wrap gap-2 ">
                 {presets.map(preset => (
                     <div className="w-full md:w-auto overflow-x-auto" key={preset.id}>
