@@ -25,11 +25,11 @@ const buttonVariants = cva(
         link: "ring-0! text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-6 py-2 rounded-full text-sm",
-        sm: "h-7 md:px-4 px-3 rounded-full text-xs",
-        lg: "h-10 px-8 rounded-full text-sm ring-2",
-        xl: "h-12 px-10 rounded-full text-lg [&_svg]:size-6",
-        icon: "h-9 w-9 rounded-full ",
+        default: "md:h-9 h-8 md:px-6 px-4 py-2 rounded-full text-sm",
+        sm: "md:h-7 h-6 md:px-4 px-3 rounded-full text-xs",
+        lg: "md:h-10 h-9 md:px-8 px-6 md:py-2 py-1 rounded-full text-sm ring-2",
+        xl: "md:h-12 h-10 md:px-10 px-8 md:py-2 py-1 rounded-full text-lg [&_svg]:size-6",
+        icon: "md:h-9 h-8 md:w-9 w-8 rounded-full ",
       },
     },
     defaultVariants: {

@@ -18,7 +18,7 @@ export default function EventsByIndustry({ initialIndustries, initialEvents, ini
     const [industries] = useState<IndustryResource[]>(initialIndustries);
 
     return (
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-5">
             <H2>Мероприятия по отраслям</H2>
             <div className="flex flex-col gap-5">
                 <div className="flex gap-2 flex-wrap">

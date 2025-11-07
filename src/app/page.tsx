@@ -32,7 +32,7 @@ async function getData() {
     eventsMeta: eventsResponse.data?.meta,
     recommendations: recommendationsResponse.data?.data ?? [],
     recommendationsMeta: recommendationsResponse.data?.meta,
-    industries: industriesResponse.data?.data ?? [],
+    industries: industriesResponse.data?.data.filter(industry => industry.future_events_count && industry.future_events_count > 0) ?? [],
     cities: citiesResponse.data?.data ?? []
   };
 }

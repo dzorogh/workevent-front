@@ -280,7 +280,7 @@ export interface components {
          * EventFormat
          * @enum {string}
          */
-        EventFormat: "forum" | "conference" | "exhibition" | "seminar" | "webinar";
+        EventFormat: "forum" | "conference" | "exhibition" | "seminar" | "webinar" | "summit";
         /** EventFormatResource */
         EventFormatResource: {
             id: string;
@@ -322,6 +322,7 @@ export interface components {
             id: number;
             title: string;
             slug: string | null;
+            future_events_count?: number;
             events_count?: number;
         };
         /** MetadataResource */
@@ -446,18 +447,6 @@ export interface components {
                 };
             };
         };
-        /** @description Authorization error */
-        AuthorizationException: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": {
-                    /** @description Error overview. */
-                    message: string;
-                };
-            };
-        };
         /** @description Not found */
         ModelNotFoundException: {
             headers: {
@@ -539,7 +528,6 @@ export interface operations {
                     "application/json": components["schemas"]["SearchEventsResource"];
                 };
             };
-            403: components["responses"]["AuthorizationException"];
             422: components["responses"]["ValidationException"];
         };
     };
@@ -743,7 +731,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Array of `PostResource` */
+            /** @description Paginated set of `PostResource` */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -751,6 +739,31 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["PostResource"][];
+                        links: {
+                            first: string | null;
+                            last: string | null;
+                            prev: string | null;
+                            next: string | null;
+                        };
+                        meta: {
+                            current_page: number;
+                            from: number | null;
+                            last_page: number;
+                            /** @description Generated paginator links. */
+                            links: {
+                                url: string | null;
+                                label: string;
+                                active: boolean;
+                            }[];
+                            /** @description Base path for paginator generated URLs. */
+                            path: string | null;
+                            /** @description Number of items shown per page. */
+                            per_page: number;
+                            /** @description Number of the last item in the slice. */
+                            to: number | null;
+                            /** @description Total number of items being paginated. */
+                            total: number;
+                        };
                     };
                 };
             };
