@@ -1,0 +1,11 @@
+services:
+  workevent-app:
+    container_name: workevent-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 3000
+    env_file:
+      - .env
