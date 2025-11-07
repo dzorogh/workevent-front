@@ -81,13 +81,13 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="">
         <div className="flex flex-wrap overflow-x-auto gap-4 rounded-lg bg-linear-to-r from-primary to-primary-dark md:py-5 py-4 md:px-8 px-4 text-primary-foreground font-normal items-end">
-          <div className="flex flex-col gap-2 w-full md:w-48">
+          <div className="flex flex-col grow gap-2 w-full md:w-48">
             <div className="md:text-lg text-sm">Поиск события</div>
             <FormField
               control={form.control}
               name="query"
               render={({ field }) => (
-                <Input {...field} placeholder="Название, отрасль, город" />
+                <Input {...field} placeholder="Найти..." />
               )}
             />
           </div>
@@ -102,9 +102,9 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
                     <div className="relative cursor-pointer">
                       {!(date?.from || date?.to) && (
                         <div className="flex items-center gap-2 absolute top-0 left-0 text-muted-foreground h-full w-full justify-between px-4 select-none text-sm">
-                          <div className="grow">С</div>
+                          <div className="grow">Начало</div>
                           <div className="w-px h-5 bg-border"></div>
-                          <div className="grow">По</div>
+                          <div className="grow">Конец</div>
                         </div>
                       )}
                       <Input
@@ -145,7 +145,7 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
                 <ClearableSelect
                   value={field.value}
                   onValueChange={field.onChange}
-                  placeholder="Отрасль"
+                  placeholder="Выберите..."
                   options={industries.map(industry => ({
                     value: industry.id.toString(),
                     label: industry.title
@@ -163,7 +163,7 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
                 <ClearableSelect
                   value={field.value}
                   onValueChange={field.onChange}
-                  placeholder="Город"
+                  placeholder="Выберите..."
                   options={cities.map(city => ({
                     value: city.id.toString(),
                     label: city.title

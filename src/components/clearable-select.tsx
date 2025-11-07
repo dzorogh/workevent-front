@@ -33,7 +33,7 @@ interface ClearableSelectProps {
           ))}
           {value && (
             <Button
-              className="w-full px-2"
+              className="w-full px-2 sticky bottom-0 left-0 right-0"
               variant="default"
               size="sm"
               onClick={(e) => {
