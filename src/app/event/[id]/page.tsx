@@ -23,6 +23,8 @@ import Tags from "./tags";
 import Contacts from "./contacts";
 import CalendarComponent from "./calendar";
 import Description from "../../../components/description";
+import { Separator } from "@/components/ui/separator";
+
 const getLocation = async (location: string): Promise<Location | null> => {
     console.log(location)
 
@@ -43,7 +45,7 @@ const getLocation = async (location: string): Promise<Location | null> => {
             console.error('HTTP error! status:', {
                 url: response.url,
                 status: response.status,
-                statusText: response.statusText,    
+                statusText: response.statusText,
                 contentType: response.headers.get('content-type'),
                 body: (await response.text()).substring(0, 200) // Первые 200 символов для отладки
             })
@@ -157,7 +159,7 @@ export default async function EventPage({ params }: Props) {
 
     const preparedAddress = prepareAddress(event.venue?.address ?? '', event.city?.title ?? '');
     const location = await getLocation(preparedAddress);
-    console.log({preparedAddress})
+    console.log({ preparedAddress })
 
     // Compile the MDX source code to a function body
     const code = String(
@@ -218,9 +220,11 @@ export default async function EventPage({ params }: Props) {
                 <Info event={event} className="md:basis-1/2" />
             </div>
 
+            <Separator />
+
             {/* Description */}
             <div className="flex flex-col md:flex-row gap-8">
-                <div className="flex flex-col gap-6 grow max-w-prose">
+                <div className="flex flex-col gap-6 grow">
                     <SectionTitle>О мероприятии</SectionTitle>
                     <Description>
                         <DescriptionMDX />
@@ -233,10 +237,15 @@ export default async function EventPage({ params }: Props) {
             </div>
 
             {/* Map */}
-            {location && <div className="flex flex-col gap-6" id="map">
-                <SectionTitle>Местоположение</SectionTitle>
-                <LocationMap location={location} event={event} />
-            </div>}
+            {location &&
+                <>
+                    <Separator />
+                    <div className="flex flex-col gap-6" id="map">
+                        <SectionTitle>Местоположение</SectionTitle>
+                        <LocationMap location={location} event={event} />
+                    </div>
+                </>
+            }
 
             {/* Form */}
             <div className="flex flex-col gap-6 -mx-4 md:mx-0 bg-secondary md:px-10 px-4 md:py-8 py-12 md:rounded-lg -mt-8 md:mt-0 max-w-[1000px]">
@@ -246,48 +255,61 @@ export default async function EventPage({ params }: Props) {
 
             {/* Tags */}
             {event.tags && event.tags.length > 0 && (
-                <div className="flex flex-col gap-6">
-                    <SectionTitle>Темы мероприятия</SectionTitle>
-                    <Tags tags={event.tags} />
-                </div>
+                <>
+                    <Separator />
+                    <div className="flex flex-col gap-6">
+                        <SectionTitle>Темы мероприятия</SectionTitle>
+                        <Tags tags={event.tags} />
+                    </div>
+                </>
             )}
 
             {/* Contacts */}
             {(event.website || event.email || event.phone) && (
-                <div className="flex flex-col gap-6">
-                    <SectionTitle>Контакты организатора</SectionTitle>
-                    <Contacts event={event} />
-                </div>
+                <>
+                    <Separator />
+                    <div className="flex flex-col gap-6">
+                        <SectionTitle>Контакты организатора</SectionTitle>
+                        <Contacts event={event} />
+                    </div>
+                </>
             )}
 
             {/* Similar Events */}
             {similarEvents.length > 0 && (
-                <div className="flex flex-col gap-6">
-                    <SectionTitle>Похожие мероприятия</SectionTitle>
+                <>
+                    <Separator />
+                    <div className="flex flex-col gap-6">
+                        <SectionTitle>Похожие мероприятия</SectionTitle>
 
-                    <EventCardGrid>
-                        {similarEvents.map((event) => (
-                            <EventCard key={event.id} event={event} />
-                        ))}
-                    </EventCardGrid>
-                </div>
+                        <EventCardGrid>
+                            {similarEvents.map((event) => (
+                                <EventCard key={event.id} event={event} />
+                            ))}
+                        </EventCardGrid>
+                    </div>
+                </>
             )}
+
 
             {/* Presets */}
             {presets && presets.length > 0 && (
-                <div className="flex flex-col gap-6">
-                    <SectionTitle>Подборки</SectionTitle>
+                <>
+                    <Separator />
+                    <div className="flex flex-col gap-6">
+                        <SectionTitle>Подборки</SectionTitle>
 
-                    <div className="flex flex-wrap gap-2">
-                        {presets.map(preset => (
-                            <div className="w-full md:w-auto overflow-x-auto" key={preset.id}>
-                                <Button variant="default" asChild>
-                                    <Link href={`/events/${preset.slug}` as Route}>{preset.title}</Link>
-                                </Button>
-                            </div>
-                        ))}
+                        <div className="flex flex-wrap gap-2">
+                            {presets.map(preset => (
+                                <div className="w-full md:w-auto overflow-x-auto" key={preset.id}>
+                                    <Button variant="default" asChild>
+                                        <Link href={`/events/${preset.slug}` as Route}>{preset.title}</Link>
+                                    </Button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                </>
             )}
         </div>
     );

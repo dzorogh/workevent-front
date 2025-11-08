@@ -15,12 +15,14 @@ export default function EventsList({
     initialEvents,
     initialMeta,
     params,
-    perPage
+    perPage,
+    withIndustry = true
 }: {
     initialEvents: EventResource[],
     initialMeta: SearchEventsResourceMeta,
     params: SearchParams,
-    perPage: number
+    perPage: number,
+    withIndustry?: boolean
 }) {
     const [events, setEvents] = useState<EventResource[]>(initialEvents);
     const [previousParams, setPreviousParams] = useState<SearchParams>(params);
@@ -70,10 +72,10 @@ export default function EventsList({
                 <>
                     <EventCardGrid>
                         {events.map((event) => (
-                            <EventCard key={event.id} event={event} />
+                            <EventCard key={event.id} event={event} withIndustry={withIndustry} />
                         ))}
                         {loading && Array(perPage).fill(0).map((_, index) => (
-                            <EventCardSkeleton key={`loading-${index}`} />
+                            <EventCardSkeleton key={`loading-${index}`} withIndustry={withIndustry} />
                         ))}
                     </EventCardGrid>
 

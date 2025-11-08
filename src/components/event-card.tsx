@@ -8,9 +8,10 @@ import { Badge } from '@/components/ui/badge';
 
 interface EventCardProps {
     event: EventResource;
+    withIndustry?: boolean;
 }
 
-export default function EventCard({ event }: EventCardProps) {
+export default function EventCard({ event, withIndustry = true }: EventCardProps) {
     return (
         <div>
             <Link href={`/event/${createSlugWithId(event.title, event.id)}` as Route} className="block h-full">
@@ -25,9 +26,10 @@ export default function EventCard({ event }: EventCardProps) {
                             </div>
                         </div>
                         <div className="font-medium text-md grow">{event.title}</div>
-                        <div>
-                            <Badge variant="secondary">{event.industry?.title}</Badge>
-                        </div>
+                        {withIndustry && <div>
+                                <Badge variant="secondary">{event.industry?.title}</Badge>
+                            </div>
+                        }
                     </div>
                 </div>
             </Link>

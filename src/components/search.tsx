@@ -173,7 +173,7 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
             />
           </div>
           <div className="flex flex-col gap-2 w-full md:w-32">
-            <Button variant="success" type="submit">Поиск</Button>
+            <Button type="submit">Поиск</Button>
           </div>
         </div>
       </form>

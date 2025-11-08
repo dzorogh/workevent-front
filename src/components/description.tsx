@@ -18,7 +18,7 @@ export default function Description({ children }: { children: React.ReactNode })
             <button onClick={(e) => {
                 e.preventDefault()
                 setShowMore(!showMore)
-            }} className="text-sm text-primary" >Показать полностью</button>
+            }} className="text-sm text-primary cursor-pointer" >Показать полностью</button>
         </div>}
     </div>
 }

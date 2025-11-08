@@ -45,27 +45,27 @@ export default function Info({ event, className }: InfoProps) {
 
             {/* Additional info */}
             <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1">
                     <InfoLabel label="Дата проведения" />
-                    <div className="font-semibold">{formatEventDates(event)}</div>
+                    <div className="font-medium">{formatEventDates(event)}</div>
                 </div>
 
                 <div className="flex flex-col gap-2">
                     <InfoLabel label="Город" />
-                    <div className="font-semibold">{event.city?.title}</div>
+                    <div className="font-medium">{event.city?.title}</div>
                 </div>
 
                 {event.tariffs && event.tariffs.length > 0 && (
                     <div className="flex flex-col gap-2">
                         <InfoLabel label="Стоимость" />
-                        <div className="font-semibold">от {formatPrice(event.tariffs?.sort((a, b) => a.price - b.price)[0]?.price)}</div>
+                        <div className="font-medium">от {formatPrice(event.tariffs?.sort((a, b) => a.price - b.price)[0]?.price)}</div>
                     </div>
                 )}
 
                 {event.venue &&
                     <div className="flex flex-col gap-2">
                         <InfoLabel label="Место проведения" />
-                        <div className="font-semibold">{event.venue?.title ? `${event.venue.title}` : ''}{event.venue?.title && event.venue?.address ? ', ' : ''}{event.venue?.address ? `${event.venue.address}` : ''}</div>
+                        <div className="font-medium">{event.venue?.title ? `${event.venue.title}` : ''}{event.venue?.title && event.venue?.address ? ', ' : ''}{event.venue?.address ? `${event.venue.address}` : ''}</div>
                         <div className="text-xs">
                             <a href="#map" className="text-primary">Показать на карте</a>
                         </div>
@@ -76,7 +76,7 @@ export default function Info({ event, className }: InfoProps) {
                 {event.format_label && (
                     <div className="flex flex-col gap-2">
                         <InfoLabel label="Формат мероприятия" />
-                        <div className="font-semibold">{event.format_label}</div>
+                        <div className="font-medium">{event.format_label}</div>
                     </div>
                 )}
 
@@ -84,7 +84,7 @@ export default function Info({ event, className }: InfoProps) {
                 {event.industry && (
                     <div className="flex flex-col gap-2">
                         <InfoLabel label="Отрасль" />
-                        <div className="font-semibold">{event.industry.title}{additionalIndustries ? `, ${additionalIndustries}` : ''}</div>
+                        <div className="font-medium">{event.industry.title}{additionalIndustries ? `, ${additionalIndustries}` : ''}</div>
                     </div>
                 )}
             </div>

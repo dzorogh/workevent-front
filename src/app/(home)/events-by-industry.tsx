@@ -39,7 +39,13 @@ export default function EventsByIndustry({ initialIndustries, initialEvents, ini
                     ))}
                 </div>
 
-                <EventsList initialEvents={events} initialMeta={initialMeta} params={{industry_id: selectedIndustry}} perPage={4} />
+                <EventsList 
+                    initialEvents={events}
+                    initialMeta={initialMeta}
+                    params={{ industry_id: selectedIndustry }}
+                    perPage={4}
+                    withIndustry={selectedIndustry === null}
+                />
             </div>
         </div >
     );

@@ -13,6 +13,7 @@ export default function Tags({ tags }: TagsProps) {
                     {tags.map((tag, index) => (
                         <Badge
                             key={tag.id}
+                            variant="secondary"
                         >
                             {tag.title}
                         </Badge>
