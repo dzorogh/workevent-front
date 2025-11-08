@@ -5,6 +5,7 @@ import Recommendations from "@/app/(home)/recommendations";
 import { Api } from "@/lib/api";
 import { Metadata } from "next";
 import H2 from "@/components/ui/h2";
+import H1 from "@/components/ui/h1";
 
 export const revalidate = false;
 
@@ -13,7 +14,7 @@ async function getData() {
     Api.GET('/v1/events', {
       params: {
         query: {
-          per_page: 4
+          per_page: 12
         }
       }
     }),
@@ -40,10 +41,13 @@ async function getData() {
 
 const EMPTY_META = { total: 0, per_page: 0, current_page: 0, last_page: 0 };
 
+const title = 'Каталог деловых мероприятий в России: конференции, форумы, семинары';
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: 'Workevent — каталог деловых мероприятий',
+    title: `Все бизнес‑события России: семинары, форумы, тренинги и выставки - Workevent`,
     description: 'Каталог деловых мероприятий на сайте Workevent. Поиск по датам, индустриям, городам. Контакты организаторов, отзывы участников, фото и видео. Инструменты организаторов',
+    keywords: 'каталог деловых мероприятий, конференции, форумы, семинары, бизнес-мероприятия, мероприятия в России',
   };
 }
 
@@ -57,7 +61,7 @@ export default async function Home() {
         <Presets />
       </div>
       {recommendations.length > 0 && <Recommendations initialEvents={recommendations} initialMeta={recommendationsMeta ?? EMPTY_META} />}
-      <H2 className="m-0">Ближайшие бизнес-мероприятия</H2>
+      <H1 className="m-0">{title}</H1>
       <EventsByIndustry initialIndustries={industries} initialEvents={events} initialMeta={eventsMeta ?? EMPTY_META} />
     </div>
   );

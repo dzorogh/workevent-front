@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import H2 from "@/components/ui/h2";
 import {EventResource, IndustryResource, SearchEventsResourceMeta} from "@/lib/types";
 import EventsList from '@/components/events-list';
 
