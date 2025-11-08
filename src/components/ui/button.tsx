@@ -20,15 +20,15 @@ const buttonVariants = cva(
         secondary:
           "ring-1 ring-inset ring-secondary bg-background text-secondary hover:bg-secondary active:bg-secondary",
         muted:
-          "ring-1 ring-inset ring-muted-foreground-dark bg-background text-muted-foreground-dark hover:bg-muted active:bg-muted",
+          "ring-1 ring-inset ring-border bg-background text-muted-foreground-dark hover:bg-muted active:bg-muted",
         ghost: "ring-0! hover:bg-accent hover:text-accent-foreground",
         link: "ring-0! text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "md:h-9 h-8 md:px-6 px-4 py-2 rounded-full text-sm",
-        sm: "md:h-7 h-6 md:px-4 px-3 rounded-full text-xs",
-        lg: "md:h-10 h-9 md:px-8 px-6 md:py-2 py-1 rounded-full text-sm ring-2",
-        xl: "md:h-12 h-10 md:px-10 px-8 md:py-2 py-1 rounded-full text-lg [&_svg]:size-6",
+        default: "md:h-9 h-8 md:px-6 px-4 py-2 rounded-sm text-sm",
+        sm: "md:h-6 h-5 md:px-4 px-3 rounded-sm text-xs",
+        lg: "md:h-10 h-9 md:px-8 px-6 md:py-2 py-1 rounded-md text-sm ring-2",
+        xl: "md:h-12 h-10 md:px-10 px-8 md:py-2 py-1 rounded-md text-lg [&_svg]:size-6",
         icon: "md:h-9 h-8 md:w-9 w-8 rounded-full ",
       },
     },

@@ -80,9 +80,9 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="">
-        <div className="flex flex-wrap overflow-x-auto gap-4 rounded-lg bg-linear-to-r from-primary to-primary-dark md:py-5 py-4 md:px-8 px-4 text-primary-foreground font-normal items-end">
+        <div className="flex flex-wrap overflow-x-auto gap-4 rounded-lg bg-linear-to-r from-primary to-primary-dark md:py-4 py-2 md:px-4 px-2 text-primary-foreground font-normal items-end">
           <div className="flex flex-col grow gap-2 w-full md:w-48">
-            <div className="md:text-lg text-sm">Поиск события</div>
+            <div className="md:text-md text-sm">Поиск события</div>
             <FormField
               control={form.control}
               name="query"
@@ -92,7 +92,7 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
             />
           </div>
           <div className="flex flex-col gap-2 w-full md:w-48">
-            <div className="md:text-lg text-sm">Даты проведения</div>
+            <div className="md:text-md text-sm">Даты проведения</div>
             <FormField
               control={form.control}
               name="dateRange"
@@ -137,7 +137,7 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
 
           </div>
           <div className="flex flex-col gap-2 w-full md:w-48">
-            <div className="md:text-lg text-sm">Отрасль</div>
+            <div className="md:text-md text-sm">Отрасль</div>
             <FormField
               control={form.control}
               name="industry"
@@ -155,7 +155,7 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
             />
           </div>
           <div className="flex flex-col gap-2 w-full md:w-48">
-            <div className="md:text-lg text-sm">Город</div>
+            <div className="md:text-md text-sm">Город</div>
             <FormField
               control={form.control}
               name="city"

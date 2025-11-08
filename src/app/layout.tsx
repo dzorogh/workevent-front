@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from 'next/font/google'
+import { Geist } from 'next/font/google'
 import Header from '@/app/header'
 import Footer from '@/app/footer'
 import Container from '@/components/ui/container'
 import "@/app/globals.css";
 import React, { Suspense } from "react";
-import Subscribe from "@/app/subscribe";
+import Subscribe from "@/app/(home)/subscribe";
 import { Api } from "@/lib/api";
 import YandexMetrika from "@/components/yandex-metrika";
 import YandexMetrikaCounter from "@/components/yandex-metrika-counter";
@@ -15,9 +15,10 @@ import NextTopLoader from "nextjs-toploader";
 import { GoogleTagManager } from '@next/third-parties/google'
 import CookieBanner from "@/components/cookie-banner";
 
-const inter = Inter({
+const font = Geist({
   subsets: ['latin', 'cyrillic'],
   display: 'swap',
+  weight: ['400', '500', '700'],
 })
 
 export const revalidate = false;
@@ -53,23 +54,23 @@ export default async function RootLayout({
     <html lang="ru">
       <GoogleTagManager gtmId="GTM-PN9DXRLD" />
       <body
-        className={`${inter.className} antialiased`}
+        className={`${font.className} antialiased`}
       >
         <NextTopLoader color="#4a4de3" shadow={false} crawlSpeed={5} />
 
-        <Container className="pt-2 md:pt-5">
+        <div className="flex flex-col gap-8">
           <Header />
-        </Container>
 
-        <Container className="pt-4 md:pt-8">
-          {children}
-        </Container>
+          <Container>
+            {children}
+          </Container>
 
-        <Container className="pt-20 pb-20">
-          <Subscribe industries={industries?.data ?? []} />
-        </Container>
+          <Container>
+            <Subscribe industries={industries?.data ?? []} />
+          </Container>
 
-        <Footer />
+          <Footer />
+        </div>
 
         <YandexMetrikaCounter />
 

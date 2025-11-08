@@ -85,7 +85,7 @@ export default function CalendarMonth({month}: { month: Month }) {
                 <div className={`flex flex-col md:h-4 ${isExpandable ? 'flex' : 'hidden md:flex'}`}>
                     {isLoading && (<div className="w-32 h-full bg-muted animate-pulse rounded-lg"></div>)}
                     {isExpandable && (
-                        <button className="text-sm text-left text-primary" onClick={() => setIsExpanded(!isExpanded)}>
+                        <button className="text-sm text-left text-primary cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
                             {isExpanded ? 'Свернуть' : 'Показать еще'}
                         </button>)}
                 </div>

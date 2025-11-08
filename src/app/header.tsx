@@ -6,27 +6,29 @@ import MenuMobile from "./menu-mobile";
 import Link from "next/link";
 import { useState } from "react";
 import Burger from "@/components/icons/burger";
+import Container from "@/components/ui/container";
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
-        <header className="rounded-lg md:bg-linear-to-r md:from-primary md:to-primary-dark md:p-[2px]">
-            <div className={`md:px-4 py-2 bg-white rounded-md `}>
+        <header className="bg-light border-b py-4 backdrop-blur-sm sticky top-0 z-10">
+            <Container>
                 <div className={`flex justify-between items-center gap-4 overflow-x-auto ${!isMenuOpen ? 'rounded-b-md' : 'rounded-b-none'}`}>
                     <Link href={{ pathname: "/" }}>
                         <Logo />
-                    </Link> 
+                    </Link>
                     <div className="hidden md:flex">
                         <MenuDesktop />
                     </div>
-                    <div className="md:hidden">
-                        <Burger onClick={() => setIsMenuOpen(!isMenuOpen)} />
+                    <div className="md:hidden flex items-center justify-center">
+                        <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                            <Burger />
+                        </button>
                     </div>
                 </div>
                 {isMenuOpen && <MenuMobile setIsMenuOpen={setIsMenuOpen} />}
-            </div>
-
+            </Container>
         </header>
     )
 }

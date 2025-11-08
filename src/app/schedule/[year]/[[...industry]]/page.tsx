@@ -18,10 +18,10 @@ type Props = {
     }>
 }
 
+const startYear = 2025
 
 const getYears = () => {
-    const currentYear = new Date().getFullYear();
-    return [currentYear, currentYear + 1];
+    return Array.from({ length: new Date().getFullYear() - startYear + 3 }, (_, i) => startYear + i);
 }
 
 export const revalidate = false;
@@ -151,17 +151,9 @@ export default async function SchedulePage({ params }: Props) {
             </BreadcrumbList>
         </Breadcrumb>
 
-        <h1 className="text-xl font-bold">{title}</h1>
+        <H1>{title}</H1>
 
         <div className="flex flex-col md:flex-row gap-6">
-            <div className="flex flex-col gap-2">
-                <div className="font-bold">
-                    Отрасль
-                </div>
-
-                <Industries industries={industries} industrySlug={industrySlug} homeRoute={`/schedule/${selectedYear}`} />
-
-            </div>
 
             <div className="flex flex-col gap-2">
                 <div className="font-bold">
@@ -171,6 +163,16 @@ export default async function SchedulePage({ params }: Props) {
                 <Years years={years} selectedYear={selectedYear} />
 
             </div>
+
+            <div className="flex flex-col gap-2">
+                <div className="font-bold">
+                    Отрасль
+                </div>
+
+                <Industries industries={industries} industrySlug={industrySlug} homeRoute={`/schedule/${selectedYear}`} />
+
+            </div>
+
         </div>
 
         <Calendar events={events.data?.data ?? []} />

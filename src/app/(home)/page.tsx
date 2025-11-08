@@ -1,9 +1,10 @@
 import Search from "@/components/search";
-import Presets from "@/app/presets";
-import EventsByIndustry from "@/app/events-by-industry";
-import Recommendations from "@/app/recommendations";
+import Presets from "@/app/(home)/presets";
+import EventsByIndustry from "@/app/(home)/events-by-industry";
+import Recommendations from "@/app/(home)/recommendations";
 import { Api } from "@/lib/api";
 import { Metadata } from "next";
+import H2 from "@/components/ui/h2";
 
 export const revalidate = false;
 
@@ -50,14 +51,13 @@ export default async function Home() {
   const { industries, events, eventsMeta, recommendations, recommendationsMeta, cities } = await getData();
 
   return (
-    <div className="flex flex-col gap-10 md:gap-20">
-      <div className="flex flex-col gap-6">
-        <div>
-          <Search industries={industries} cities={cities} />
-        </div>
+    <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-4">
+        <Search industries={industries} cities={cities} />
         <Presets />
       </div>
       {recommendations.length > 0 && <Recommendations initialEvents={recommendations} initialMeta={recommendationsMeta ?? EMPTY_META} />}
+      <H2 className="m-0">Ближайшие бизнес-мероприятия</H2>
       <EventsByIndustry initialIndustries={industries} initialEvents={events} initialMeta={eventsMeta ?? EMPTY_META} />
     </div>
   );

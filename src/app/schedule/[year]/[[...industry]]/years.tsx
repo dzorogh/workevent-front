@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Years({ years, selectedYear }: { years: number[], selectedYear: string }) {
     return (
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
             {years.map((year) => (
                 <Button
                     id={year.toString()}

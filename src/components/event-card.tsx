@@ -13,18 +13,20 @@ interface EventCardProps {
 export default function EventCard({ event }: EventCardProps) {
     return (
         <div>
-            <Link href={`/event/${createSlugWithId(event.title, event.id)}` as Route} className="block">
-                <div className="flex flex-col gap-5">
+            <Link href={`/event/${createSlugWithId(event.title, event.id)}` as Route} className="block h-full">
+                <div className="flex flex-col gap-5 border rounded-lg p-4 h-full">
                     <EventCoverImage cover={event.cover} title={event.title} />
 
-                    <div className="flex flex-col gap-2">
-                        <div className="text-muted-foreground-dark">{formatEventDates(event)}</div>
-                        <div className="font-semibold text-lg">{event.title}</div>
-                        <div className="font-normal text-md text-primary-darker flex gap-1">
-                            <IconMapPin className="w-5 h-5 mr-0.5" /> {event.city?.title}
+                    <div className="flex flex-col gap-2 grow">
+                        <div className="flex justify-between">
+                            <div className="text-muted-foreground-dark text-sm">{formatEventDates(event)}</div>
+                            <div className="font-normal text-sm text-primary-darker flex gap-1">
+                                <IconMapPin className="w-5 h-5 mr-0.5" /> {event.city?.title}
+                            </div>
                         </div>
+                        <div className="font-medium text-md grow">{event.title}</div>
                         <div>
-                            <Badge>{event.industry?.title}</Badge>
+                            <Badge variant="secondary">{event.industry?.title}</Badge>
                         </div>
                     </div>
                 </div>
