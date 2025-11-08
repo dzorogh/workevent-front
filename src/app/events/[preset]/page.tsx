@@ -38,7 +38,7 @@ async function getEvents(presetParams: EventIndexParametersQuery) {
         params: {
             query: {
                 ...presetParams,
-                per_page: 8,
+                per_page: 12,
                 page: 1
             }
         }
