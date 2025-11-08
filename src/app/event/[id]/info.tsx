@@ -9,6 +9,7 @@ import InfoLabel from "./info-label";
 import Tags from "./tags";
 import { encodeUrl } from "@/lib/utils";
 import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 
 interface InfoProps {
     event: EventResource
@@ -35,7 +36,7 @@ export default function Info({ event, className }: InfoProps) {
 
 
     return (
-        <div className={cn("flex flex-col gap-6 pt-2", className)}>
+        <div className={cn("flex flex-col gap-6", className)}>
             <h1 className="md:text-3xl text-xl font-semibold">{event.title}</h1>
 
             {/* Tags */}
@@ -50,10 +51,28 @@ export default function Info({ event, className }: InfoProps) {
                     <div className="font-medium">{formatEventDates(event)}</div>
                 </div>
 
+                <div className="flex flex-col md:flex-row gap-4 max-w-[550px]">
+                    <Button variant="primary" size="lg" asChild className="md:basis-1/2 w-full">
+                        <Link target="_blank" href={encodeUrl(event.website ?? '', { utm_campaign: 'participate' }) as Route}>Принять участие</Link>
+                    </Button>
+                    {/* <Button variant="default" size="lg" asChild className="md:basis-1/2 w-full">
+                        <Link target="_blank" href={googleCalendarRoute()}>Добавить в календарь</Link>
+                    </Button> */}
+                </div>
+
+                <Separator />
+
                 <div className="flex flex-col gap-2">
                     <InfoLabel label="Город" />
                     <div className="font-medium">{event.city?.title}</div>
                 </div>
+
+                {event.venue &&
+                    <div className="flex flex-col gap-2">
+                        <InfoLabel label="Место проведения" />
+                        <div className="font-medium">{event.venue?.title ? `${event.venue.title}` : ''}{event.venue?.title && event.venue?.address ? ', ' : ''}{event.venue?.address ? `${event.venue.address}` : ''}</div>
+                    </div>
+                }
 
                 {event.tariffs && event.tariffs.length > 0 && (
                     <div className="flex flex-col gap-2">
@@ -62,15 +81,7 @@ export default function Info({ event, className }: InfoProps) {
                     </div>
                 )}
 
-                {event.venue &&
-                    <div className="flex flex-col gap-2">
-                        <InfoLabel label="Место проведения" />
-                        <div className="font-medium">{event.venue?.title ? `${event.venue.title}` : ''}{event.venue?.title && event.venue?.address ? ', ' : ''}{event.venue?.address ? `${event.venue.address}` : ''}</div>
-                        <div className="text-xs">
-                            <a href="#map" className="text-primary">Показать на карте</a>
-                        </div>
-                    </div>
-                }
+                <Separator />
 
                 {/* Format */}
                 {event.format_label && (
@@ -87,15 +98,6 @@ export default function Info({ event, className }: InfoProps) {
                         <div className="font-medium">{event.industry.title}{additionalIndustries ? `, ${additionalIndustries}` : ''}</div>
                     </div>
                 )}
-            </div>
-
-            <div className="flex flex-col md:flex-row gap-4 max-w-[550px]">
-                <Button variant="primary" size="lg" asChild className="md:basis-1/2 w-full">
-                    <Link target="_blank" href={encodeUrl(event.website ?? '', { utm_campaign: 'participate' }) as Route}>Принять участие</Link>
-                </Button>
-                <Button variant="default" size="lg" asChild className="md:basis-1/2 w-full">
-                    <Link target="_blank" href={googleCalendarRoute()}>Добавить в календарь</Link>
-                </Button>
             </div>
         </div>
     )
