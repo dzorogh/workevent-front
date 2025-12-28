@@ -12,7 +12,6 @@ import YandexMetrikaCounter from "@/components/yandex-metrika-counter";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from '@vercel/analytics/next';
 import NextTopLoader from "nextjs-toploader";
-import { GoogleTagManager } from '@next/third-parties/google'
 import CookieBanner from "@/components/cookie-banner";
 
 const font = Geist({
@@ -52,7 +51,7 @@ export default async function RootLayout({
 
   return (
     <html lang="ru">
-      <GoogleTagManager gtmId="GTM-PN9DXRLD" />
+      
       <body
         className={`${font.className} antialiased`}
       >
