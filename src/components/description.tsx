@@ -3,7 +3,7 @@
 import { useState } from "react"
 
 export default function Description({ children }: { children: React.ReactNode }) {
-    const [showMore, setShowMore] = useState(false)
+    const [showMore, setShowMore] = useState(true)
 
     return <div className="flex flex-col gap-4">
         <div className="relative">

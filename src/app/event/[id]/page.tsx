@@ -236,23 +236,6 @@ export default async function EventPage({ params }: Props) {
                 </div>
             </div>
 
-            {/* Map */}
-            {location &&
-                <>
-                    <Separator />
-                    <div className="flex flex-col gap-6" id="map">
-                        <SectionTitle>Местоположение</SectionTitle>
-                        <LocationMap location={location} event={event} />
-                    </div>
-                </>
-            }
-
-            {/* Form */}
-            <div className="flex flex-col gap-6 -mx-4 md:mx-0 bg-secondary md:px-10 px-4 md:py-8 py-12 md:rounded-lg -mt-8 md:mt-0 max-w-[1000px]">
-                <SectionTitle className="text-center md:text-left">Оставьте заявку на участие</SectionTitle>
-                <Form />
-            </div>
-
             {/* Tags */}
             {event.tags && event.tags.length > 0 && (
                 <>
@@ -274,6 +257,22 @@ export default async function EventPage({ params }: Props) {
                     </div>
                 </>
             )}
+
+            {/* Map */}
+            {location &&
+                <>
+                    <div className="flex flex-col gap-6" id="map">
+                        <SectionTitle>Местоположение</SectionTitle>
+                        <LocationMap location={location} event={event} />
+                    </div>
+                </>
+            }
+
+            {/* Form */}
+            <div className="flex flex-col gap-6 -mx-4 md:mx-0 bg-secondary md:px-10 px-4 md:py-8 py-12 md:rounded-lg -mt-8 md:mt-0 max-w-[1000px]">
+                <SectionTitle className="text-center md:text-left">Оставьте заявку на участие</SectionTitle>
+                <Form />
+            </div>
 
             {/* Similar Events */}
             {similarEvents.length > 0 && (
