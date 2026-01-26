@@ -6,7 +6,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 })
 
 const nextConfig: NextConfig = withBundleAnalyzer({
-  output: "standalone",
   typedRoutes: true,
   experimental: {
     cssChunking: true,
