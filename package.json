@@ -7,7 +7,7 @@
     "build": "next build",
     "postbuild": "next-sitemap",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "generate-api": "openapi-typescript https://admin.workevent.ru/docs/api.json -o ./src/lib/api/v1.d.ts"
   },
   "dependencies": {
@@ -70,5 +70,8 @@
     "postcss": "^8.5.1",
     "tailwindcss": "^4.1.16",
     "typescript": "^5.7.3"
+  },
+  "overrides": {
+    "js-yaml": "^4.3.1"
   }
 }
