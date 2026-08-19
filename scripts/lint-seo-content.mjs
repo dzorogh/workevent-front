@@ -1,23 +1,35 @@
 #!/usr/bin/env node
 /**
- * Lint SEO copy for machine-voice phrases. Not GPTZero / «AI %».
+ * Lint content copy for machine-voice phrases. Not GPTZero / «AI %».
  *
+ *   npm run content:lint
  *   npm run seo:lint-content
- *   node scripts/lint-seo-content.mjs seo/posts-seed.json
+ *   node scripts/lint-seo-content.mjs content/pages/home.md
  */
 
-import { readFileSync, existsSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
+import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
 
-const DEFAULT_FILES = [
-  'seo/posts-seed.json',
-  'scripts/seed-seo-posts.php',
-  'scripts/seed-seo-pages.php',
-];
+function walkMd(dir, acc = []) {
+  let names = [];
+  try {
+    names = readdirSync(dir);
+  } catch {
+    return acc;
+  }
+  for (const name of names) {
+    const full = join(dir, name);
+    if (statSync(full).isDirectory()) walkMd(full, acc);
+    else if (name.endsWith('.md')) acc.push(full);
+  }
+  return acc;
+}
+
+const DEFAULT_FILES = walkMd(resolve(root, 'content'));
 
 const FORBIDDEN = [
   { id: 'meta-page-assembled', re: /страница собрана/i },
@@ -30,11 +42,12 @@ const FORBIDDEN = [
   { id: 'not-just-but', re: /не просто\s+.+\s+а\s+/i },
 ];
 
-const files = (process.argv.slice(2).length ? process.argv.slice(2) : DEFAULT_FILES)
+const requested = process.argv.slice(2);
+const files = (requested.length ? requested : DEFAULT_FILES)
   .map((f) => resolve(root, f))
   .filter((f) => existsSync(f));
 
-if (files.length === 0) {
+if (files.length === 0 && requested.length > 0) {
   console.error('No files to lint.');
   process.exit(1);
 }
@@ -54,8 +67,8 @@ for (const file of files) {
 }
 
 if (hits > 0) {
-  console.error(`seo:lint-content failed: ${hits} hit(s). Rewrite, do not publish.`);
+  console.error(`content:lint failed: ${hits} hit(s). Rewrite, do not publish.`);
   process.exit(1);
 }
 
-console.log(`seo:lint-content ok (${files.length} file(s))`);
+console.log(`content:lint ok (${files.length} file(s))`);
