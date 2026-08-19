@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 /**
- * Bulk upsert SEO landing pages (city + industry) from JSON seed file.
+ * Bulk upsert SEO landing pages (city + industry + schedule) from JSON seed file.
  *
  * Usage (inside Laravel / backend container):
  *   php scripts/seed-seo-pages.php /var/www/html/../pages-seed-priority.json
@@ -150,6 +150,25 @@ foreach ($pages as $entry) {
         $path = '/industry/' . $slug;
         upsertPage($path, $entry['title'], $entry['content'], $entry['metadata'] ?? []);
         echo "OK industry: {$path}\n";
+        $created++;
+        continue;
+    }
+
+    if (($entry['type'] ?? '') === 'schedule') {
+        $path = $entry['path'] ?? null;
+        if (!$path || !str_starts_with($path, '/schedule/')) {
+            echo "SKIP schedule: missing or invalid path\n";
+            continue;
+        }
+
+        $industrySlug = $entry['industrySlug'] ?? null;
+        if ($industrySlug && !Industry::query()->where('slug', $industrySlug)->exists()) {
+            echo "SKIP schedule (industry not in DB): {$path}\n";
+            continue;
+        }
+
+        upsertPage($path, $entry['title'], $entry['content'], $entry['metadata'] ?? []);
+        echo "OK schedule: {$path}\n";
         $created++;
     }
 }

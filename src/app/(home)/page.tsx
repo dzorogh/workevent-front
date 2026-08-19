@@ -48,24 +48,35 @@ async function getData() {
 
 const EMPTY_META = { total: 0, per_page: 0, current_page: 0, last_page: 0 };
 
-const title = 'Каталог деловых мероприятий в России: конференции, форумы, семинары';
+async function getPage() {
+  const pageResponse = await Api.GET('/v1/pages', {
+    params: { query: { path: '/' } },
+  });
+  return pageResponse.data?.data ?? undefined;
+}
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildMetadata(null, {
-    title: 'Все бизнес‑события России: семинары, форумы, тренинги и выставки - Workevent',
-    description: 'Каталог деловых мероприятий на сайте Workevent. Поиск по датам, индустриям, городам. Контакты организаторов, отзывы участников, фото и видео. Инструменты организаторов',
+  const page = await getPage();
+
+  return buildMetadata(page?.metadata, {
+    title: 'Workevent — каталог деловых мероприятий',
+    description: 'Каталог деловых мероприятий: поиск по датам, городам и отраслям.',
     canonicalPath: '/',
     openGraph: {
       type: 'website',
-      title: 'Все бизнес‑события России — Workevent',
-      description: 'Каталог деловых мероприятий на сайте Workevent. Поиск по датам, индустриям, городам.',
+      title: 'Workevent — каталог деловых мероприятий',
+      description: 'Каталог деловых мероприятий: поиск по датам, городам и отраслям.',
       url: SITE_URL,
     },
   });
 }
 
 export default async function Home() {
-  const { industries, events, eventsMeta, recommendations, recommendationsMeta, cities } = await getData();
+  const [{ industries, events, eventsMeta, recommendations, recommendationsMeta, cities }, page] = await Promise.all([
+    getData(),
+    getPage(),
+  ]);
+  const title = page?.metadata?.h1 ?? page?.title ?? 'Каталог деловых мероприятий';
   const seoYear = getSeoYear();
   const faqItems = [
     {

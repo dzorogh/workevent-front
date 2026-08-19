@@ -93,6 +93,21 @@ export function buildMetadata(
   };
 }
 
+const CITY_PREP: Record<string, string> = {
+  Москва: 'в Москве',
+  'Санкт-Петербург': 'в Санкт-Петербурге',
+  Новосибирск: 'в Новосибирске',
+  Екатеринбург: 'в Екатеринбурге',
+  Казань: 'в Казани',
+  'Ростов-на-Дону': 'в Ростове-на-Дону',
+  Краснодар: 'в Краснодаре',
+  Владивосток: 'во Владивостоке',
+};
+
+export function cityPrep(title: string) {
+  return CITY_PREP[title] ?? `в ${title}`;
+}
+
 export function isIndustryCatalogIntent(text: string | null | undefined): boolean {
   if (!text) return false;
   const value = text.trim();
@@ -106,17 +121,9 @@ export function resolvePresetHeading(presetTitle: string, raw?: string | null): 
   return `Подборка: ${value}`;
 }
 
-export function resolveScheduleHeading(
-  year: string,
-  industryTitle?: string,
-  raw?: string | null,
-): string {
-  const fallback = industryTitle
-    ? `Календарь мероприятий: ${industryTitle} на ${year} год`
-    : `Календарь деловых мероприятий на ${year} год`;
-  if (!raw?.trim()) return fallback;
-  if (isIndustryCatalogIntent(raw)) return fallback;
-  return raw.trim();
+export function resolveScheduleHeading(year: string, industryTitle?: string, raw?: string | null): string {
+  if (raw?.trim()) return raw.trim();
+  return industryTitle ? `Календарь: ${industryTitle} на ${year}` : `Календарь мероприятий ${year}`;
 }
 
 export function buildFacetedEventsMetadata(searchParams: Record<string, string | string[] | undefined>): Metadata {
@@ -127,19 +134,19 @@ export function buildFacetedEventsMetadata(searchParams: Record<string, string |
   });
 
   return buildMetadata(null, {
-    title: 'Каталог и поиск мероприятий — Workevent',
+    title: 'Каталог деловых мероприятий — Workevent',
     description:
       'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
     canonicalPath: '/events',
     openGraph: {
       type: 'website',
-      title: 'Каталог мероприятий — Workevent',
+      title: 'Каталог деловых мероприятий — Workevent',
       description:
         'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
       url: `${SITE_URL}/events`,
     },
     twitter: {
-      title: 'Каталог мероприятий — Workevent',
+      title: 'Каталог деловых мероприятий — Workevent',
       description:
         'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
     },

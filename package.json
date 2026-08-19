@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "generate-api": "openapi-typescript https://admin.workevent.ru/docs/api.json -o ./src/lib/api/v1.d.ts",
     "dokploy:shell": "node scripts/dokploy-exec.mjs",
     "dokploy:shell:backend": "node scripts/dokploy-exec.mjs --app backend",
@@ -73,5 +73,8 @@
     "tailwindcss": "^4.1.16",
     "typescript": "^5.7.3",
     "ws": "^8.21.0"
+  },
+  "overrides": {
+    "js-yaml": "^4.3.1"
   }
 }

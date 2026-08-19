@@ -43,13 +43,13 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(SITE_URL),
     ...buildMetadata(page?.metadata, {
-      title: 'Все бизнес‑события России: семинары, форумы, тренинги и выставки - Workevent',
-      description: 'Каталог деловых мероприятий на сайте Workevent. Поиск по датам, индустриям, городам. Контакты организаторов, отзывы участников, фото и видео. Инструменты организаторов',
+      title: 'Workevent — каталог деловых мероприятий',
+      description: 'Каталог деловых мероприятий: поиск по датам, городам и отраслям.',
       canonicalPath: '/',
       openGraph: {
         type: 'website',
-        title: 'Все бизнес‑события России — Workevent',
-        description: 'Каталог деловых мероприятий на сайте Workevent. Поиск по датам, индустриям, городам.',
+        title: 'Workevent — каталог деловых мероприятий',
+        description: 'Каталог деловых мероприятий: поиск по датам, городам и отраслям.',
         url: SITE_URL,
       },
     }),

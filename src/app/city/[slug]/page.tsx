@@ -13,27 +13,12 @@ import {
 import InternalLinks from '@/components/seo/internal-links';
 import { JsonLd } from '@/lib/seo/jsonld';
 import { buildBreadcrumbJsonLd, buildItemListJsonLd } from '@/lib/seo/jsonld-builders';
-import { buildMetadata } from '@/lib/seo/metadata';
+import { buildMetadata, cityPrep } from '@/lib/seo/metadata';
 import { SITE_URL } from '@/lib/seo/constants';
 import { createSlugWithId, getIdFromSlug } from '@/lib/utils';
 import { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import type { FAQPage, WithContext } from 'schema-dts';
-
-const CITY_PREP: Record<string, string> = {
-  Москва: 'в Москве',
-  'Санкт-Петербург': 'в Санкт-Петербурге',
-  Новосибирск: 'в Новосибирске',
-  Екатеринбург: 'в Екатеринбурге',
-  Казань: 'в Казани',
-  'Ростов-на-Дону': 'в Ростове-на-Дону',
-  Краснодар: 'в Краснодаре',
-  Владивосток: 'во Владивостоке',
-};
-
-function cityPrep(title: string) {
-  return CITY_PREP[title] ?? `в ${title}`;
-}
 
 function extractFaqItems(content: string | null | undefined) {
   if (!content) return [];
@@ -131,17 +116,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     params: { query: { path: `/city/${createSlugWithId(city.title, city.id)}` } },
   });
   const page = pageResponse.data?.data;
+  const citySlug = createSlugWithId(city.title, city.id);
   const prep = cityPrep(city.title);
 
   const metadata = buildMetadata(page?.metadata, {
-    title: `Деловые мероприятия ${prep} — Workevent`,
-    description: `Каталог конференций, форумов, выставок и семинаров ${prep}. Актуальные даты, контакты организаторов и регистрация на Workevent.`,
-    canonicalPath: `/city/${createSlugWithId(city.title, city.id)}`,
+    title: `Мероприятия ${prep} — Workevent`,
+    description: `Каталог конференций, форумов и выставок ${prep}.`,
+    canonicalPath: `/city/${citySlug}`,
     openGraph: {
       type: 'website',
       title: `Мероприятия ${prep} — Workevent`,
       description: `Конференции, форумы и выставки ${prep}.`,
-      url: `${SITE_URL}/city/${createSlugWithId(city.title, city.id)}`,
+      url: `${SITE_URL}/city/${citySlug}`,
     },
   });
 
@@ -184,7 +170,8 @@ export default async function CityPage({ params }: Props) {
 
   const citySlug = createSlugWithId(city.title, city.id);
   const pageUrl = `${SITE_URL}/city/${citySlug}`;
-  const title = page?.metadata?.h1 ?? page?.title ?? `Мероприятия ${cityPrep(city.title)}`;
+  const prep = cityPrep(city.title);
+  const title = page?.metadata?.h1 ?? page?.title ?? `Мероприятия ${prep}`;
   const Content = page?.content ? await compileMdxContent(page.content) : null;
   const faqItems = extractFaqItems(page?.content);
 
@@ -199,7 +186,7 @@ export default async function CityPage({ params }: Props) {
           ]),
           buildItemListJsonLd({
             name: title,
-            description: `Деловые мероприятия ${cityPrep(city.title)}`,
+            description: page?.metadata?.description ?? `Мероприятия ${prep}`,
             url: pageUrl,
             events: initialEvents,
           }),
@@ -225,18 +212,18 @@ export default async function CityPage({ params }: Props) {
 
       <H1 className="mt-0">{title}</H1>
 
-      {Content && (
-        <div className="prose max-w-none text-sm">
-          <Content />
-        </div>
-      )}
-
       <EventsList
         initialEvents={initialEvents}
         initialMeta={initialMeta}
         params={{ city_id: city.id }}
         perPage={12}
       />
+
+      {Content && (
+        <div className="prose max-w-none text-sm">
+          <Content />
+        </div>
+      )}
 
       <InternalLinks />
     </div>

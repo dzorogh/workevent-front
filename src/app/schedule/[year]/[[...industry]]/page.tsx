@@ -12,7 +12,7 @@ import Description from "@/components/description";
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { JsonLd } from "@/lib/seo/jsonld";
 import { buildBreadcrumbJsonLd, buildFaqPageJsonLd, buildItemListJsonLd } from "@/lib/seo/jsonld-builders";
-import { buildMetadata, isIndustryCatalogIntent, resolveScheduleHeading } from "@/lib/seo/metadata";
+import { buildMetadata, resolveScheduleHeading } from "@/lib/seo/metadata";
 import { getScheduleYears, SITE_URL } from "@/lib/seo/constants";
 import { resolvePageFaq } from "@/lib/seo/faq";
 import FaqSection from "@/components/seo/faq";
@@ -71,29 +71,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     const page = await getPage(selectedYear, industrySlug);
     const industry = await getIndustry(industrySlug);
-
-    const pageTitle = resolveScheduleHeading(selectedYear, industry?.title, page?.metadata?.title ?? page?.title);
-    const description = page?.metadata?.description && !isIndustryCatalogIntent(page.metadata.description)
-        ? page.metadata.description
-        : industry?.title
-            ? `План мероприятий отрасли «${industry.title}» на ${selectedYear} год — календарь по датам, не полный каталог отрасли.`
-            : `Календарь и план деловых мероприятий на ${selectedYear} год: даты конференций, форумов и выставок.`;
+    const fallbackTitle = resolveScheduleHeading(selectedYear, industry?.title);
+    const fallbackDescription = industry?.title
+        ? `Календарь мероприятий отрасли «${industry.title}» на ${selectedYear} год.`
+        : `Календарь мероприятий на ${selectedYear} год.`;
     const canonicalPath = `/schedule/${selectedYear}${industrySlug ? `/${industrySlug}` : ''}`;
 
-    return buildMetadata(
-        page?.metadata ? { ...page.metadata, title: `${pageTitle} — Workevent`, description } : null,
-        {
-            title: `${pageTitle} — Workevent`,
-            description,
-            canonicalPath,
-            openGraph: {
-                type: 'website',
-                title: `${pageTitle} — Workevent`,
-                description,
-                url: `${SITE_URL}${canonicalPath}`,
-            },
+    return buildMetadata(page?.metadata, {
+        title: `${fallbackTitle} — Workevent`,
+        description: fallbackDescription,
+        canonicalPath,
+        openGraph: {
+            type: 'website',
+            title: `${fallbackTitle} — Workevent`,
+            description: fallbackDescription,
+            url: `${SITE_URL}${canonicalPath}`,
         },
-    );
+    });
 }
 
 export default async function SchedulePage({ params }: Props) {
@@ -163,7 +157,10 @@ export default async function SchedulePage({ params }: Props) {
                 ]),
                 buildItemListJsonLd({
                     name: title,
-                    description: `Календарь мероприятий на ${selectedYear} год`,
+                    description: page?.metadata?.description
+                        ?? (industry
+                            ? `Календарь: ${industry.title} на ${selectedYear}`
+                            : `Календарь мероприятий ${selectedYear}`),
                     url: pageUrl,
                     events: scheduleEvents,
                 }),
