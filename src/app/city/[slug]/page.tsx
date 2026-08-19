@@ -13,7 +13,7 @@ import {
 import InternalLinks from '@/components/seo/internal-links';
 import { JsonLd } from '@/lib/seo/jsonld';
 import { buildBreadcrumbJsonLd, buildItemListJsonLd } from '@/lib/seo/jsonld-builders';
-import { buildMetadata, cityPrep } from '@/lib/seo/metadata';
+import { applyLiveYearToTitle, buildMetadata, cityPrep } from '@/lib/seo/metadata';
 import { SITE_URL } from '@/lib/seo/constants';
 import { createSlugWithId, getIdFromSlug } from '@/lib/utils';
 import { Metadata } from 'next';
@@ -55,9 +55,9 @@ function buildLocalFaqJsonLd(items: Array<{ name: string; text: string }>): With
   };
 }
 
-async function cityHasFutureEvents(city: { id: number; events_count?: number }) {
+async function cityNextEventYear(city: { id: number; events_count?: number }) {
   if (city.events_count === 0) {
-    return false;
+    return null;
   }
 
   const response = await Api.GET('/v1/events', {
@@ -71,7 +71,12 @@ async function cityHasFutureEvents(city: { id: number; events_count?: number }) 
     },
   });
 
-  return (response.data?.meta?.total ?? response.data?.data?.length ?? 0) > 0;
+  const start = response.data?.data?.[0]?.start_date;
+  if (start) {
+    return Number(String(start).slice(0, 4));
+  }
+
+  return (response.data?.meta?.total ?? 0) > 0 ? new Date().getFullYear() : null;
 }
 
 type Props = {
@@ -119,19 +124,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const citySlug = createSlugWithId(city.title, city.id);
   const prep = cityPrep(city.title);
 
-  const metadata = buildMetadata(page?.metadata, {
-    title: `Мероприятия ${prep} — Workevent`,
-    description: `Каталог конференций, форумов и выставок ${prep}.`,
-    canonicalPath: `/city/${citySlug}`,
-    openGraph: {
-      type: 'website',
-      title: `Мероприятия ${prep} — Workevent`,
-      description: `Конференции, форумы и выставки ${prep}.`,
-      url: `${SITE_URL}/city/${citySlug}`,
-    },
-  });
+  const liveYear = await cityNextEventYear(city);
+  const fallbackTitle = `Мероприятия ${prep} — Workevent`;
+  const documentTitle = applyLiveYearToTitle(page?.metadata?.title ?? fallbackTitle, liveYear);
 
-  if (!(await cityHasFutureEvents(city))) {
+  const metadata = buildMetadata(
+    { ...page?.metadata, title: documentTitle },
+    {
+      title: documentTitle,
+      description: `Каталог конференций, форумов и выставок ${prep}.`,
+      canonicalPath: `/city/${citySlug}`,
+      openGraph: {
+        type: 'website',
+        title: documentTitle,
+        description: `Конференции, форумы и выставки ${prep}.`,
+        url: `${SITE_URL}/city/${citySlug}`,
+      },
+    },
+  );
+
+  if (liveYear == null) {
     return { ...metadata, robots: { index: false, follow: true } };
   }
 

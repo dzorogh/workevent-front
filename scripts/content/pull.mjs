@@ -2,7 +2,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fileStemFromPath, serializeMarkdown } from './markdown.mjs';
-import { createAdminClient, loadAdminEnv } from './remote.mjs';
+import { createAdminClient, loadAdminEnv, withPublicMetadata } from './remote.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '../..');
@@ -21,20 +21,14 @@ async function main() {
     client.listAll('/api/admin/pages'),
     client.listAll('/api/admin/posts'),
   ]);
+  const pagesWithMeta = await withPublicMetadata(pages, baseUrl);
 
-  for (const page of pages) {
+  for (const page of pagesWithMeta) {
     if (!page.path) continue;
     writeEntry(`pages/${fileStemFromPath(page.path)}.md`, {
       path: page.path,
       title: page.title ?? '',
-      metadata: {
-        title: page.metadata?.title ?? undefined,
-        h1: page.metadata?.h1 ?? undefined,
-        description: page.metadata?.description ?? undefined,
-        keywords: page.metadata?.keywords ?? undefined,
-        robots: page.metadata?.robots ?? 'index,follow',
-        canonicalUrl: page.metadata?.canonical_url ?? page.metadata?.canonicalUrl ?? undefined,
-      },
+      metadata: page.metadata,
       body: page.content ?? '',
     });
   }

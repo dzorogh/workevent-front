@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadContentTree } from './markdown.mjs';
-import { createAdminClient, loadAdminEnv } from './remote.mjs';
+import { createAdminClient, loadAdminEnv, withPublicMetadata } from './remote.mjs';
 import { planActions, selectEntries } from './sync.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -95,8 +95,9 @@ async function main() {
     client.listAll('/api/admin/pages'),
     client.listAll('/api/admin/posts'),
   ]);
+  const pagesWithMeta = await withPublicMetadata(pages, baseUrl);
   const entries = selectEntries(loadContentTree(resolve(root, 'content')), { only });
-  const actions = planActions(entries, { pages, posts });
+  const actions = planActions(entries, { pages: pagesWithMeta, posts });
   const summary = await applyActions(actions, { dryRun, request: client.request });
   for (const row of summary.rows) {
     console.log(`${row.result}\t${row.key}\t${row.method ?? ''}\t${row.changed?.join(',') ?? row.error ?? ''}`);

@@ -70,3 +70,36 @@ export function createAdminClient({ baseUrl, token, fetchImpl = fetch }) {
 
   return { request, listAll };
 }
+
+export function metadataFromResource(meta) {
+  if (!meta) return {};
+  return {
+    title: meta.title ?? undefined,
+    h1: meta.h1 ?? undefined,
+    description: meta.description ?? undefined,
+    keywords: meta.keywords ?? undefined,
+    robots: meta.robots ?? 'index,follow',
+    canonicalUrl: meta.canonical_url ?? meta.canonicalUrl ?? undefined,
+  };
+}
+
+export async function fetchPublicPage(baseUrl, path, fetchImpl = fetch) {
+  const res = await fetchImpl(`${baseUrl}/api/v1/pages?path=${encodeURIComponent(path)}`);
+  if (!res.ok) return null;
+  const json = await res.json();
+  return json.data ?? null;
+}
+
+export async function withPublicMetadata(pages, baseUrl, fetchImpl = fetch) {
+  return Promise.all(
+    pages.map(async (page) => {
+      if (!page.path) return page;
+      const current = page.metadata;
+      if (current && (current.title || current.h1 || current.description)) {
+        return { ...page, metadata: metadataFromResource(current) };
+      }
+      const pub = await fetchPublicPage(baseUrl, page.path, fetchImpl);
+      return { ...page, metadata: metadataFromResource(pub?.metadata) };
+    }),
+  );
+}

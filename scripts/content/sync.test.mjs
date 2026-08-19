@@ -55,3 +55,24 @@ test('planActions POSTs missing page and fails missing post id', () => {
 test('metadataToApi maps canonicalUrl', () => {
   assert.equal(metadataToApi({ canonicalUrl: 'https://workevent.ru/' }).canonical_url, 'https://workevent.ru/');
 });
+
+test('planActions treats metadata.title as a metadata change', () => {
+  const actions = planActions(
+    [{ ...page, metadata: { title: 'Конференции в Москве 2026 — Workevent', h1: 'Старый H1', robots: 'index,follow' } }],
+    {
+      pages: [
+        {
+          id: 9,
+          path: '/city/moskva-1',
+          title: 'Мероприятия в Москве',
+          content: 'Текст',
+          metadata: { title: 'Старый title', h1: 'Старый H1', robots: 'index,follow' },
+        },
+      ],
+      posts: [],
+    },
+  );
+  assert.equal(actions[0].method, 'PUT');
+  assert.equal(actions[0].body.metadata.title, 'Конференции в Москве 2026 — Workevent');
+  assert.equal(actions[0].body.metadata.h1, 'Старый H1');
+});

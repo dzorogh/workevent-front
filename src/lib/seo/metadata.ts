@@ -108,6 +108,30 @@ export function cityPrep(title: string) {
   return CITY_PREP[title] ?? `в ${title}`;
 }
 
+const YEAR_IN_TITLE = /\s*(?:20\d{2})\b/g;
+
+export function applyLiveYearToTitle(title: string, liveYear: number | null): string {
+  const cleaned = title
+    .replace(YEAR_IN_TITLE, '')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/\s+([—–-]\s*Workevent)/i, ' $1')
+    .trim();
+
+  if (liveYear == null) {
+    return cleaned;
+  }
+
+  if (title.includes(String(liveYear))) {
+    return title;
+  }
+
+  if (/[—–-]\s*Workevent\s*$/i.test(cleaned)) {
+    return cleaned.replace(/(\s*[—–-]\s*Workevent)\s*$/i, ` ${liveYear}$1`);
+  }
+
+  return `${cleaned} ${liveYear}`;
+}
+
 export function isIndustryCatalogIntent(text: string | null | undefined): boolean {
   if (!text) return false;
   const value = text.trim();
