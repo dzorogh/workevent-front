@@ -1,0 +1,33 @@
+---
+description: SEO-тексты и статьи блога писать в бэкенд через Dokploy, не во фронт и не через POST /v1/posts
+globs: seo/**/*,scripts/seed-seo*.php,scripts/dokploy-*.mjs,scripts/lint-seo-content.mjs
+alwaysApply: true
+---
+
+# SEO-контент: только бэкенд через Dokploy
+
+Посадочные (`pages`) и статьи блога (`posts`) живут в Laravel. Не хардкодить тексты во фронте. Не вызывать `POST /api/v1/posts` — публичный API отвечает 405 (только GET/HEAD).
+
+## Команды
+
+```bash
+npm run seo:lint-content
+# Pages
+node scripts/dokploy-run.mjs --app backend -- \
+  'LARAVEL_ROOT=/var/www/html php /tmp/seed-seo-pages.php /tmp/pages-seed-priority.json'
+# Posts
+npm run seo:seed-posts
+```
+
+Интерактивный шелл: `npm run dokploy:shell:backend` (контейнер `workevent-backend-*-app-1`).
+
+## Что куда
+
+| Сущность | Модель | Сидер | JSON |
+| --- | --- | --- | --- |
+| Посадочные city/industry/schedule | `Page` + metadata | `scripts/seed-seo-pages.php` | `seo/pages-seed-priority.json` |
+| Статьи блога | `Post` (`title`, `content`, `user_id`, timestamps; cover = Spatie `cover`) | `scripts/seed-seo-posts.php` | `seo/posts-seed.json` |
+
+У `posts` нет slug и published: URL на фронте `/blog/{slugify(title)}-{id}`. Обложку копировать с существующего поста, не выдумывать чужой CDN.
+
+Перед записью в seed JSON — `npm run seo:lint-content` и правило `.cursor/rules/seo-content-lint.mdc`. Подробности: `seo/README.md`.

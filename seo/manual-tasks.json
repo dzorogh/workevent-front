@@ -1,24 +1,24 @@
 {
   "apiAutomation": {
-    "checkedAt": "2026-08-19",
-    "result": "blocked_no_user_oauth_token",
-    "note": "Через API ничего не закрыто. В .env.local только YANDEX_API_CLIENT_ID / YANDEX_API_CLIENT_SECRET / YANDEX_API_REDIRECT_URI. Нужен YANDEX_API_ACCESS_TOKEN. Отчёт: seo/yandex-ops-report.json"
+    "checkedAt": "2026-08-20",
+    "result": "webmaster_metrika_done_region_and_blog_manual",
+    "note": "YANDEX_API_ACCESS_TOKEN сработал. Sitemap уже был в Вебмастере (POST 409). Переобход 27 URL (202). Сегмент organic уже существовал, цели не дублировали. Регион и Яндекс.Бизнес — только руками. Посты: POST /api/v1/posts = 405. Отчёт: seo/yandex-ops-report.json"
   },
   "yandexWebmaster": [
-    "Подтвердить домен workevent.ru в Yandex.Вебмастер (DNS или HTML-файл) — API: не сделано, нет токена",
-    "Указать регион продвижения (Россия, приоритетные города: Москва, СПб) — API: не сделано",
-    "Отправить sitemap: https://workevent.ru/sitemap.xml — API: не отправлено; прод сейчас отдаёт 200 на старую next-sitemap карту, city/industry 404, это не успех индексации нового слоя",
-    "Запустить переобход главной, /events и топ-50 event-страниц — API: не сделано",
-    "Связать счётчик Yandex.Metrika с Вебмастером — API: не сделано",
-    "Мониторить ИКС, индексацию и запросы с брендом Workevent"
+    "Домен workevent.ru подтверждён (API: verified, host https:workevent.ru:443)",
+    "Регион продвижения (Россия, Москва, СПб) — ТОЛЬКО РУКАМИ: в API v4 нет метода, диагностика NO_REGIONS = PRESENT",
+    "Sitemap https://workevent.ru/sitemap.xml — уже добавлен 2026-08-19 (повтор POST = 409 SITEMAP_ALREADY_ADDED). Прод: 200, 192 URL, есть city/industry",
+    "Переобход через API: 27 URL, все HTTP 202 (/, /events, /schedule/2026, все 12 city, 12 industry)",
+    "Счётчик Метрики с Вебмастером связан (NO_METRIKA_COUNTER_BINDING = ABSENT)",
+    "Мониторить ИКС (сейчас 10), индексацию (453 в поиске, 6 исключено), DUPLICATE_PAGES = PRESENT"
   ],
   "googleSearchConsole": [
-    "Подтвердить домен в Google Search Console",
-    "Отправить sitemap.xml",
+    "Подтвердить домен в Google Search Console — ключа/API нет, только руками",
+    "Отправить sitemap.xml — только руками",
     "Проверить покрытие индекса и ошибки canonical"
   ],
   "yandexBusiness": [
-    "Создать/актуализировать карточку организации в Yandex.Бизнес",
+    "Создать/актуализировать карточку в Яндекс.Бизнес — отдельного API-ключа нет; диагностика NOT_IN_SPRAV = PRESENT",
     "Заполнить NAP, категорию, сайт, описание, логотип",
     "Добавить ссылки на ключевые разделы сайта"
   ],
@@ -28,9 +28,17 @@
     "2GIS / Spravker (если есть офис/юрлицо для NAP)"
   ],
   "yandexMetrikaGoals": [
-    "Цель: отправка заявки на участие (форма на event-странице) — в коде reachGoal event_apply, счётчик 99029501; в API Метрики не проверено и не создано (нет токена)",
-    "Цель: подписка на рассылку (блок Subscribe) — в коде newsletter_subscribe; в API не проверено",
-    "Цель: переход на сайт организатора (click /goto/*) — в коде organizer_goto; в API не проверено",
-    "Сегмент: organic из Yandex + Google для отслеживания SEO-трафика — завести вручную (последний значимый источник = Яндекс ИЛИ Google); API сегментов без токена не вызывался"
+    "Цель event_apply — есть в API (id 599688992), не дублировали",
+    "Цель newsletter_subscribe — есть (id 599688993), не дублировали",
+    "Цель organizer_goto — есть (id 599688994), не дублировали",
+    "Сегмент organic Yandex+Google — есть (id 1008074935), expression lastSignTrafficSource=organic AND lastSignSearchEngineRoot yandex|google"
+  ],
+  "blog": [
+    "Публичный API: GET /api/v1/posts = 200, POST = 405 (Allow: GET, HEAD)",
+    "Filament Posts есть, но штатный путь: seo/posts-seed.json + scripts/seed-seo-posts.php через npm run seo:seed-posts (Dokploy). POST /api/v1/posts = 405",
+    "В БД после сида: id=3 гид «как выбрать»; id=4 календарь 2026; id=5 отраслевой гид; id=6 как читать программу; id=1 заглушка"
+  ],
+  "outreach": [
+    "Авторассылки не было. Собрано 32 домена организаторов: seo/outreach-prospects.json (без phone/email)"
   ]
 }

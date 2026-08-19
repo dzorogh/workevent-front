@@ -45,12 +45,25 @@ async function dokployFetch(baseUrl, apiKey, path) {
   return res.json();
 }
 
+function pickContainer(containers, appName) {
+  const running = containers.filter((c) => c.state === 'running');
+  const named = running.filter((c) => c.name?.includes(appName));
+  const app1 = named.find((c) => /-app-1$/.test(c.name || ''));
+  if (app1?.containerId) return app1.containerId;
+
+  if (appName.includes('backend')) {
+    const fuzzy = running.find((c) => /workevent-backend-.+-app-1$/.test(c.name || ''));
+    if (fuzzy?.containerId) return fuzzy.containerId;
+  }
+
+  if (named[0]?.containerId) return named[0].containerId;
+  return null;
+}
+
 async function resolveContainerId(baseUrl, apiKey, appName) {
   const containers = await dokployFetch(baseUrl, apiKey, 'docker.getContainers');
-  const running = containers.filter(
-    (c) => c.state === 'running' && c.name?.includes(appName),
-  );
-  if (running[0]?.containerId) return running[0].containerId;
+  const fromList = pickContainer(containers, appName);
+  if (fromList) return fromList;
 
   const tasks = await dokployFetch(
     baseUrl,

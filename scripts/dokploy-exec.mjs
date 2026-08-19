@@ -54,24 +54,35 @@ async function dokployFetch(baseUrl, apiKey, path) {
   return res.json();
 }
 
+function pickContainer(containers, appName) {
+  const running = containers.filter((c) => c.state === "running");
+  const named = running.filter((c) => c.name?.includes(appName));
+  const app1 = named.find((c) => /-app-1$/.test(c.name || ""));
+  if (app1?.containerId) return app1.containerId;
+
+  if (appName.includes("backend")) {
+    const fuzzy = running.find((c) => /workevent-backend-.+-app-1$/.test(c.name || ""));
+    if (fuzzy?.containerId) return fuzzy.containerId;
+  }
+
+  return named[0]?.containerId ?? null;
+}
+
 async function resolveContainerId(baseUrl, apiKey, appName) {
   const containers = await dokployFetch(baseUrl, apiKey, "docker.getContainers");
-  const running = containers.filter(
-    (c) => c.state === "running" && c.name?.includes(appName),
+  const fromList = pickContainer(containers, appName);
+  if (fromList) return fromList;
+
+  const tasks = await dokployFetch(
+    baseUrl,
+    apiKey,
+    `docker.getServiceContainersByAppName?appName=${encodeURIComponent(appName)}`,
   );
-  if (running.length === 0) {
-    const tasks = await dokployFetch(
-      baseUrl,
-      apiKey,
-      `docker.getServiceContainersByAppName?appName=${encodeURIComponent(appName)}`,
-    );
-    const ready = tasks.find((t) => t.state === "running" || t.state === "ready");
-    if (ready?.containerId) return ready.containerId;
-    throw new Error(
-      `No running container for "${appName}". Check Dokploy → Terminal tab or redeploy.`,
-    );
-  }
-  return running[0].containerId;
+  const ready = tasks.find((t) => t.state === "running" || t.state === "ready");
+  if (ready?.containerId) return ready.containerId;
+  throw new Error(
+    `No running container for "${appName}". Check Dokploy → Terminal tab or redeploy.`,
+  );
 }
 
 function connectTerminal({ baseUrl, apiKey, containerId, shell }) {
@@ -110,8 +121,13 @@ async function main() {
 
   const appName =
     args.app === "frontend"
-      ? (env.DOCKPLOY_FRONTEND_APP_NAME ?? "workevent-frontend-gdwwql")
-      : (env.DOCKPLOY_BACKEND_APP_NAME ?? "workevent-backend-s14vzr");
+      ? env.DOCKPLOY_FRONTEND_APP_NAME
+      : env.DOCKPLOY_BACKEND_APP_NAME;
+  if (!appName) {
+    const key = args.app === "frontend" ? "DOCKPLOY_FRONTEND_APP_NAME" : "DOCKPLOY_BACKEND_APP_NAME";
+    console.error(`Set ${key} in .env.local`);
+    process.exit(1);
+  }
 
   console.error(`Resolving container for ${appName}...`);
   const containerId = await resolveContainerId(baseUrl, apiKey, appName);

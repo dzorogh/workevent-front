@@ -11,7 +11,9 @@
     "dokploy:shell": "node scripts/dokploy-exec.mjs",
     "dokploy:shell:backend": "node scripts/dokploy-exec.mjs --app backend",
     "dokploy:shell:frontend": "node scripts/dokploy-exec.mjs --app frontend",
-    "seo:generate-pages-seed": "node scripts/generate-pages-seed.mjs"
+    "seo:generate-pages-seed": "node scripts/generate-pages-seed.mjs",
+    "seo:lint-content": "node scripts/lint-seo-content.mjs",
+    "seo:seed-posts": "node scripts/dokploy-seed-posts.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

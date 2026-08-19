@@ -184,3 +184,5 @@
 - `seo/drift-baseline.json` — что должно остаться после деплоя
 - `scripts/generate-pages-seed.mjs` — генерация сидера
 - `scripts/seed-seo-pages.php` — заливка страниц в Laravel
+- `scripts/seed-seo-posts.php` + `seo/posts-seed.json` — статьи блога в `App\Models\Post` через Dokploy
+- `seo/README.md` — команды сида pages/posts
