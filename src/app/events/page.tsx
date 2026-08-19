@@ -13,6 +13,7 @@ import { buildFacetedEventsMetadata } from "@/lib/seo/metadata";
 import { SITE_URL } from "@/lib/seo/constants";
 import { cloneLandingPath } from "@/lib/seo/inventory";
 import { permanentRedirect } from "next/navigation";
+import { Route } from "next";
 
 export const revalidate = 300;
 
@@ -66,12 +67,12 @@ export default async function Events({
         industries,
     );
     if (clone) {
-        permanentRedirect(clone);
+        permanentRedirect(clone as Route);
     }
 
     const preset = response.data?.presets.length === 1 ? response.data.presets[0] : undefined;
     if (preset?.slug) {
-        permanentRedirect(cloneLandingPath(preset.filters, cities, industries) ?? `/events/${preset.slug}`);
+        permanentRedirect((cloneLandingPath(preset.filters, cities, industries) ?? `/events/${preset.slug}`) as Route);
     }
 
     const initialEvents = response.data?.data ?? [];

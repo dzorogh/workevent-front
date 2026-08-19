@@ -7,7 +7,7 @@ import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
 import { EventFormat, EventIndexParametersQuery } from "@/lib/types";
 import H1 from "@/components/ui/h1";
-import { Metadata } from "next";
+import { Metadata, Route } from "next";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -79,7 +79,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         industriesResponse.data?.data ?? [],
     );
     if (clone) {
-        permanentRedirect(clone);
+        permanentRedirect(clone as Route);
     }
 
     const title = resolvePresetHeading(preset.title, preset.metadata?.title);
@@ -118,7 +118,7 @@ export default async function PresetPage({ params }: Props) {
     const citiesList = citiesResponse.data?.data ?? [];
     const clone = cloneLandingPath(preset.filters, citiesList, industriesList);
     if (clone) {
-        permanentRedirect(clone);
+        permanentRedirect(clone as Route);
     }
 
     const presetParams = {
