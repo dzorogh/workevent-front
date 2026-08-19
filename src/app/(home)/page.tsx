@@ -52,12 +52,12 @@ const title = 'Каталог деловых мероприятий в Росс�
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata(null, {
-    title: 'Все бизнес‑события России: семинары, форумы, тренинги и выставки - Workevent',
+    title: 'Деловые мероприятия России: конференции, форумы и выставки — Workevent',
     description: 'Каталог деловых мероприятий на сайте Workevent. Поиск по датам, индустриям, городам. Контакты организаторов, отзывы участников, фото и видео. Инструменты организаторов',
     canonicalPath: '/',
     openGraph: {
       type: 'website',
-      title: 'Все бизнес‑события России — Workevent',
+      title: 'Деловые мероприятия России — Workevent',
       description: 'Каталог деловых мероприятий на сайте Workevent. Поиск по датам, индустриям, городам.',
       url: SITE_URL,
     },

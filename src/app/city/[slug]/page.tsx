@@ -35,6 +35,31 @@ function cityPrep(title: string) {
   return CITY_PREP[title] ?? `в ${title}`;
 }
 
+function cityFallbackCopy(cityTitle: string) {
+  const prep = cityPrep(cityTitle);
+
+  if (cityTitle === 'Москва') {
+    return {
+      title: 'Мероприятия в Москве: конференции и выставки 2026 — Workevent',
+      h1: 'Мероприятия в Москве: конференции и выставки',
+      description:
+        'Мероприятия в Москве: конференции, форумы и выставки 2026. Актуальные даты, контакты организаторов и регистрация на Workevent.',
+      ogTitle: 'Мероприятия в Москве — конференции и выставки',
+      ogDescription: 'Конференции и выставки в Москве на 2026 год.',
+      listDescription: 'Мероприятия в Москве: конференции и выставки',
+    };
+  }
+
+  return {
+    title: `Деловые мероприятия ${prep} — Workevent`,
+    h1: `Мероприятия ${prep}`,
+    description: `Каталог конференций, форумов, выставок и семинаров ${prep}. Актуальные даты, контакты организаторов и регистрация на Workevent.`,
+    ogTitle: `Мероприятия ${prep} — Workevent`,
+    ogDescription: `Конференции, форумы и выставки ${prep}.`,
+    listDescription: `Деловые мероприятия ${prep}`,
+  };
+}
+
 function extractFaqItems(content: string | null | undefined) {
   if (!content) return [];
 
@@ -131,16 +156,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     params: { query: { path: `/city/${createSlugWithId(city.title, city.id)}` } },
   });
   const page = pageResponse.data?.data;
-  const prep = cityPrep(city.title);
+  const copy = cityFallbackCopy(city.title);
 
   const metadata = buildMetadata(page?.metadata, {
-    title: `Деловые мероприятия ${prep} — Workevent`,
-    description: `Каталог конференций, форумов, выставок и семинаров ${prep}. Актуальные даты, контакты организаторов и регистрация на Workevent.`,
+    title: copy.title,
+    description: copy.description,
     canonicalPath: `/city/${createSlugWithId(city.title, city.id)}`,
     openGraph: {
       type: 'website',
-      title: `Мероприятия ${prep} — Workevent`,
-      description: `Конференции, форумы и выставки ${prep}.`,
+      title: copy.ogTitle,
+      description: copy.ogDescription,
       url: `${SITE_URL}/city/${createSlugWithId(city.title, city.id)}`,
     },
   });
@@ -184,7 +209,8 @@ export default async function CityPage({ params }: Props) {
 
   const citySlug = createSlugWithId(city.title, city.id);
   const pageUrl = `${SITE_URL}/city/${citySlug}`;
-  const title = page?.metadata?.h1 ?? page?.title ?? `Мероприятия ${cityPrep(city.title)}`;
+  const copy = cityFallbackCopy(city.title);
+  const title = page?.metadata?.h1 ?? page?.title ?? copy.h1;
   const Content = page?.content ? await compileMdxContent(page.content) : null;
   const faqItems = extractFaqItems(page?.content);
 
@@ -199,7 +225,7 @@ export default async function CityPage({ params }: Props) {
           ]),
           buildItemListJsonLd({
             name: title,
-            description: `Деловые мероприятия ${cityPrep(city.title)}`,
+            description: copy.listDescription,
             url: pageUrl,
             events: initialEvents,
           }),

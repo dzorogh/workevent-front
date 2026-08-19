@@ -76,8 +76,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const description = page?.metadata?.description && !isIndustryCatalogIntent(page.metadata.description)
         ? page.metadata.description
         : industry?.title
-            ? `План мероприятий отрасли «${industry.title}» на ${selectedYear} год — календарь по датам, не полный каталог отрасли.`
-            : `Календарь и план деловых мероприятий на ${selectedYear} год: даты конференций, форумов и выставок.`;
+            ? `Расписание выставок и план мероприятий отрасли «${industry.title}» на ${selectedYear} год — календарь по датам, не полный каталог отрасли.`
+            : `Календарь мероприятий ${selectedYear}: расписание выставок, даты конференций и форумов. План на год, не отраслевой каталог.`;
     const canonicalPath = `/schedule/${selectedYear}${industrySlug ? `/${industrySlug}` : ''}`;
 
     return buildMetadata(
@@ -163,7 +163,9 @@ export default async function SchedulePage({ params }: Props) {
                 ]),
                 buildItemListJsonLd({
                     name: title,
-                    description: `Календарь мероприятий на ${selectedYear} год`,
+                    description: industry
+                        ? `Календарь мероприятий: ${industry.title} на ${selectedYear} год`
+                        : `Календарь мероприятий ${selectedYear}: расписание выставок`,
                     url: pageUrl,
                     events: scheduleEvents,
                 }),

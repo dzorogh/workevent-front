@@ -93,10 +93,111 @@ export function buildMetadata(
   };
 }
 
+const CITY_PREP: Record<string, string> = {
+  Москва: 'в Москве',
+  'Санкт-Петербург': 'в Санкт-Петербурге',
+  Новосибирск: 'в Новосибирске',
+  Екатеринбург: 'в Екатеринбурге',
+  Казань: 'в Казани',
+  'Ростов-на-Дону': 'в Ростове-на-Дону',
+  Краснодар: 'в Краснодаре',
+  Владивосток: 'во Владивостоке',
+};
+
+/** Сидер резолвит Москву по title; в прод-БД это id=1, slug moskva-1. */
+export const MOSCOW_SEED_CITY_IDS = [1] as const;
+
+export type CityCopy = {
+  title: string;
+  h1: string;
+  description: string;
+  ogTitle: string;
+  ogDescription: string;
+  listDescription: string;
+};
+
+export function cityPrep(title: string) {
+  return CITY_PREP[title] ?? `в ${title}`;
+}
+
+export function isMoscowCity(
+  city: { id?: number | null; title?: string | null },
+  slug?: string | null,
+): boolean {
+  if (city.id != null && MOSCOW_SEED_CITY_IDS.includes(Number(city.id) as (typeof MOSCOW_SEED_CITY_IDS)[number])) {
+    return true;
+  }
+
+  const haystack = [city.title, slug].filter(Boolean).join(' ').toLowerCase();
+  return /москв/.test(haystack) || /moskv/.test(haystack);
+}
+
+export function isBrokenCityPrep(text: string | null | undefined, cityTitle?: string): boolean {
+  if (!text) return false;
+  if (/в москва(?![а-яё])/i.test(text)) return true;
+  if (!cityTitle) return false;
+
+  const correct = CITY_PREP[cityTitle];
+  const broken = `в ${cityTitle}`;
+  if (!correct || correct === broken) return false;
+
+  const escaped = broken.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`${escaped}(?![а-яё])`, 'i').test(text);
+}
+
+export function hasMoscowWordstatIntent(text: string | null | undefined): boolean {
+  if (!text || isBrokenCityPrep(text)) return false;
+  const value = text.toLowerCase();
+  return /мероприятия в москве/.test(value) && /конференц/.test(value) && /выставк/.test(value) && /2026/.test(value);
+}
+
+export function resolveCityCopy(
+  city: { id?: number | null; title: string },
+  slug?: string | null,
+): CityCopy {
+  const prep = cityPrep(city.title);
+
+  if (isMoscowCity(city, slug)) {
+    return {
+      title: 'Мероприятия в Москве: конференции и выставки 2026 — Workevent',
+      h1: 'Мероприятия в Москве: конференции и выставки 2026',
+      description:
+        'Мероприятия в Москве: конференции, форумы и выставки 2026. Актуальные даты, контакты организаторов и регистрация на Workevent.',
+      ogTitle: 'Мероприятия в Москве — конференции и выставки 2026',
+      ogDescription: 'Конференции и выставки в Москве на 2026 год.',
+      listDescription: 'Мероприятия в Москве: конференции и выставки 2026',
+    };
+  }
+
+  return {
+    title: `Деловые мероприятия ${prep} — Workevent`,
+    h1: `Мероприятия ${prep}`,
+    description: `Каталог конференций, форумов, выставок и семинаров ${prep}. Актуальные даты, контакты организаторов и регистрация на Workevent.`,
+    ogTitle: `Мероприятия ${prep} — Workevent`,
+    ogDescription: `Конференции, форумы и выставки ${prep}.`,
+    listDescription: `Деловые мероприятия ${prep}`,
+  };
+}
+
+export function resolveCityVisibleHeading(
+  city: { id?: number | null; title: string },
+  slug: string | undefined,
+  raw: string | null | undefined,
+  kind: 'title' | 'h1',
+): string {
+  const copy = resolveCityCopy(city, slug);
+  const fallback = kind === 'h1' ? copy.h1 : copy.title;
+  const value = raw?.trim();
+  if (!value) return fallback;
+  if (isBrokenCityPrep(value, city.title)) return fallback;
+  if (isMoscowCity(city, slug) && !hasMoscowWordstatIntent(value)) return fallback;
+  return value;
+}
+
 export function isIndustryCatalogIntent(text: string | null | undefined): boolean {
   if (!text) return false;
   const value = text.trim();
-  return /^мероприятия[:\s—-]/i.test(value) && !/(подборк|календар|план на \d{4})/i.test(value);
+  return /^мероприятия[:\s—-]/i.test(value) && !/(подборк|календар|план на \d{4}|расписание)/i.test(value);
 }
 
 export function resolvePresetHeading(presetTitle: string, raw?: string | null): string {
@@ -112,10 +213,11 @@ export function resolveScheduleHeading(
   raw?: string | null,
 ): string {
   const fallback = industryTitle
-    ? `Календарь мероприятий: ${industryTitle} на ${year} год`
-    : `Календарь деловых мероприятий на ${year} год`;
+    ? `Расписание выставок: ${industryTitle} на ${year}`
+    : `Календарь мероприятий ${year}: расписание выставок`;
   if (!raw?.trim()) return fallback;
-  if (isIndustryCatalogIntent(raw)) return fallback;
+  if (isIndustryCatalogIntent(raw) || isBrokenCityPrep(raw)) return fallback;
+  if (!/(расписание выставок|календарь мероприятий)/i.test(raw)) return fallback;
   return raw.trim();
 }
 
@@ -127,19 +229,19 @@ export function buildFacetedEventsMetadata(searchParams: Record<string, string |
   });
 
   return buildMetadata(null, {
-    title: 'Каталог и поиск мероприятий — Workevent',
+    title: 'Каталог деловых мероприятий — Workevent',
     description:
       'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
     canonicalPath: '/events',
     openGraph: {
       type: 'website',
-      title: 'Каталог мероприятий — Workevent',
+      title: 'Каталог деловых мероприятий — Workevent',
       description:
         'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
       url: `${SITE_URL}/events`,
     },
     twitter: {
-      title: 'Каталог мероприятий — Workevent',
+      title: 'Каталог деловых мероприятий — Workevent',
       description:
         'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
     },
