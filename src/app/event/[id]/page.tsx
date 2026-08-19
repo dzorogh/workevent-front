@@ -3,33 +3,42 @@ import { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
-import { createSlugWithId, getIdFromSlug } from "@/lib/utils";
+import { createSlugWithId, formatEventDates, formatPrice, getIdFromSlug, truncateText } from "@/lib/utils";
 import EventCardGrid from "@/components/event-card-grid";
 import EventCard from "@/components/event-card";
 import { Route } from "next";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Event, WithContext } from 'schema-dts'
 import removeMarkdown from "remove-markdown";
-import { truncateText } from "@/lib/utils";
-import LocationMap from "./location-map";
+import LocationMapLoader from "./location-map-loader";
 import Breadcrumbs from "./breadcrumbs";
 import Info from "./info";
 import Images from "./images";
 import SectionTitle from "./section-title";
-import { Location } from "@/lib/types";
+import { EventResource, Location } from "@/lib/types";
 import Form from "./form";
 import Tags from "./tags";
 import Contacts from "./contacts";
 import CalendarComponent from "./calendar";
 import Description from "../../../components/description";
 import { Separator } from "@/components/ui/separator";
+import InternalLinks from "@/components/seo/internal-links";
+import { JsonLd } from "@/lib/seo/jsonld";
+import { buildBreadcrumbJsonLd, buildEventJsonLd, buildFaqPageJsonLd } from "@/lib/seo/jsonld-builders";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { SITE_URL } from "@/lib/seo/constants";
+import { resolvePageFaq, type FaqItem } from "@/lib/seo/faq";
+import FaqSection from "@/components/seo/faq";
 
 const getLocation = async (location: string): Promise<Location | null> => {
-    console.log(location)
+    const query = location.trim()
+
+    if (!query) {
+        return null
+    }
 
     const url = new URL(`https://nominatim.openstreetmap.org/search`)
-    url.searchParams.set('q', location.trim())
+    url.searchParams.set('q', query)
     url.searchParams.set('limit', '1')
     url.searchParams.set('format', 'json')
 
@@ -37,31 +46,30 @@ const getLocation = async (location: string): Promise<Location | null> => {
         const response = await fetch(url.toString(), {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",
+                "User-Agent": "Workevent/1.0 (+https://workevent.ru)",
+                "Accept": "application/json",
+                "Accept-Language": "ru",
             },
         })
 
         if (!response.ok) {
-            console.error('HTTP error! status:', {
+            console.error('Nominatim request failed:', {
                 url: response.url,
                 status: response.status,
                 statusText: response.statusText,
-                contentType: response.headers.get('content-type'),
-                body: (await response.text()).substring(0, 200) // Первые 200 символов для отладки
             })
-            throw new Error(`HTTP error! status: ${response.status}`)
+            return null
         }
 
         const data = await response.json()
 
-        if (!data || !Array.isArray(data) || data.length === 0) {
-            throw new Error('No location data found')
+        if (!Array.isArray(data) || data.length === 0) {
+            return null
         }
 
         return data[0]
     } catch (error) {
         console.error('Error fetching location:', error)
-        // Возвращаем базовый объект локации в случае ошибки
         return null;
     }
 }
@@ -70,22 +78,32 @@ type Props = {
     params: Promise<{ id: string }>
 }
 
-export const revalidate = false;
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
-    const events = await Api.GET('/v1/events/ids')
-        .then(res => res.data?.data || []);
+    const events: Array<{ id: number; title: string }> = [];
+    let page = 1;
+    let lastPage = 1;
+
+    do {
+        const response = await Api.GET('/v1/events', {
+            params: { query: { page, per_page: 100 } },
+        });
+        const data = response.data?.data ?? [];
+        events.push(...data.map((event) => ({ id: event.id, title: event.title })));
+        lastPage = response.data?.meta?.last_page ?? 1;
+        page += 1;
+    } while (page <= lastPage);
 
     return events.map((event) => ({
-        id: String(event.id),
-    }))
+        id: createSlugWithId(event.title, event.id),
+    }));
 }
 
 const getEventData = async (params: Props['params']) => {
     const resolvedParams = await params;
     const numericId = getIdFromSlug(resolvedParams.id);
 
-    // First fetch the event
     const responseData = await Api.GET(`/v1/events/{event}`, {
         params: { path: { event: Number(numericId) } }
     }).then(res => res.data);
@@ -102,7 +120,6 @@ const getEventData = async (params: Props['params']) => {
         permanentRedirect(`/event/${correctSlug}`);
     }
 
-    // Then fetch similar events using event data
     const similarEvents = await Api.GET('/v1/events', {
         params: {
             query: {
@@ -125,96 +142,105 @@ const getEventData = async (params: Props['params']) => {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { event } = await getEventData(params);
+    const slug = createSlugWithId(event.title, event.id);
+    const fallbackTitle = `${event.title} — ${event.city?.title ?? ''} ${event.start_date ? new Date(event.start_date).toLocaleDateString('ru-RU', { month: 'long', day: 'numeric', year: 'numeric' }) : ''}`.trim();
+    const fallbackDescription = truncateText(removeMarkdown(event.description ?? ''), 150);
 
-    const title = `${event?.title} — ${event?.city?.title} ${event?.start_date ? new Date(event.start_date).toLocaleDateString('ru-RU', { month: 'long', day: 'numeric', year: 'numeric' }) : ''}`;
-    const description = truncateText(removeMarkdown(event?.description ?? ''), 150);
-
-    return {
-        title: title,
-        description: description,
+    return buildMetadata(event.metadata, {
+        title: fallbackTitle,
+        description: fallbackDescription,
+        canonicalPath: `/event/${slug}`,
         openGraph: {
             type: 'website',
-            title: title,
-            description: description,
-            images: [event?.cover],
-            url: `${process.env.NEXT_PUBLIC_SITE_URL}/event/${createSlugWithId(event.title, event.id)}`,
+            title: fallbackTitle,
+            description: fallbackDescription,
+            url: `${SITE_URL}/event/${slug}`,
+            images: event.cover ? [{ url: event.cover }] : undefined,
         },
         twitter: {
-            title: title,
-            description: description,
-            images: [event?.cover],
-        }
-    };
+            title: fallbackTitle,
+            description: fallbackDescription,
+            images: event.cover ? [event.cover] : undefined,
+        },
+    });
+}
+
+function buildEventFaq(event: EventResource): FaqItem[] {
+    const items: FaqItem[] = [];
+
+    if (event.start_date) {
+        items.push({
+            question: `Когда проходит «${event.title}»?`,
+            answer: `${formatEventDates(event)}${event.city?.title ? `, ${event.city.title}` : ''}.`,
+        });
+    }
+
+    if (event.format === 'webinar' || event.city || event.venue) {
+        const place = event.format === 'webinar'
+            ? 'Мероприятие проходит онлайн.'
+            : [event.venue?.title, event.venue?.address, event.city?.title].filter(Boolean).join(', ');
+        items.push({
+            question: 'Где проходит мероприятие?',
+            answer: place || 'Площадку уточнит организатор.',
+        });
+    }
+
+    if (event.tariffs && event.tariffs.length > 0) {
+        const cheapest = [...event.tariffs].sort((a, b) => a.price - b.price)[0];
+        items.push({
+            question: 'Сколько стоит участие?',
+            answer: `Стоимость участия — от ${formatPrice(cheapest.price)}. Актуальные тарифы указаны на странице.`,
+        });
+    }
+
+    items.push({
+        question: 'Как принять участие?',
+        answer: 'Оставьте заявку на этой странице — мы передадим её организатору. Также можно перейти на сайт организатора по кнопке «Принять участие».',
+    });
+
+    return items;
 }
 
 const prepareAddress = (address: string, city: string) => {
     const addressString = address || city
-    // remove special characters and ' д ' because it breaks the search
     return addressString.replace(/[^a-zA-Z0-9а-яА-Я\s]/g, '').replace(' д ', ' ')
 }
 
 export default async function EventPage({ params }: Props) {
     const { event, similarEvents, presets } = await getEventData(params);
 
-
     const preparedAddress = prepareAddress(event.venue?.address ?? '', event.city?.title ?? '');
     const location = await getLocation(preparedAddress);
-    console.log({ preparedAddress })
 
-    // Compile the MDX source code to a function body
     const code = String(
         await compile(event.description ?? '', { outputFormat: 'function-body' })
     )
 
-    // Run the compiled code with the runtime and get the default export
     const { default: DescriptionMDX } = await run(code, {
         ...runtime,
         baseUrl: import.meta.url,
     })
 
-    const jsonLd: WithContext<Event> = {
-        '@context': 'https://schema.org',
-        '@type': 'Event',
-        name: event.title,
-        description: event.description ?? event.title,
-        startDate: event.start_date,
-        endDate: event.end_date,
-        location: event.venue ? {
-            '@type': 'Place',
-            name: event.venue.title,
-            address: event.venue.address ?? event.city?.title,
-        } : event.city ? {
-            '@type': 'Place',
-            name: event.city.title,
-        } : undefined,
-        image: event.cover,
-        url: `https://workevent.ru/event/${createSlugWithId(event.title, event.id)}`,
-        offers: {
-            '@type': 'Offer',
-            price: event.tariffs?.sort((a, b) => a.price - b.price)[0]?.price,
-            priceCurrency: 'RUB',
-            availability: 'https://schema.org/InStock',
-            url: `https://workevent.ru/event/${createSlugWithId(event.title, event.id)}`,
-            validFrom: event.start_date,
-            validThrough: event.end_date,
-        },
-        eventStatus: 'https://schema.org/EventScheduled',
-        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-    }
+    const eventUrl = `${SITE_URL}/event/${createSlugWithId(event.title, event.id)}`;
+    const faq = resolvePageFaq(event.description, buildEventFaq(event));
+    const faqJsonLd = buildFaqPageJsonLd(faq.items);
 
     return (
-
         <div className="flex flex-col md:gap-16 gap-8">
-            {/* JSON-LD */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            <JsonLd
+                data={[
+                    buildEventJsonLd(event),
+                    buildBreadcrumbJsonLd([
+                        { name: 'Главная', url: SITE_URL },
+                        { name: 'Мероприятия', url: `${SITE_URL}/events` },
+                        { name: event.title, url: eventUrl },
+                    ]),
+                    ...(faqJsonLd ? [faqJsonLd] : []),
+                ]}
             />
 
-            {/* Breadcrumbs */}
             <Breadcrumbs event={event} />
 
-            {/* Product Card */}
             <div className="flex flex-col md:flex-row md:gap-8 gap-4">
                 <Images event={event} className="md:basis-1/2" />
                 <Info event={event} className="md:basis-1/2" />
@@ -222,7 +248,6 @@ export default async function EventPage({ params }: Props) {
 
             <Separator />
 
-            {/* Description */}
             <div className="flex flex-col md:flex-row gap-8">
                 <div className="flex flex-col gap-6 grow">
                     <SectionTitle>О мероприятии</SectionTitle>
@@ -236,7 +261,6 @@ export default async function EventPage({ params }: Props) {
                 </div>
             </div>
 
-            {/* Tags */}
             {event.tags && event.tags.length > 0 && (
                 <>
                     <Separator />
@@ -247,7 +271,6 @@ export default async function EventPage({ params }: Props) {
                 </>
             )}
 
-            {/* Contacts */}
             {(event.website || event.email || event.phone) && (
                 <>
                     <Separator />
@@ -258,23 +281,20 @@ export default async function EventPage({ params }: Props) {
                 </>
             )}
 
-            {/* Map */}
             {location &&
                 <>
                     <div className="flex flex-col gap-6" id="map">
                         <SectionTitle>Местоположение</SectionTitle>
-                        <LocationMap location={location} event={event} />
+                        <LocationMapLoader location={location} event={event} />
                     </div>
                 </>
             }
 
-            {/* Form */}
             <div className="flex flex-col gap-6 -mx-4 md:mx-0 bg-secondary md:px-10 px-4 md:py-8 py-12 md:rounded-lg -mt-8 md:mt-0 max-w-[1000px]">
                 <SectionTitle className="text-center md:text-left">Оставьте заявку на участие</SectionTitle>
                 <Form />
             </div>
 
-            {/* Similar Events */}
             {similarEvents.length > 0 && (
                 <>
                     <Separator />
@@ -290,8 +310,6 @@ export default async function EventPage({ params }: Props) {
                 </>
             )}
 
-
-            {/* Presets */}
             {presets && presets.length > 0 && (
                 <>
                     <Separator />
@@ -310,6 +328,10 @@ export default async function EventPage({ params }: Props) {
                     </div>
                 </>
             )}
+
+            {faq.visible && <FaqSection items={faq.items} />}
+
+            <InternalLinks variant="event" event={event} />
         </div>
     );
 }

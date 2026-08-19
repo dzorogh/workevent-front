@@ -3,24 +3,32 @@ import { Api } from "@/lib/api"
 import H1 from '@/components/ui/h1';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import Image from 'next/image';
 import { createSlugWithId } from '@/lib/utils';
 import { Route } from 'next';
 import { Metadata } from 'next';
 import EventCoverImage from '@/components/event-cover-image';
+import { buildMetadata } from '@/lib/seo/metadata';
+import { SITE_URL } from '@/lib/seo/constants';
 
 const getPosts = async () => {
     const response = await Api.GET('/v1/posts');
     return response.data;
 }
 
-export const revalidate = false;
+export const revalidate = 1800;
 
 export async function generateMetadata(): Promise<Metadata> {
-    return {
+    return buildMetadata(null, {
         title: 'Блог и новости проекта Workevent',
         description: 'Блог на сайте Workevent. Статьи о деловых мероприятиях, полезные советы для организаторов, отзывы участников, новости и обзоры',
-    };
+        canonicalPath: '/blog',
+        openGraph: {
+            type: 'website',
+            title: 'Блог Workevent',
+            description: 'Статьи о деловых мероприятиях, советы организаторам и новости проекта',
+            url: `${SITE_URL}/blog`,
+        },
+    });
 }
 
 export default async function BlogPage() {

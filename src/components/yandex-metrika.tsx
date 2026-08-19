@@ -2,12 +2,7 @@
 
 import { useEffect } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
-
-declare global {
-    interface Window {
-        ym: (id: number, action: string, url: string) => void;
-    }
-}
+import { isOrganizerGotoHref, reachGoal, YANDEX_METRIKA_COUNTER_ID } from './yandex-metrika-goals'
 
 export default function YandexMetrika() {
     const pathname = usePathname()
@@ -15,8 +10,20 @@ export default function YandexMetrika() {
 
     useEffect(() => {
         const url = `${pathname}?${searchParams}`
-        window.ym(99029501, 'hit', url);
+        window.ym?.(YANDEX_METRIKA_COUNTER_ID, 'hit', url);
     }, [pathname, searchParams])
+
+    useEffect(() => {
+        const onClick = (event: MouseEvent) => {
+            const anchor = (event.target as Element | null)?.closest?.('a')
+            if (isOrganizerGotoHref(anchor?.getAttribute('href'))) {
+                reachGoal('organizer_goto')
+            }
+        }
+
+        document.addEventListener('click', onClick)
+        return () => document.removeEventListener('click', onClick)
+    }, [])
 
     return null
 }

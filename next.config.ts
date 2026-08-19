@@ -5,6 +5,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 
+const seoYear = new Date().getMonth() < 10
+  ? new Date().getFullYear()
+  : new Date().getFullYear() + 1;
+
 const nextConfig: NextConfig = withBundleAnalyzer({
   typedRoutes: true,
   experimental: {
@@ -34,7 +38,7 @@ const nextConfig: NextConfig = withBundleAnalyzer({
     },
   },
   images: {
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 86400,
     remotePatterns: [
       {
         protocol: 'https',
@@ -47,11 +51,26 @@ const nextConfig: NextConfig = withBundleAnalyzer({
     ],
   },
 
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+        ],
+      },
+    ];
+  },
+
   async redirects() {
     return [
       {
         source: '/schedule',
-        destination: '/schedule/2025',
+        destination: `/schedule/${seoYear}`,
         permanent: true,
       },
     ]

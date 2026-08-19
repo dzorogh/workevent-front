@@ -1,0 +1,36 @@
+{
+  "apiAutomation": {
+    "checkedAt": "2026-08-19",
+    "result": "blocked_no_user_oauth_token",
+    "note": "Через API ничего не закрыто. В .env.local только YANDEX_API_CLIENT_ID / YANDEX_API_CLIENT_SECRET / YANDEX_API_REDIRECT_URI. Нужен YANDEX_API_ACCESS_TOKEN. Отчёт: seo/yandex-ops-report.json"
+  },
+  "yandexWebmaster": [
+    "Подтвердить домен workevent.ru в Yandex.Вебмастер (DNS или HTML-файл) — API: не сделано, нет токена",
+    "Указать регион продвижения (Россия, приоритетные города: Москва, СПб) — API: не сделано",
+    "Отправить sitemap: https://workevent.ru/sitemap.xml — API: не отправлено; прод сейчас отдаёт 200 на старую next-sitemap карту, city/industry 404, это не успех индексации нового слоя",
+    "Запустить переобход главной, /events и топ-50 event-страниц — API: не сделано",
+    "Связать счётчик Yandex.Metrika с Вебмастером — API: не сделано",
+    "Мониторить ИКС, индексацию и запросы с брендом Workevent"
+  ],
+  "googleSearchConsole": [
+    "Подтвердить домен в Google Search Console",
+    "Отправить sitemap.xml",
+    "Проверить покрытие индекса и ошибки canonical"
+  ],
+  "yandexBusiness": [
+    "Создать/актуализировать карточку организации в Yandex.Бизнес",
+    "Заполнить NAP, категорию, сайт, описание, логотип",
+    "Добавить ссылки на ключевые разделы сайта"
+  ],
+  "directories": [
+    "TimePad / EventCatalog / профильные каталоги мероприятий РФ",
+    "Отраслевые ассоциации и медиа с разделами events",
+    "2GIS / Spravker (если есть офис/юрлицо для NAP)"
+  ],
+  "yandexMetrikaGoals": [
+    "Цель: отправка заявки на участие (форма на event-странице) — в коде reachGoal event_apply, счётчик 99029501; в API Метрики не проверено и не создано (нет токена)",
+    "Цель: подписка на рассылку (блок Subscribe) — в коде newsletter_subscribe; в API не проверено",
+    "Цель: переход на сайт организатора (click /goto/*) — в коде organizer_goto; в API не проверено",
+    "Сегмент: organic из Yandex + Google для отслеживания SEO-трафика — завести вручную (последний значимый источник = Яндекс ИЛИ Google); API сегментов без токена не вызывался"
+  ]
+}

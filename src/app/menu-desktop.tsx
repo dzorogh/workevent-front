@@ -1,8 +1,12 @@
 import AppLink from "@/components/ui/app-link";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Route } from "next";
+import { getSeoYear } from "@/lib/seo/constants";
 
 export default function MenuDesktop({ className }: { className?: string }) {
+  const schedulePath = `/schedule/${getSeoYear()}` as Route;
+
   return (
     <nav className={className}>
       <ul className={`flex gap-x-6 gap-y-2`}>
@@ -13,7 +17,7 @@ export default function MenuDesktop({ className }: { className?: string }) {
         </li>
         <li>
           <Button variant="ghost" asChild>
-            <Link href={{ pathname: "/schedule/2025" }}>Календарь</Link>
+            <Link href={schedulePath}>Календарь</Link>
           </Button>
         </li>
         <li>
