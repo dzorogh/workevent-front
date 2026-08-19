@@ -6,7 +6,7 @@
   },
   "yandexWebmaster": [
     "Домен workevent.ru подтверждён (API: verified, host https:workevent.ru:443)",
-    "Регион продвижения (Россия, Москва, СПб) — ТОЛЬКО РУКАМИ: в API v4 нет метода, диагностика NO_REGIONS = PRESENT",
+    "Регион продвижения — закрыт руками 2026-08-20",
     "Sitemap https://workevent.ru/sitemap.xml — уже добавлен 2026-08-19 (повтор POST = 409 SITEMAP_ALREADY_ADDED). Прод: 200, 192 URL, есть city/industry",
     "Переобход через API: 27 URL, все HTTP 202 (/, /events, /schedule/2026, все 12 city, 12 industry)",
     "Счётчик Метрики с Вебмастером связан (NO_METRIKA_COUNTER_BINDING = ABSENT)",
@@ -18,9 +18,7 @@
     "Проверить покрытие индекса и ошибки canonical"
   ],
   "yandexBusiness": [
-    "Создать/актуализировать карточку в Яндекс.Бизнес — отдельного API-ключа нет; диагностика NOT_IN_SPRAV = PRESENT",
-    "Заполнить NAP, категорию, сайт, описание, логотип",
-    "Добавить ссылки на ключевые разделы сайта"
+    "Карточка Яндекс.Бизнес — закрыта руками 2026-08-20, NAP совпадает с сайтом"
   ],
   "directories": [
     "TimePad / EventCatalog / профильные каталоги мероприятий РФ",
@@ -36,9 +34,10 @@
   "blog": [
     "Публичный API: GET /api/v1/posts = 200, POST = 405 (Allow: GET, HEAD)",
     "Filament Posts есть, но штатный путь: seo/posts-seed.json + scripts/seed-seo-posts.php через npm run seo:seed-posts (Dokploy). POST /api/v1/posts = 405",
-    "В БД после сида: id=3 гид «как выбрать»; id=4 календарь 2026; id=5 отраслевой гид; id=6 как читать программу; id=1 заглушка"
+    "В БД: id=3 гид «как выбрать»; id=4 календарь 2026; id=5 отраслевой гид; id=6 как читать программу; плюс статья про конференции в Москве осенью 2026 (после seo:seed-posts); id=1 заглушка"
   ],
   "outreach": [
-    "Авторассылки не было. Собрано 32 домена организаторов: seo/outreach-prospects.json (без phone/email)"
+    "Авторассылки нет и не будет без явной команды. 32 домена: seo/outreach-prospects.json.",
+    "Черновики писем (15 московских, high): seo/outreach-letters.json. Email не собирали — отправка руками с сайта организатора."
   ]
 }

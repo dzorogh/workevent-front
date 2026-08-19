@@ -1,203 +1,308 @@
 {
   "site": "https://workevent.ru",
-  "generatedAt": "2026-08-19T22:40:00+03:00",
+  "generatedAt": "2026-08-20T00:16:00+03:00",
   "secretsPolicy": "report contains only env names, HTTP statuses, public counter id, hostnames — never token/key values",
   "envInventory": {
     ".env": {
-      "yandexApiKeys": []
-    },
-    ".env.example": {
+      "publicSite": ["NEXT_PUBLIC_API_URL", "NEXT_PUBLIC_SITE_URL"],
+      "otherKeysPresent": [
+        "PORT",
+        "NEXT_CACHE_REVALIDATE_SECRET_HASH",
+        "NEXT_PUBLIC_ENCRYPTION_KEY",
+        "NEXT_PUBLIC_ENCRYPTION_IV",
+        "NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN"
+      ],
       "yandexApiKeys": []
     },
     ".env.local": {
       "yandexApiKeys": [
         {
           "name": "YANDEX_API_CLIENT_ID",
-          "service": "Yandex OAuth app (shared client for Metrika / Webmaster / Direct / legacy Wordstat OAuth)",
-          "present": true,
-          "looksLike": "oauth_client_id_hex_32"
+          "service": "Yandex OAuth app",
+          "present": true
         },
         {
           "name": "YANDEX_API_CLIENT_SECRET",
           "service": "Yandex OAuth app secret",
-          "present": true,
-          "looksLike": "oauth_client_secret_len_32"
+          "present": true
         },
         {
           "name": "YANDEX_API_REDIRECT_URI",
-          "service": "Yandex OAuth redirect (verification_code / desktop flow)",
+          "service": "Yandex OAuth redirect",
           "present": true,
           "host": "oauth.yandex.ru"
+        },
+        {
+          "name": "YANDEX_API_ACCESS_TOKEN",
+          "service": "user OAuth access token (Webmaster + Metrika)",
+          "present": true
+        },
+        {
+          "name": "YANDEX_API_REFRESH_TOKEN",
+          "service": "OAuth refresh token",
+          "present": true
+        },
+        {
+          "name": "YANDEX_API_KEY",
+          "service": "Yandex Cloud Api-Key (Wordstat Search API v2 probed OK)",
+          "present": true
         }
-      ]
-    },
-    "processEnv": {
-      "yandexApiKeys": []
-    },
-    "dokployScripts": {
-      "files": [
-        "scripts/dokploy-exec.mjs",
-        "scripts/dokploy-run.mjs",
-        "docker-compose-dokploy.yml"
       ],
-      "yandexApiKeys": []
+      "dokploy": [
+        "DOCKPLOY_API_KEY",
+        "DOCKPLOY_URL",
+        "DOCKPLOY_PROJECT_ID",
+        "DOCKPLOY_ENVIRONMENT_ID",
+        "DOCKPLOY_BACKEND_APP_ID",
+        "DOCKPLOY_BACKEND_APP_NAME",
+        "DOCKPLOY_FRONTEND_APP_ID",
+        "DOCKPLOY_FRONTEND_APP_NAME",
+        "DOCKPLOY_FRONTEND_COMPOSE_ID"
+      ],
+      "telegram": ["TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID"],
+      "missing": ["YANDEX_API_FOLDER_ID", "YANDEX_BUSINESS_*"]
     },
-    "missingForLiveApi": [
-      "YANDEX_API_ACCESS_TOKEN",
-      "YANDEX_API_OAUTH_TOKEN",
-      "YANDEX_API_REFRESH_TOKEN",
-      "YANDEX_API_KEY",
-      "YANDEX_API_FOLDER_ID"
-    ]
+    "capabilityMap": {
+      "Yandex Webmaster API v4": "host info, diagnostics, user sitemaps add/list, recrawl queue/quota. No region SET method.",
+      "Yandex Metrika Management API": "counters, goals list, API segments list/create. No PII export used.",
+      "Yandex Cloud Wordstat v2": "YANDEX_API_KEY + folder from Cloud error; 58/58 topRequests HTTP 200 on 2026-08-20; report seo/wordstat-report.json",
+      "Yandex Business / Sprav": "no dedicated key; skipped",
+      "Admin public API": "GET /api/v1/* only. POST /api/v1/posts = 405",
+      "Filament": "Posts resource exists; login at https://admin.workevent.ru/login; no API token for writes",
+      "Dokploy": "container exec; backend app name in env is stale vs running workevent-backend-*-app-1",
+      "Telegram": "not used (no auto outreach)"
+    }
   },
   "accessProbes": {
-    "oauthClientCredentials": {
-      "endpoint": "POST https://oauth.yandex.ru/token grant_type=client_credentials",
-      "httpStatus": 400,
-      "error": "unauthorized_client",
-      "meaning": "приложение не выдаёт токен без пользовательского OAuth-кода"
-    },
-    "oauthDeviceCode": {
-      "endpoint": "POST https://oauth.yandex.ru/device/code",
-      "httpStatus": 400,
-      "error": "unauthorized_client",
-      "meaning": "device flow для этого приложения не включён"
-    },
-    "loginInfoNoToken": {
+    "loginInfo": {
       "endpoint": "GET https://login.yandex.ru/info",
-      "httpStatus": 401,
-      "error": "NOT_AUTHORIZED"
+      "httpStatus": 200
     },
-    "metrikaCountersNoToken": {
-      "endpoint": "GET https://api-metrika.yandex.net/management/v1/counters",
-      "httpStatus": 401,
-      "message": "Неавторизованный пользователь"
-    },
-    "webmasterUserNoToken": {
+    "webmasterUser": {
       "endpoint": "GET https://api.webmaster.yandex.net/v4/user",
-      "httpStatus": 403
+      "httpStatus": 200,
+      "user_id": 48680820
     },
-    "wordstatCloudSecretAsApiKey": {
+    "webmasterHosts": {
+      "endpoint": "GET /v4/user/{user-id}/hosts",
+      "httpStatus": 200,
+      "workeventHostId": "https:workevent.ru:443",
+      "verified": true
+    },
+    "metrikaCounters": {
+      "endpoint": "GET https://api-metrika.yandex.net/management/v1/counters",
+      "httpStatus": 200,
+      "count": 26
+    },
+    "wordstatCloudApiKey": {
       "endpoint": "POST https://searchapi.api.cloud.yandex.net/v2/wordstat/topRequests",
-      "httpStatus": 401,
-      "errorCode": 16,
-      "meaning": "YANDEX_API_CLIENT_SECRET не является Cloud Api-Key; Wordstat v2 недоступен"
+      "httpStatus": 200,
+      "meaning": "YANDEX_API_KEY is a valid Cloud Api-Key; frequencies not collected this run"
     }
   },
   "services": {
     "webmaster": {
-      "available": false,
-      "reason": "нет пользовательского OAuth access token",
-      "done": [],
-      "notDone": [
-        "найти хост workevent.ru",
-        "статус сайта / диагностика / индексация",
-        "отправить https://workevent.ru/sitemap.xml через POST /user-added-sitemaps",
-        "переобход главной, /events и топ event-страниц"
-      ]
+      "available": true,
+      "hostId": "https:workevent.ru:443",
+      "done": [
+        "хост workevent.ru найден и verified",
+        "диагностика хоста снята",
+        "sitemap https://workevent.ru/sitemap.xml уже в user-added (повтор POST = 409 SITEMAP_ALREADY_ADDED)",
+        "переобход 27 URL, все HTTP 202"
+      ],
+      "notDone": [],
+      "doneManual": [
+        "регион продвижения — закрыт руками 2026-08-20",
+        "карточка Яндекс.Бизнес — закрыта руками 2026-08-20, NAP как на сайте",
+        "дубли: 301/308 клонов /events/moscow и /events/it-conferences на канон; /events noindex; sitemap-0 удалён из user-added и отдаёт 410; sitemap 88 URL после деплоя 2026-08-20"
+      ],
+      "diagnostics": {
+        "httpStatus": 200,
+        "sqi": 10,
+        "searchable_pages_count": 453,
+        "excluded_pages_count": 6,
+        "presentProblems": [
+          {
+            "code": "DUPLICATE_PAGES",
+            "severity": "POSSIBLE_PROBLEM",
+            "state": "PRESENT"
+          },
+          {
+            "code": "NO_REGIONS",
+            "severity": "RECOMMENDATION",
+            "state": "PRESENT"
+          },
+          {
+            "code": "NOT_IN_SPRAV",
+            "severity": "RECOMMENDATION",
+            "state": "PRESENT"
+          }
+        ]
+      },
+      "sitemapSubmit": {
+        "httpStatus": 409,
+        "error_code": "SITEMAP_ALREADY_ADDED",
+        "sitemap_id": "a81ff28d-9609-3f17-b78a-de20b7a872f7",
+        "alreadyAddedAt": "2026-08-19T22:43:29.918+03:00"
+      },
+      "recrawl": {
+        "quota": { "daily_quota": 150, "quota_remainder_after": 124 },
+        "submitted": 27,
+        "httpStatus": 202,
+        "urls": [
+          "https://workevent.ru/",
+          "https://workevent.ru/events",
+          "https://workevent.ru/schedule/2026",
+          "https://workevent.ru/city/moskva-1",
+          "https://workevent.ru/city/vladivostok-22",
+          "https://workevent.ru/city/ekaterinburg-17",
+          "https://workevent.ru/city/oshkar-ola-26",
+          "https://workevent.ru/city/kazan-21",
+          "https://workevent.ru/city/novosibirsk-12",
+          "https://workevent.ru/city/onlayn-7",
+          "https://workevent.ru/city/orenburg-25",
+          "https://workevent.ru/city/sankt-peterburg-5",
+          "https://workevent.ru/city/sochi-4",
+          "https://workevent.ru/city/tyumen-2",
+          "https://workevent.ru/city/habarovsk-24",
+          "https://workevent.ru/industry/event_mice",
+          "https://workevent.ru/industry/ekologiia",
+          "https://workevent.ru/industry/reklama_i_marketing",
+          "https://workevent.ru/industry/promyslennaia-bezopasnost",
+          "https://workevent.ru/industry/it",
+          "https://workevent.ru/industry/hr",
+          "https://workevent.ru/industry/light-industry",
+          "https://workevent.ru/industry/heavy-industry",
+          "https://workevent.ru/industry/horeca",
+          "https://workevent.ru/industry/construction",
+          "https://workevent.ru/industry/medicina-i-farmacevtika",
+          "https://workevent.ru/industry/finansy"
+        ]
+      },
+      "region": {
+        "api": "absent",
+        "probesHttpStatus": 404,
+        "verdict": "только руками в кабинете Вебмастера"
+      }
     },
     "metrika": {
-      "available": false,
-      "reason": "нет пользовательского OAuth access token",
+      "available": true,
       "publicCounterIdFromCode": 99029501,
-      "goalsInFrontend": [
-        "event_apply",
-        "newsletter_subscribe",
-        "organizer_goto"
-      ],
-      "goalsVerifiedViaApi": false,
+      "goalsVerifiedViaApi": true,
       "goalsCreatedViaApi": false,
-      "organicSegmentCreated": false,
-      "done": [],
-      "notDone": [
-        "проверить список целей счётчика 99029501",
-        "создать JS-цели event_apply / newsletter_subscribe / organizer_goto если их нет",
-        "сегмент organic Yandex+Google"
-      ]
+      "organicSegmentCreated": true,
+      "organicSegmentAlreadyExisted": true,
+      "goals": [
+        { "id": 599688992, "name": "event_apply", "type": "action" },
+        { "id": 599688993, "name": "newsletter_subscribe", "type": "action" },
+        { "id": 599688994, "name": "organizer_goto", "type": "action" }
+      ],
+      "segment": {
+        "segment_id": 1008074935,
+        "name": "organic Yandex+Google",
+        "expression": "ym:s:lastSignTrafficSource=='organic' AND ym:s:lastSignSearchEngineRoot=.('yandex','google')",
+        "httpStatusGet": 200,
+        "createdThisRun": false,
+        "note": "сегмент уже был (2026-08-19). Не дублировали."
+      },
+      "done": [
+        "цели event_apply / newsletter_subscribe / organizer_goto проверены, не дублировались",
+        "сегмент organic Yandex+Google подтверждён"
+      ],
+      "notDone": []
     },
-    "wordstat": {
+    "yandexBusiness": {
       "available": false,
-      "reason": "нет OAuth token для старого API и нет Cloud Api-Key + folderId для Search API v2",
-      "reportFile": "seo/wordstat-report.json",
-      "queriesPrepared": 48,
-      "frequenciesCollected": 0
+      "reason": "нет YANDEX_BUSINESS_* / Sprav ключа; карточку завели руками 2026-08-20",
+      "diagnosticsNotInSprav": false,
+      "closedManuallyAt": "2026-08-20"
     },
-    "direct": {
-      "available": false,
-      "probed": false,
-      "note": "отдельного YANDEX_API_* для Direct нет"
+    "blog": {
+      "publicApi": {
+        "getPosts": 200,
+        "optionsAllow": "GET,HEAD",
+        "postPosts": 405,
+        "existingPosts": [
+          { "id": 3, "title": "Как выбрать деловое мероприятие в России и получить максимум пользы: пошаговый гид", "contentChars": 7607 },
+          { "id": 1, "title": "Первая запись в блоге", "contentChars": 541 }
+        ]
+      },
+      "filament": {
+        "resource": "app/Filament/Resources/Posts",
+        "login": "https://admin.workevent.ru/login",
+        "writeViaApi": false
+      },
+      "createdThisRun": 0,
+      "neededMethod": "POST /api/v1/posts (сейчас 405) либо ручное создание в Filament Posts"
+    },
+    "outreach": {
+      "file": "seo/outreach-prospects.json",
+      "count": 32,
+      "source": "GET /api/v1/events/{id} website only",
+      "emailsSent": 0
     }
   },
   "productionPublicCheck": {
-    "note": "публичные URL, без API. Это не успех индексации в Вебмастере.",
     "sitemapXml": {
       "url": "https://workevent.ru/sitemap.xml",
       "httpStatus": 200,
       "contentType": "application/xml",
-      "kind": "sitemapindex → https://workevent.ru/sitemap-0.xml",
-      "bytes": 186
-    },
-    "sitemap0Xml": {
-      "url": "https://workevent.ru/sitemap-0.xml",
-      "httpStatus": 200,
-      "bytes": 52451,
-      "urlCount": 301,
+      "kind": "urlset (динамический sitemap.ts, не next-sitemap index)",
+      "bytes": 34150,
+      "urlCount": 192,
       "prefixes": {
         "/": 1,
-        "/blog": 1,
-        "/event": 190,
-        "/events": 4,
-        "/icon.svg": 1,
-        "/schedule": 104
+        "/events": 5,
+        "/blog": 3,
+        "/event": 32,
+        "/schedule": 112,
+        "/city": 12,
+        "/industry": 27
       },
-      "hasCityLanding": false,
-      "hasIndustryLanding": false,
-      "looksLike": "старый next-sitemap артефакт на проде, не новый src/app/sitemap.ts"
+      "hasCityLanding": true,
+      "hasIndustryLanding": true
     },
     "robotsTxt": {
       "url": "https://workevent.ru/robots.txt",
       "httpStatus": 200,
-      "hasGotoDisallow": false,
-      "hasApiDisallow": false,
+      "hasGotoDisallow": true,
+      "hasApiDisallow": true,
       "hasHost": true,
       "hasSitemap": true
     },
     "cityMoscow": {
-      "url": "https://workevent.ru/city/moscow",
-      "httpStatus": 404
+      "url": "https://workevent.ru/city/moskva-1",
+      "httpStatus": 200
     },
-    "indexationVerdict": "sitemap.xml сейчас 200, но это старая статическая карта без city/industry. Новые посадочные на проде 404. Не считать успехом индексации нового SEO-слоя. План описывал 500 — на момент проверки 19.08.2026 индекс и sitemap-0.xml отвечают 200."
+    "indexationVerdict": "SEO-слой на проде живой: sitemap 200 с city/industry, посадочные 200, robots с Disallow /goto/ и /api/. Вебмастер: 453 в поиске, ИКС 10. Регион и Справочник — только руками."
   },
   "manualRemaining": [
     {
-      "id": "oauth-user-token",
-      "service": "Yandex OAuth",
-      "action": "Выпустить пользовательский access token для приложения из YANDEX_API_CLIENT_ID и записать в .env.local как YANDEX_API_ACCESS_TOKEN (значение в чат не слать). Нужные права: metrika:read, metrika:write, webmaster:hostinfo, webmaster:hostview, webmaster:verify, webmaster:recrawl."
-    },
-    {
-      "id": "wordstat-cloud-key",
-      "service": "Wordstat / Yandex Cloud Search API v2",
-      "action": "Если нужен Wordstat 2026: завести Cloud Api-Key и folder id (YANDEX_API_KEY + YANDEX_API_FOLDER_ID). OAuth client_secret для этого API не подходит."
-    },
-    {
-      "id": "webmaster-confirm",
+      "id": "webmaster-region",
       "service": "Webmaster",
-      "action": "Подтвердить workevent.ru, указать регион РФ (Москва, СПб), отправить sitemap, связать счётчик 99029501, запустить переобход. Через API сейчас нельзя."
+      "action": "Закрыто руками 2026-08-20.",
+      "status": "done"
     },
     {
-      "id": "metrika-goals",
-      "service": "Metrika",
-      "action": "В счётчике 99029501 завести JS-события exact: event_apply, newsletter_subscribe, organizer_goto. Не дублировать, если уже есть."
+      "id": "yandex-business",
+      "service": "Yandex Business",
+      "action": "Закрыто руками 2026-08-20, NAP как на сайте.",
+      "status": "done"
     },
     {
-      "id": "metrika-organic-segment",
-      "service": "Metrika",
-      "action": "Сегмент вручную: Источник трафика → последний значимый → поисковые системы → Яндекс ИЛИ Google. Management API сегментов без токена не проверялся; создавать вслепую нельзя."
+      "id": "gsc",
+      "service": "Google Search Console",
+      "action": "Подтвердить домен, отправить sitemap — API/ключа GSC в репозитории нет."
     },
     {
-      "id": "deploy-seo-diff",
-      "service": "Production",
-      "action": "Задеплоить текущий SEO-дифф (динамический sitemap, robots с disallow /goto/ и /api/, /city и /industry). Пока city=404, отправка карты в Вебмастер не даст новых посадочных."
+      "id": "blog-filament",
+      "service": "Filament",
+      "action": "Дописать 2–4 статьи фазы 4 в Filament → Posts (или добавить POST /api/v1/posts). Публичный API только GET. В каталоге уже есть гид id=3."
+    },
+    {
+      "id": "outreach-send",
+      "service": "Outreach",
+      "action": "Письма организаторам не рассылались. Список доменов: seo/outreach-prospects.json (32)."
     }
   ]
 }

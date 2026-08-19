@@ -91,8 +91,9 @@ async function main() {
   }
   process.stderr.write(`Container ${app.name}\n`);
 
+  const seedRel = process.argv[2] || 'seo/posts-seed.json';
   const phpB64 = readFileSync(resolve(root, 'scripts/seed-seo-posts.php')).toString('base64');
-  const jsonB64 = readFileSync(resolve(root, 'seo/posts-seed.json')).toString('base64');
+  const jsonB64 = readFileSync(resolve(root, seedRel)).toString('base64');
 
   const putB64 = (remotePath, b64) => {
     const chunks = b64.match(/.{1,1200}/g) ?? [];

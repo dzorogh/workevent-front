@@ -1,0 +1,202 @@
+{
+  "generatedAt": "2026-08-20T00:13:26+03:00",
+  "source": "GET https://admin.workevent.ru/api/v1/events/{id}",
+  "piiPolicy": "website domain only; phone/email not exported",
+  "eventsInspected": 32,
+  "eventsWithWebsiteField": 32,
+  "count": 32,
+  "prospects": [
+    {
+      "domain": "forumvostok.ru",
+      "eventTitle": "XI Восточный экономический форум (ВЭФ-2026)",
+      "eventId": 210,
+      "workeventUrl": "https://workevent.ru/event/xi-vostochnyy-ekonomicheskiy-forum-vef-2026-210"
+    },
+    {
+      "domain": "cpm-moscow.com",
+      "eventTitle": "45-я Международная выставка индустрии моды CPM — Collection Première Moscow 2026",
+      "eventId": 221,
+      "workeventUrl": "https://workevent.ru/event/45-ya-mezhdunarodnaya-vystavka-industrii-mody-cpm-collection-221"
+    },
+    {
+      "domain": "tourismexpo.ru",
+      "eventTitle": "Международная туристская выставка «EXPOTRAVEL / Туризм и Отдых 2026»",
+      "eventId": 218,
+      "workeventUrl": "https://workevent.ru/event/mezhdunarodnaya-turistskaya-vystavka-expotravel-turizm-i-otd-218"
+    },
+    {
+      "domain": "2026.vredenreadings.org",
+      "eventTitle": "Научно-практическая конференция с международным участием «Вреденовские чтения 2026»",
+      "eventId": 231,
+      "workeventUrl": "https://workevent.ru/event/nauchno-prakticheskaya-konferentsiya-s-mezhdunarodnym-uchast-231"
+    },
+    {
+      "domain": "ruschinaforum.ru",
+      "eventTitle": "IV Международный форум «РОСТКИ: Россия и Китай — взаимовыгодное сотрудничество»",
+      "eventId": 232,
+      "workeventUrl": "https://workevent.ru/event/iv-mezhdunarodnyy-forum-rostki-rossiya-i-kitay-vzaimovygodno-232"
+    },
+    {
+      "domain": "deeptechnight.ru",
+      "eventTitle": "Deep Tech Nigh",
+      "eventId": 205,
+      "workeventUrl": "https://workevent.ru/event/deep-tech-nigh-205"
+    },
+    {
+      "domain": "shoesstar.ru",
+      "eventTitle": "30-я Юбилейная Международная выставка обуви и аксессуаров «SHOESSTAR-Сибирь 2026»",
+      "eventId": 228,
+      "workeventUrl": "https://workevent.ru/event/30-ya-yubileynaya-mezhdunarodnaya-vystavka-obuvi-i-aksessuar-228"
+    },
+    {
+      "domain": "holoexpo.ru",
+      "eventTitle": "23-я Международная конференция по голографии и прикладным оптическим технологиям «ХОЛОЭКСПО 2026»",
+      "eventId": 230,
+      "workeventUrl": "https://workevent.ru/event/23-ya-mezhdunarodnaya-konferentsiya-po-golografii-i-prikladn-230"
+    },
+    {
+      "domain": "vipforum.ru",
+      "eventTitle": "XXV Всероссийский форум «Информационная безопасность. Регулирование. Технологии. Практика. ИнфоБЕРЕГ»",
+      "eventId": 204,
+      "workeventUrl": "https://workevent.ru/event/xxv-vserossiyskiy-forum-informatsionnaya-bezopasnost-regulir-204"
+    },
+    {
+      "domain": "pay.plus-forum.com",
+      "eventTitle": "Международный ПЛАС-Форум «Платежный бизнес и денежное обращение» 2026",
+      "eventId": 211,
+      "workeventUrl": "https://workevent.ru/event/mezhdunarodnyy-plas-forum-platezhnyy-biznes-i-denezhnoe-obra-211"
+    },
+    {
+      "domain": "ecwatech.ru",
+      "eventTitle": "20-я Международная выставка технологий и оборудования для водного сектора «ЭКВАТЭК-2026»",
+      "eventId": 223,
+      "workeventUrl": "https://workevent.ru/event/20-ya-mezhdunarodnaya-vystavka-tehnologiy-i-oborudovaniya-dl-223"
+    },
+    {
+      "domain": "waste-tech.ru",
+      "eventTitle": "18-я Международная выставка технологий и оборудования для обращения с отходами и экологических технологий «ВЭЙСТТЕХ-2026»",
+      "eventId": 224,
+      "workeventUrl": "https://workevent.ru/event/18-ya-mezhdunarodnaya-vystavka-tehnologiy-i-oborudovaniya-dl-224"
+    },
+    {
+      "domain": "conf.rahr.ru",
+      "eventTitle": "XXXVI Международная конференция Российской Ассоциации Репродукции Человека «Репродуктивные технологии сегодня и завтра 2026»",
+      "eventId": 227,
+      "workeventUrl": "https://workevent.ru/event/xxxvi-mezhdunarodnaya-konferentsiya-rossiyskoy-assotsiatsii-227"
+    },
+    {
+      "domain": "comnews-conferences.ru",
+      "eventTitle": "XII Федеральный форум ИТ и цифровых технологий ТЭК России Smart Oil & Gas 2026",
+      "eventId": 206,
+      "workeventUrl": "https://workevent.ru/event/xii-federalnyy-forum-it-i-tsifrovyh-tehnologiy-tek-rossii-sm-206"
+    },
+    {
+      "domain": "teamleadtoday.ru",
+      "eventTitle": "Team Lead Today 2026",
+      "eventId": 207,
+      "workeventUrl": "https://workevent.ru/event/team-lead-today-2026-207"
+    },
+    {
+      "domain": "finservforum.ru",
+      "eventTitle": "Финансовый Форум и Премия FinServ Forum & Awards 2026",
+      "eventId": 212,
+      "workeventUrl": "https://workevent.ru/event/finansovyy-forum-i-premiya-finserv-forum-awards-2026-212"
+    },
+    {
+      "domain": "teamleadconf.ru",
+      "eventTitle": "Профессиональная конференция для тимлидов и IT-руководителей 2026",
+      "eventId": 229,
+      "workeventUrl": "https://workevent.ru/event/professionalnaya-konferentsiya-dlya-timlidov-i-it-rukovodite-229"
+    },
+    {
+      "domain": "orenburg-gazneft.ru",
+      "eventTitle": "Газ. Нефть. Оренбуржье — 2026",
+      "eventId": 233,
+      "workeventUrl": "https://workevent.ru/event/gaz-neft-orenburzhe-2026-233"
+    },
+    {
+      "domain": "oilgasforum.ru",
+      "eventTitle": "Промышленно-энергетический форум TNF 2026",
+      "eventId": 213,
+      "workeventUrl": "https://workevent.ru/event/promyshlenno-energeticheskiy-forum-tnf-2026-213"
+    },
+    {
+      "domain": "cemat-russia.ru",
+      "eventTitle": "16-я Международная выставка складской логистики CeMAT RUSSIA 2026",
+      "eventId": 214,
+      "workeventUrl": "https://workevent.ru/event/16-ya-mezhdunarodnaya-vystavka-skladskoy-logistiki-cemat-rus-214"
+    },
+    {
+      "domain": "textilexpo.ru",
+      "eventTitle": "66-я Федеральная оптовая ярмарка товаров и оборудования текстильной и легкой промышленности «ТЕКСТИЛЬЛЕГПРОМ-2026»",
+      "eventId": 222,
+      "workeventUrl": "https://workevent.ru/event/66-ya-federalnaya-optovaya-yarmarka-tovarov-i-oborudovaniya-222"
+    },
+    {
+      "domain": "seafoodexporussia.com",
+      "eventTitle": "VII Международный рыбопромышленный форум и выставка рыбной индустрии, морепродуктов и технологий (Global Fishery Forum & Seafood Expo Russia 2026)",
+      "eventId": 220,
+      "workeventUrl": "https://workevent.ru/event/vii-mezhdunarodnyy-rybopromyshlennyy-forum-i-vystavka-rybnoy-220"
+    },
+    {
+      "domain": "agrorus.expoforum.ru",
+      "eventTitle": "XXXV Международная агропромышленная выставка «Агрорусь-2026»",
+      "eventId": 225,
+      "workeventUrl": "https://workevent.ru/event/xxxv-mezhdunarodnaya-agropromyshlennaya-vystavka-agrorus-202-225"
+    },
+    {
+      "domain": "thermalpowerrussia.ru",
+      "eventTitle": "III Международный форум «Теплоэнергетика России: строительство и модернизация станций»",
+      "eventId": 234,
+      "workeventUrl": "https://workevent.ru/event/iii-mezhdunarodnyy-forum-teploenergetika-rossii-stroitelstvo-234"
+    },
+    {
+      "domain": "smartdataconf.ru",
+      "eventTitle": "SmartData 2026",
+      "eventId": 209,
+      "workeventUrl": "https://workevent.ru/event/smartdata-2026-209"
+    },
+    {
+      "domain": "radelexpo.ru",
+      "eventTitle": "XXIV Международная выставка радиоэлектроники и приборостроения «РАДЭЛ-2026»",
+      "eventId": 215,
+      "workeventUrl": "https://workevent.ru/event/xxiv-mezhdunarodnaya-vystavka-radioelektroniki-i-priborostro-215"
+    },
+    {
+      "domain": "scorconf.ru",
+      "eventTitle": "15-й Ежегодный межотраслевой форум по скорингу, антифроду и ИИ «Scoring Day 2026»",
+      "eventId": 236,
+      "workeventUrl": "https://workevent.ru/event/15-y-ezhegodnyy-mezhotraslevoy-forum-po-skoringu-antifrodu-i-236"
+    },
+    {
+      "domain": "ispring.ru",
+      "eventTitle": "Ежегодная практическая конференция по онлайн-обучению «iSpring Days 2026»",
+      "eventId": 235,
+      "workeventUrl": "https://workevent.ru/event/ezhegodnaya-prakticheskaya-konferentsiya-po-onlayn-obucheniy-235"
+    },
+    {
+      "domain": "interforums.ru",
+      "eventTitle": "III Всероссийский форум по маркетинговой аналитике «MARKETING DATA ANALYTICS 2026»",
+      "eventId": 237,
+      "workeventUrl": "https://workevent.ru/event/iii-vserossiyskiy-forum-po-marketingovoy-analitike-marketing-237"
+    },
+    {
+      "domain": "agroprodmash-expo.ru",
+      "eventTitle": "31-я Международная выставка оборудования, технологий, сырья и ингредиентов для пищевой и перерабатывающей промышленности «Агропродмаш-2026»",
+      "eventId": 216,
+      "workeventUrl": "https://workevent.ru/event/31-ya-mezhdunarodnaya-vystavka-oborudovaniya-tehnologiy-syry-216"
+    },
+    {
+      "domain": "forum-100.com",
+      "eventTitle": "100+ TechnoBuild 2026",
+      "eventId": 217,
+      "workeventUrl": "https://workevent.ru/event/100-technobuild-2026-217"
+    },
+    {
+      "domain": "kazandigitalweek.com",
+      "eventTitle": "Международный форум Kazan Digital Week 2026",
+      "eventId": 208,
+      "workeventUrl": "https://workevent.ru/event/mezhdunarodnyy-forum-kazan-digital-week-2026-208"
+    }
+  ]
+}

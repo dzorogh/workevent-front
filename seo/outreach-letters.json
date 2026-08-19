@@ -1,0 +1,129 @@
+{
+  "generatedAt": "2026-08-20",
+  "policy": "Черновики для ручной отправки. Email и телефон не собирались. Авторассылки нет.",
+  "subject": "Карточка мероприятия на Workevent — можно поставить ссылку с вашего сайта?",
+  "bodyTemplate": "Здравствуйте!\n\nНа Workevent опубликована карточка мероприятия «{eventTitle}»:\n{workeventUrl}\n\nВ карточке — даты, город и ссылка на ваш сайт. Если удобно, добавьте обратную ссылку на эту страницу в блоке партнёров, пресс-материалах или в описании события — участникам проще найти даты и площадку в одном каталоге.\n\nЕсли данные в карточке устарели, напишите — поправим.\n\nСергей, Workevent\nhttps://workevent.ru",
+  "letters": [
+    {
+      "domain": "cpm-moscow.com",
+      "eventTitle": "45-я Международная выставка индустрии моды CPM — Collection Première Moscow 2026",
+      "eventId": 221,
+      "workeventUrl": "https://workevent.ru/event/45-ya-mezhdunarodnaya-vystavka-industrii-mody-cpm-collection-221",
+      "cityHint": "Москва",
+      "priority": "high"
+    },
+    {
+      "domain": "pay.plus-forum.com",
+      "eventTitle": "Международный ПЛАС-Форум «Платежный бизнес и денежное обращение» 2026",
+      "eventId": 211,
+      "workeventUrl": "https://workevent.ru/event/mezhdunarodnyy-plas-forum-platezhnyy-biznes-i-denezhnoe-obra-211",
+      "cityHint": "Москва",
+      "priority": "high"
+    },
+    {
+      "domain": "ecwatech.ru",
+      "eventTitle": "20-я Международная выставка технологий и оборудования для водного сектора «ЭКВАТЭК-2026»",
+      "eventId": 223,
+      "workeventUrl": "https://workevent.ru/event/20-ya-mezhdunarodnaya-vystavka-tehnologiy-i-oborudovaniya-dl-223",
+      "cityHint": "Москва",
+      "priority": "high"
+    },
+    {
+      "domain": "waste-tech.ru",
+      "eventTitle": "18-я Международная выставка технологий и оборудования для обращения с отходами и экологических технологий «ВЭЙСТТЕХ-2026»",
+      "eventId": 224,
+      "workeventUrl": "https://workevent.ru/event/18-ya-mezhdunarodnaya-vystavka-tehnologiy-i-oborudovaniya-dl-224",
+      "cityHint": "Москва",
+      "priority": "high"
+    },
+    {
+      "domain": "conf.rahr.ru",
+      "eventTitle": "XXXVI Международная конференция Российской Ассоциации Репродукции Человека «Репродуктивные технологии сегодня и завтра 2026»",
+      "eventId": 227,
+      "workeventUrl": "https://workevent.ru/event/xxxvi-mezhdunarodnaya-konferentsiya-rossiyskoy-assotsiatsii-227",
+      "cityHint": "Москва",
+      "priority": "high"
+    },
+    {
+      "domain": "teamleadtoday.ru",
+      "eventTitle": "Team Lead Today 2026",
+      "eventId": 207,
+      "workeventUrl": "https://workevent.ru/event/team-lead-today-2026-207",
+      "cityHint": "Москва",
+      "priority": "high"
+    },
+    {
+      "domain": "finservforum.ru",
+      "eventTitle": "Финансовый Форум и Премия FinServ Forum & Awards 2026",
+      "eventId": 212,
+      "workeventUrl": "https://workevent.ru/event/finansovyy-forum-i-premiya-finserv-forum-awards-2026-212",
+      "cityHint": "Москва",
+      "priority": "high"
+    },
+    {
+      "domain": "cemat-russia.ru",
+      "eventTitle": "16-я Международная выставка складской логистики CeMAT RUSSIA 2026",
+      "eventId": 214,
+      "workeventUrl": "https://workevent.ru/event/16-ya-mezhdunarodnaya-vystavka-skladskoy-logistiki-cemat-rus-214",
+      "cityHint": "Москва",
+      "priority": "high"
+    },
+    {
+      "domain": "textilexpo.ru",
+      "eventTitle": "66-я Федеральная оптовая ярмарка товаров и оборудования текстильной и легкой промышленности «ТЕКСТИЛЬЛЕГПРОМ-2026»",
+      "eventId": 222,
+      "workeventUrl": "https://workevent.ru/event/66-ya-federalnaya-optovaya-yarmarka-tovarov-i-oborudovaniya-222",
+      "cityHint": "Москва",
+      "priority": "high"
+    },
+    {
+      "domain": "thermalpowerrussia.ru",
+      "eventTitle": "III Международный форум «Теплоэнергетика России: строительство и модернизация станций»",
+      "eventId": 234,
+      "workeventUrl": "https://workevent.ru/event/iii-mezhdunarodnyy-forum-teploenergetika-rossii-stroitelstvo-234",
+      "cityHint": "Москва",
+      "priority": "high"
+    },
+    {
+      "domain": "smartdataconf.ru",
+      "eventTitle": "SmartData 2026",
+      "eventId": 209,
+      "workeventUrl": "https://workevent.ru/event/smartdata-2026-209",
+      "cityHint": "Москва",
+      "priority": "high"
+    },
+    {
+      "domain": "scorconf.ru",
+      "eventTitle": "15-й Ежегодный межотраслевой форум по скорингу, антифроду и ИИ «Scoring Day 2026»",
+      "eventId": 236,
+      "workeventUrl": "https://workevent.ru/event/15-y-ezhegodnyy-mezhotraslevoy-forum-po-skoringu-antifrodu-i-236",
+      "cityHint": "Москва",
+      "priority": "high"
+    },
+    {
+      "domain": "interforums.ru",
+      "eventTitle": "III Всероссийский форум по маркетинговой аналитике «MARKETING DATA ANALYTICS 2026»",
+      "eventId": 237,
+      "workeventUrl": "https://workevent.ru/event/iii-vserossiyskiy-forum-po-marketingovoy-analitike-marketing-237",
+      "cityHint": "Москва",
+      "priority": "high"
+    },
+    {
+      "domain": "agroprodmash-expo.ru",
+      "eventTitle": "31-я Международная выставка оборудования, технологий, сырья и ингредиентов для пищевой и перерабатывающей промышленности «Агропродмаш-2026»",
+      "eventId": 216,
+      "workeventUrl": "https://workevent.ru/event/31-ya-mezhdunarodnaya-vystavka-oborudovaniya-tehnologiy-syry-216",
+      "cityHint": "Москва",
+      "priority": "high"
+    },
+    {
+      "domain": "forum-100.com",
+      "eventTitle": "100+ TechnoBuild 2026",
+      "eventId": 217,
+      "workeventUrl": "https://workevent.ru/event/100-technobuild-2026-217",
+      "cityHint": "Москва",
+      "priority": "high"
+    }
+  ],
+  "otherProspects": "Остальные 17 доменов из seo/outreach-prospects.json — тот же шаблон, приоритет medium (не Москва / не сентябрь). Письма не отправлялись."
+}
