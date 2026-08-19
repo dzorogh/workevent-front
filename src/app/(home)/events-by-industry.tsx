@@ -42,7 +42,7 @@ export default function EventsByIndustry({ initialIndustries, initialEvents, ini
                 <EventsList 
                     initialEvents={events}
                     initialMeta={initialMeta}
-                    params={{ industry_id: selectedIndustry }}
+                    params={selectedIndustry == null ? {} : { industry_id: selectedIndustry }}
                     perPage={4}
                     withIndustry={selectedIndustry === null}
                 />

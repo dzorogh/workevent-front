@@ -12,11 +12,12 @@ import { buildMetadata } from "@/lib/seo/metadata";
 import { getSeoYear, SITE_URL } from "@/lib/seo/constants";
 import FaqSection from "@/components/seo/faq";
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 async function getData() {
   const [eventsResponse, recommendationsResponse, industriesResponse, citiesResponse] = await Promise.all([
     Api.GET('/v1/events', {
+      cache: 'no-store',
       params: {
         query: {
           per_page: 12
@@ -24,6 +25,7 @@ async function getData() {
       }
     }),
     Api.GET('/v1/events', {
+      cache: 'no-store',
       params: {
         query: {
           per_page: 4,
@@ -31,15 +33,15 @@ async function getData() {
         }
       }
     }),
-    Api.GET('/v1/industries'),
-    Api.GET('/v1/cities')
+    Api.GET('/v1/industries', { cache: 'no-store' }),
+    Api.GET('/v1/cities', { cache: 'no-store' })
   ]);
   return {
     events: eventsResponse.data?.data ?? [],
     eventsMeta: eventsResponse.data?.meta,
     recommendations: recommendationsResponse.data?.data ?? [],
     recommendationsMeta: recommendationsResponse.data?.meta,
-    industries: industriesResponse.data?.data.filter(industry => industry.future_events_count && industry.future_events_count > 0) ?? [],
+    industries: (industriesResponse.data?.data ?? []).filter((industry) => (industry.future_events_count ?? 0) > 0),
     cities: citiesResponse.data?.data ?? []
   };
 }
