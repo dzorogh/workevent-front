@@ -13,7 +13,7 @@ import {
 import InternalLinks from '@/components/seo/internal-links';
 import { JsonLd } from '@/lib/seo/jsonld';
 import { buildBreadcrumbJsonLd, buildItemListJsonLd } from '@/lib/seo/jsonld-builders';
-import { buildMetadata, isBrokenCityPrep, resolveCityCopy, resolveCityVisibleHeading } from '@/lib/seo/metadata';
+import { buildMetadata, cityPrep } from '@/lib/seo/metadata';
 import { SITE_URL } from '@/lib/seo/constants';
 import { createSlugWithId, getIdFromSlug } from '@/lib/utils';
 import { Metadata } from 'next';
@@ -117,26 +117,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
   const page = pageResponse.data?.data;
   const citySlug = createSlugWithId(city.title, city.id);
-  const copy = resolveCityCopy(city, citySlug);
-  const visibleTitle = resolveCityVisibleHeading(city, citySlug, page?.metadata?.title, 'title');
-  const visibleDescription = isBrokenCityPrep(page?.metadata?.description, city.title)
-    ? copy.description
-    : page?.metadata?.description;
+  const prep = cityPrep(city.title);
 
-  const metadata = buildMetadata(
-    page?.metadata ? { ...page.metadata, title: visibleTitle, description: visibleDescription ?? copy.description } : null,
-    {
-      title: copy.title,
-      description: copy.description,
-      canonicalPath: `/city/${citySlug}`,
-      openGraph: {
-        type: 'website',
-        title: copy.ogTitle,
-        description: copy.ogDescription,
-        url: `${SITE_URL}/city/${citySlug}`,
-      },
+  const metadata = buildMetadata(page?.metadata, {
+    title: `Мероприятия ${prep} — Workevent`,
+    description: `Каталог конференций, форумов и выставок ${prep}.`,
+    canonicalPath: `/city/${citySlug}`,
+    openGraph: {
+      type: 'website',
+      title: `Мероприятия ${prep} — Workevent`,
+      description: `Конференции, форумы и выставки ${prep}.`,
+      url: `${SITE_URL}/city/${citySlug}`,
     },
-  );
+  });
 
   if (!(await cityHasFutureEvents(city))) {
     return { ...metadata, robots: { index: false, follow: true } };
@@ -177,8 +170,8 @@ export default async function CityPage({ params }: Props) {
 
   const citySlug = createSlugWithId(city.title, city.id);
   const pageUrl = `${SITE_URL}/city/${citySlug}`;
-  const copy = resolveCityCopy(city, citySlug);
-  const title = resolveCityVisibleHeading(city, citySlug, page?.metadata?.h1 ?? page?.title, 'h1');
+  const prep = cityPrep(city.title);
+  const title = page?.metadata?.h1 ?? page?.title ?? `Мероприятия ${prep}`;
   const Content = page?.content ? await compileMdxContent(page.content) : null;
   const faqItems = extractFaqItems(page?.content);
 
@@ -193,7 +186,7 @@ export default async function CityPage({ params }: Props) {
           ]),
           buildItemListJsonLd({
             name: title,
-            description: copy.listDescription,
+            description: page?.metadata?.description ?? `Мероприятия ${prep}`,
             url: pageUrl,
             events: initialEvents,
           }),

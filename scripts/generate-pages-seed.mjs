@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Generates seo/pages-seed-priority.json with 8 city + 8 industry landing pages.
- * Each page gets unique calendar + facts + FAQ (no shared boilerplate).
+ * Generates seo/pages-seed-priority.json: 8 city + 8 industry + calendar pages.
+ * SEO title/H1/description/content live here and in backend pages — not in Next fallbacks.
  * Run: node scripts/generate-pages-seed.mjs
  */
 
@@ -488,7 +488,7 @@ function citySeo(city) {
       metadata: {
         title: `Мероприятия в Москве: конференции и выставки ${YEAR} — Workevent`,
         h1: `Мероприятия в Москве: конференции и выставки ${YEAR}`,
-        description: `Мероприятия в Москве: конференции, форумы и выставки ${YEAR}. Актуальные даты, регистрация и контакты организаторов на Workevent.`,
+        description: `Мероприятия в Москве: конференции, форумы и выставки ${YEAR}. Даты, площадки и регистрация на Workevent — каталог событий в Москве, не общий календарь России.`,
         keywords: city.keywords,
         canonicalUrl: null,
         robots: 'index,follow',
@@ -544,6 +544,103 @@ ${city.howToChoose}
 ## FAQ
 
 ${renderFaq(city.faq)}`;
+}
+
+function scheduleYearSeo() {
+  return {
+    title: `Расписание выставок ${YEAR}`,
+    metadata: {
+      title: `Расписание выставок ${YEAR}: календарь мероприятий — Workevent`,
+      h1: `Расписание выставок ${YEAR}`,
+      description: `Расписание выставок и конференций на ${YEAR} год: даты по месяцам, площадки и план мероприятий. Годовой календарь Workevent, не каталог одного города.`,
+      keywords: `расписание выставок, выставки ${YEAR}, календарь мероприятий ${YEAR}, конференции ${YEAR}, форумы ${YEAR}`,
+      canonicalUrl: null,
+      robots: 'index,follow',
+    },
+  };
+}
+
+function scheduleYearContent() {
+  return `Расписание выставок ${YEAR} на Workevent — годовой календарь конференций, форумов и экспозиций по датам. Страница отвечает на запрос «расписание выставок» и «выставки ${YEAR}»: что проходит в каком месяце, а не полный каталог одного города или отрасли.
+
+---
+
+## Как читать календарь ${YEAR}
+
+События сгруппированы по месяцам. Весна и осень обычно плотнее: контрактация, отраслевые выставки и федеральные форумы. Лето редеет из‑за отпусков и полевых сезонов, сентябрь добавляет восточный контур.
+
+### Чем календарь отличается от каталога
+
+- Каталог города (например, мероприятия в Москве) собирает текущие события одной локации без привязки к году.
+- Отраслевая страница показывает актуальные мероприятия отрасли, тоже без годового плана.
+- Здесь — расписание выставок и конференций на ${YEAR} год: удобно собрать командировки на квартал вперёд.
+
+### Полезные разделы
+
+- [Каталог мероприятий](${SITE}/events) — фильтры по дате, городу и отрасли, включая мероприятия в Москве.
+- [Главная Workevent](${SITE}/)
+
+---
+
+## FAQ
+
+**Что значит «расписание выставок» на этой странице?**  
+Это календарь экспозиций, конференций и форумов на ${YEAR} год с датами. Билеты и площадка — в карточке конкретного события.
+
+**Можно ли сразу открыть только московские даты?**  
+Да: откройте городскую страницу «Мероприятия в Москве». Культурный и деловой календарь Москвы там, годовой план страны — здесь.
+
+**Как посмотреть расписание выставок одной отрасли?**  
+Выберите отрасль в фильтре на этой странице или откройте календарь отрасли на ${YEAR} год. Полный каталог отрасли без года — на странице индустрии.`;
+}
+
+function scheduleIndustrySeo(industry) {
+  return {
+    title: `Расписание: ${industry.title} ${YEAR}`,
+    metadata: {
+      title: `Расписание выставок: ${industry.title} на ${YEAR} — Workevent`,
+      h1: `Расписание выставок: ${industry.title} на ${YEAR}`,
+      description: `Расписание выставок и конференций отрасли «${industry.title}» на ${YEAR} год — даты по месяцам. Это годовой план, не полный каталог «Мероприятия: ${industry.title}».`,
+      keywords: `расписание выставок ${industry.title.toLowerCase()}, ${industry.keywords}`,
+      canonicalUrl: null,
+      robots: 'index,follow',
+    },
+  };
+}
+
+function scheduleIndustryContent(industry) {
+  return `Расписание выставок отрасли «${industry.title}» на ${YEAR} год: даты конференций и экспозиций по месяцам. Это календарный срез, а не полный каталог «Мероприятия: ${industry.title}» — актуальные события отрасли без привязки к году смотрите на отраслевой странице.
+
+---
+
+## Календарь ${industry.title} на ${YEAR}
+
+${industry.calendar}
+
+### Зачем отдельная страница года
+
+- Годовой план нужен, чтобы заложить командировки и стенды заранее.
+- Каталог отрасли живёт без года и постоянно обновляется — его интент другой.
+- Фильтр года на Workevent не подменяет отраслевой хаб.
+
+### Связанные разделы
+
+- [Все мероприятия: ${industry.title}](${SITE}/industry/${industry.slug})
+- [Расписание выставок ${YEAR}](${SITE}/schedule/${YEAR})
+- [Каталог](${SITE}/events)
+
+---
+
+## FAQ
+
+**Чем это расписание отличается от страницы отрасли?**  
+Здесь только план на ${YEAR} год. На странице «${industry.title}» — актуальный каталог без годовой рамки.
+
+**Есть ли в календаре выставки вне Москвы?**  
+Да, даты по всей России. Московские события отрасли идут рядом с региональными — смотрите город в карточке.
+
+**Как попасть на общее расписание выставок ${YEAR}?**  
+Откройте [календарь ${YEAR}](${SITE}/schedule/${YEAR}) без фильтра отрасли.`;
 }
 
 function industryContent(industry) {
@@ -610,11 +707,34 @@ for (const industry of industries) {
   });
 }
 
+{
+  const seo = scheduleYearSeo();
+  pages.push({
+    type: 'schedule',
+    path: `/schedule/${YEAR}`,
+    title: seo.title,
+    metadata: seo.metadata,
+    content: scheduleYearContent(),
+  });
+}
+
+for (const industry of industries) {
+  const seo = scheduleIndustrySeo(industry);
+  pages.push({
+    type: 'schedule',
+    path: `/schedule/${YEAR}/${industry.slug}`,
+    industrySlug: industry.slug,
+    title: seo.title,
+    metadata: seo.metadata,
+    content: scheduleIndustryContent(industry),
+  });
+}
+
 const out = {
   generatedAt: new Date().toISOString().slice(0, 10),
   site: SITE,
   year: YEAR,
-  note: 'City paths resolved at seed time from DB (top cities by events_count or title match).',
+  note: 'City paths resolved at seed time from DB (title match). Schedule paths are explicit /schedule/{year}[/industry].',
   pages,
 };
 
