@@ -124,7 +124,7 @@ export function isMoscowCity(
   city: { id?: number | null; title?: string | null },
   slug?: string | null,
 ): boolean {
-  if (city.id != null && MOSCOW_SEED_CITY_IDS.includes(Number(city.id) as (typeof MOSCOW_SEED_CITY_IDS)[number])) {
+  if (city.id != null && (MOSCOW_SEED_CITY_IDS as readonly number[]).includes(Number(city.id))) {
     return true;
   }
 
