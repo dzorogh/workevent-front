@@ -10,6 +10,7 @@ const seoYear = new Date().getMonth() < 10
   : new Date().getFullYear() + 1;
 
 const nextConfig: NextConfig = withBundleAnalyzer({
+  output: "standalone",
   typedRoutes: true,
   experimental: {
     cssChunking: true,
