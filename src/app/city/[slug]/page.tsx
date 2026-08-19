@@ -13,52 +13,12 @@ import {
 import InternalLinks from '@/components/seo/internal-links';
 import { JsonLd } from '@/lib/seo/jsonld';
 import { buildBreadcrumbJsonLd, buildItemListJsonLd } from '@/lib/seo/jsonld-builders';
-import { buildMetadata } from '@/lib/seo/metadata';
+import { buildMetadata, isBrokenCityPrep, resolveCityCopy, resolveCityVisibleHeading } from '@/lib/seo/metadata';
 import { SITE_URL } from '@/lib/seo/constants';
 import { createSlugWithId, getIdFromSlug } from '@/lib/utils';
 import { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import type { FAQPage, WithContext } from 'schema-dts';
-
-const CITY_PREP: Record<string, string> = {
-  Москва: 'в Москве',
-  'Санкт-Петербург': 'в Санкт-Петербурге',
-  Новосибирск: 'в Новосибирске',
-  Екатеринбург: 'в Екатеринбурге',
-  Казань: 'в Казани',
-  'Ростов-на-Дону': 'в Ростове-на-Дону',
-  Краснодар: 'в Краснодаре',
-  Владивосток: 'во Владивостоке',
-};
-
-function cityPrep(title: string) {
-  return CITY_PREP[title] ?? `в ${title}`;
-}
-
-function cityFallbackCopy(cityTitle: string) {
-  const prep = cityPrep(cityTitle);
-
-  if (cityTitle === 'Москва') {
-    return {
-      title: 'Мероприятия в Москве: конференции и выставки 2026 — Workevent',
-      h1: 'Мероприятия в Москве: конференции и выставки',
-      description:
-        'Мероприятия в Москве: конференции, форумы и выставки 2026. Актуальные даты, контакты организаторов и регистрация на Workevent.',
-      ogTitle: 'Мероприятия в Москве — конференции и выставки',
-      ogDescription: 'Конференции и выставки в Москве на 2026 год.',
-      listDescription: 'Мероприятия в Москве: конференции и выставки',
-    };
-  }
-
-  return {
-    title: `Деловые мероприятия ${prep} — Workevent`,
-    h1: `Мероприятия ${prep}`,
-    description: `Каталог конференций, форумов, выставок и семинаров ${prep}. Актуальные даты, контакты организаторов и регистрация на Workevent.`,
-    ogTitle: `Мероприятия ${prep} — Workevent`,
-    ogDescription: `Конференции, форумы и выставки ${prep}.`,
-    listDescription: `Деловые мероприятия ${prep}`,
-  };
-}
 
 function extractFaqItems(content: string | null | undefined) {
   if (!content) return [];
@@ -156,19 +116,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     params: { query: { path: `/city/${createSlugWithId(city.title, city.id)}` } },
   });
   const page = pageResponse.data?.data;
-  const copy = cityFallbackCopy(city.title);
+  const citySlug = createSlugWithId(city.title, city.id);
+  const copy = resolveCityCopy(city, citySlug);
+  const visibleTitle = resolveCityVisibleHeading(city, citySlug, page?.metadata?.title, 'title');
+  const visibleDescription = isBrokenCityPrep(page?.metadata?.description, city.title)
+    ? copy.description
+    : page?.metadata?.description;
 
-  const metadata = buildMetadata(page?.metadata, {
-    title: copy.title,
-    description: copy.description,
-    canonicalPath: `/city/${createSlugWithId(city.title, city.id)}`,
-    openGraph: {
-      type: 'website',
-      title: copy.ogTitle,
-      description: copy.ogDescription,
-      url: `${SITE_URL}/city/${createSlugWithId(city.title, city.id)}`,
+  const metadata = buildMetadata(
+    page?.metadata ? { ...page.metadata, title: visibleTitle, description: visibleDescription ?? copy.description } : null,
+    {
+      title: copy.title,
+      description: copy.description,
+      canonicalPath: `/city/${citySlug}`,
+      openGraph: {
+        type: 'website',
+        title: copy.ogTitle,
+        description: copy.ogDescription,
+        url: `${SITE_URL}/city/${citySlug}`,
+      },
     },
-  });
+  );
 
   if (!(await cityHasFutureEvents(city))) {
     return { ...metadata, robots: { index: false, follow: true } };
@@ -209,8 +177,8 @@ export default async function CityPage({ params }: Props) {
 
   const citySlug = createSlugWithId(city.title, city.id);
   const pageUrl = `${SITE_URL}/city/${citySlug}`;
-  const copy = cityFallbackCopy(city.title);
-  const title = page?.metadata?.h1 ?? page?.title ?? copy.h1;
+  const copy = resolveCityCopy(city, citySlug);
+  const title = resolveCityVisibleHeading(city, citySlug, page?.metadata?.h1 ?? page?.title, 'h1');
   const Content = page?.content ? await compileMdxContent(page.content) : null;
   const faqItems = extractFaqItems(page?.content);
 
