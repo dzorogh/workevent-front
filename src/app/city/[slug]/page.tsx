@@ -128,26 +128,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const fallbackTitle = `Мероприятия ${prep} — Workevent`;
   const documentTitle = applyLiveYearToTitle(page?.metadata?.title ?? fallbackTitle, liveYear);
 
-  const metadata = buildMetadata(
-    { ...page?.metadata, title: documentTitle },
-    {
+  const metadata = buildMetadata(page?.metadata, {
+    title: documentTitle,
+    description: `Каталог конференций, форумов и выставок ${prep}.`,
+    canonicalPath: `/city/${citySlug}`,
+    openGraph: {
+      type: 'website',
       title: documentTitle,
-      description: `Каталог конференций, форумов и выставок ${prep}.`,
-      canonicalPath: `/city/${citySlug}`,
-      openGraph: {
-        type: 'website',
-        title: documentTitle,
-        description: `Конференции, форумы и выставки ${prep}.`,
-        url: `${SITE_URL}/city/${citySlug}`,
-      },
+      description: `Конференции, форумы и выставки ${prep}.`,
+      url: `${SITE_URL}/city/${citySlug}`,
     },
-  );
+  });
+
+  const titled = {
+    ...metadata,
+    title: documentTitle,
+    openGraph: { ...metadata.openGraph, title: documentTitle },
+    twitter: { ...metadata.twitter, title: documentTitle },
+  };
 
   if (liveYear == null) {
-    return { ...metadata, robots: { index: false, follow: true } };
+    return { ...titled, robots: { index: false, follow: true } };
   }
 
-  return metadata;
+  return titled;
 }
 
 export default async function CityPage({ params }: Props) {
