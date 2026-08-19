@@ -1,9 +1,13 @@
+"use client"
+
+import { FormEvent } from "react"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import AppLink from "@/components/ui/app-link"
 import { Route } from "next"
 import { z } from "zod"
+import { reachGoal } from "@/components/yandex-metrika-goals"
 
 export default function EventForm() {
     
@@ -14,9 +18,13 @@ export default function EventForm() {
         comment: z.string().optional(),
     });
 
+    const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        reachGoal('event_apply')
+    }
 
     return (
-        <div className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" onSubmit={onSubmit}>
             <div className="flex flex-col md:flex-row gap-x-2 gap-y-4">
                 <Input placeholder="ФИО" />
                 <Input placeholder="Электронная почта" />
@@ -28,8 +36,8 @@ export default function EventForm() {
             <div className="text-xs text-muted-foreground-dark">Нажимая на кнопку, вы соглашаетесь с <AppLink href={`/` as Route} variant="underline">политикой конфиденциальности</AppLink></div>
             
             <div className="flex">
-                <Button variant="primary">Оставить заявку</Button>
+                <Button variant="primary" type="submit">Оставить заявку</Button>
             </div>
-        </div>
+        </form>
     )
 }

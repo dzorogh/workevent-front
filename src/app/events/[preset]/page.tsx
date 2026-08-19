@@ -5,16 +5,31 @@ import Search from "@/components/search";
 import { permanentRedirect } from "next/navigation";
 import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
-import { getSeoYear } from "@/lib/utils";
 import { EventFormat, EventIndexParametersQuery } from "@/lib/types";
 import H1 from "@/components/ui/h1";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { JsonLd } from "@/lib/seo/jsonld";
+import { buildBreadcrumbJsonLd, buildFaqPageJsonLd, buildItemListJsonLd } from "@/lib/seo/jsonld-builders";
+import { buildMetadata, isIndustryCatalogIntent, resolvePresetHeading } from "@/lib/seo/metadata";
+import { getSeoYear, SITE_URL } from "@/lib/seo/constants";
+import { resolvePageFaq } from "@/lib/seo/faq";
+import FaqSection from "@/components/seo/faq";
+import InternalLinks from "@/components/seo/internal-links";
+import { createSlugWithId } from "@/lib/utils";
 
 type Props = {
     params: Promise<{ preset: string }>
 }
 
-export const revalidate = false;
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
     const presets = await Api.GET('/v1/presets/slugs')
@@ -46,17 +61,32 @@ async function getEvents(presetParams: EventIndexParametersQuery) {
 }
 
 
-export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const preset = await getPreset((await params).preset);
 
-    const title = preset?.metadata?.title ?? preset?.title;
+    if (!preset) {
+        return { title: 'Подборка не найдена — Workevent' };
+    }
 
-    const description = preset?.metadata?.description ?? `Подборка мероприятий «${preset?.title}» на сайте Workevent с поиском по датам`;
+    const title = resolvePresetHeading(preset.title, preset.metadata?.title);
+    const description = preset.metadata?.description && !isIndustryCatalogIntent(preset.metadata.description)
+        ? preset.metadata.description
+        : `Редакционная подборка «${preset.title}» на Workevent: отобранные мероприятия, а не полный каталог отрасли.`;
 
-    return {
-        title: title + ' — Workevent',
-        description: description,
-    };
+    return buildMetadata(
+        preset.metadata ? { ...preset.metadata, title: `${title} — Workevent`, description } : null,
+        {
+            title: `${title} — Workevent`,
+            description,
+            canonicalPath: `/events/${preset.slug}`,
+            openGraph: {
+                type: 'website',
+                title: `${title} — Workevent`,
+                description,
+                url: `${SITE_URL}/events/${preset.slug}`,
+            },
+        },
+    );
 }
 
 export default async function PresetPage({ params }: Props) {
@@ -84,19 +114,66 @@ export default async function PresetPage({ params }: Props) {
     const industries = await Api.GET('/v1/industries').then(res => res.data);
     const cities = await Api.GET('/v1/cities').then(res => res.data);
 
-    // Compile the MDX source code to a function body
     const code = String(
-        await compile(preset?.description ?? '', { outputFormat: 'function-body' })
+        await compile(preset.description ?? '', { outputFormat: 'function-body' })
     )
 
-    // Run the compiled code with the runtime and get the default export
     const { default: Description } = await run(code, {
         ...runtime,
         baseUrl: import.meta.url,
     })
 
+    const pageUrl = `${SITE_URL}/events/${preset.slug}`;
+    const h1 = resolvePresetHeading(preset.title, preset.metadata?.h1 ?? preset.title);
+    const seoYear = getSeoYear();
+    const industry = industries?.data?.find((item) => item.id === Number(preset.filters.industry_id));
+    const city = cities?.data?.find((item) => item.id === Number(preset.filters.city_id));
+    const faq = resolvePageFaq(preset.description, [
+        {
+            question: 'Чем эта подборка отличается от страницы отрасли?',
+            answer: `Это редакционная подборка «${preset.title}» с заданными фильтрами, а не полный каталог отрасли. Полный список смотрите на странице отрасли.`,
+        },
+        {
+            question: 'Как посмотреть план мероприятий на год?',
+            answer: `Откройте календарь на ${seoYear} год — там события разложены по датам, это другой тип страницы.`,
+        },
+    ]);
+    const faqJsonLd = buildFaqPageJsonLd(faq.items);
+
     return (
         <div className="flex flex-col gap-10">
+            <JsonLd
+                data={[
+                    buildBreadcrumbJsonLd([
+                        { name: 'Главная', url: SITE_URL },
+                        { name: 'Мероприятия', url: `${SITE_URL}/events` },
+                        { name: h1, url: pageUrl },
+                    ]),
+                    buildItemListJsonLd({
+                        name: h1,
+                        description: `Редакционная подборка «${preset.title}»`,
+                        url: pageUrl,
+                        events: initialEvents,
+                    }),
+                    ...(faqJsonLd ? [faqJsonLd] : []),
+                ]}
+            />
+
+            <Breadcrumb>
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink href="/">Главная</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbLink href="/events">Мероприятия</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>{h1}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
 
             <Search
                 industries={industries?.data ?? []}
@@ -104,7 +181,23 @@ export default async function PresetPage({ params }: Props) {
                 initialParams={presetParams}
             />
 
-            <H1 className="mt-0">{preset.metadata?.h1 ?? preset.title ?? 'Поиск мероприятий'}</H1>
+            <H1 className="mt-0">{h1}</H1>
+
+            <InternalLinks
+                variant="related"
+                links={[
+                    ...(industry?.slug
+                        ? [{ href: `/industry/${industry.slug}`, label: `Все мероприятия: ${industry.title}` }]
+                        : []),
+                    ...(city
+                        ? [{ href: `/city/${createSlugWithId(city.title, city.id)}`, label: `Мероприятия в ${city.title}` }]
+                        : []),
+                    {
+                        href: `/schedule/${seoYear}${industry?.slug ? `/${industry.slug}` : ''}`,
+                        label: `Календарь на ${seoYear}`,
+                    },
+                ]}
+            />
 
             <Suspense>
                 <EventsList
@@ -118,6 +211,8 @@ export default async function PresetPage({ params }: Props) {
             <div className="prose max-w-none">
                 <Description />
             </div>
+
+            {faq.visible && <FaqSection items={faq.items} />}
         </div>
     );
 }

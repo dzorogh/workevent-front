@@ -1,0 +1,32 @@
+{
+  "site": "https://workevent.ru",
+  "generatedAt": "2026-06-11",
+  "linkbuildingActions": [
+    {
+      "type": "organizer-outreach",
+      "description": "Попросить организаторов событий из каталога добавить ссылку на карточку Workevent в раздел «Где зарегистрироваться»",
+      "priority": "high"
+    },
+    {
+      "type": "guest-post",
+      "description": "Гостевые статьи на HR/IT/маркетинг медиа с упоминанием каталога и ссылкой на релевантные подборки",
+      "priority": "medium"
+    },
+    {
+      "type": "partner-badge",
+      "description": "Бейдж «Мероприятие в каталоге Workevent» для сайтов организаторов",
+      "priority": "medium"
+    },
+    {
+      "type": "event-mentions",
+      "description": "Упоминания в пресс-релизах мероприятий со ссылкой на event-страницу",
+      "priority": "high"
+    }
+  ],
+  "prospectSources": [
+    "Организаторы мероприятий из каталога (поле website)",
+    "Отраслевые медиа: HR, IT, маркетинг, медицина",
+    "Региональные бизнес-порталы",
+    "Каталоги конференций и выставок РФ"
+  ]
+}

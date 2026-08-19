@@ -1,4 +1,5 @@
 import Script from "next/script";
+import { YANDEX_METRIKA_COUNTER_ID } from "./yandex-metrika-goals";
 
 export default function YandexMetrikaCounter() {
     return <Script id="metrika-counter" strategy="afterInteractive">
@@ -9,7 +10,7 @@ export default function YandexMetrikaCounter() {
     k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
                 (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-                ym(99029501, "init", {
+                ym(${YANDEX_METRIKA_COUNTER_ID}, "init", {
                 clickmap:true,
                 trackLinks:true,
                 accurateTrackBounce:true,

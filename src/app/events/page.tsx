@@ -7,8 +7,13 @@ import { Metadata } from "next";
 type SearchParams = NonNullable<EventIndexParametersQuery>;
 import H1 from "@/components/ui/h1";
 import RedirectIfPreset from "./redirect-if-preset";
+import InternalLinks from "@/components/seo/internal-links";
+import { JsonLd } from "@/lib/seo/jsonld";
+import { buildItemListJsonLd } from "@/lib/seo/jsonld-builders";
+import { buildFacetedEventsMetadata } from "@/lib/seo/metadata";
+import { SITE_URL } from "@/lib/seo/constants";
 
-export const revalidate = false;
+export const revalidate = 300;
 
 async function getEvents(searchParams: SearchParams) {
     return await Api.GET('/v1/events', {
@@ -25,21 +30,13 @@ async function getEvents(searchParams: SearchParams) {
     });
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-    return {
-        title: 'Каталог и поиск мероприятий — Workevent',
-        description: 'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
-        openGraph: {
-            type: 'website',
-            title: 'Каталог мероприятий — Workevent',
-            description: 'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
-            url: `${process.env.NEXT_PUBLIC_SITE_URL}/events`,
-        },
-        twitter: {
-            title: 'Каталог мероприятий — Workevent',
-            description: 'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
-        }
-    }
+export async function generateMetadata({
+    searchParams,
+}: {
+    searchParams: Promise<SearchParams>;
+}): Promise<Metadata> {
+    const params = await searchParams;
+    return buildFacetedEventsMetadata(params as Record<string, string | string[] | undefined>);
 }
 
 export default async function Events({
@@ -66,6 +63,15 @@ export default async function Events({
 
     return (
         <div className="flex flex-col gap-10">
+            <JsonLd
+                data={buildItemListJsonLd({
+                    name: 'Каталог мероприятий Workevent',
+                    description: 'Поиск деловых мероприятий по датам, городам и отраслям',
+                    url: `${SITE_URL}/events`,
+                    events: initialEvents,
+                })}
+            />
+
             <Search industries={industries?.data ?? []} cities={cities?.data ?? []} initialParams={initialParams} />
 
             <RedirectIfPreset preset={preset} />
@@ -75,6 +81,8 @@ export default async function Events({
             <Suspense>
                 <EventsList initialEvents={initialEvents} initialMeta={initialMeta} params={initialParams} perPage={8} />
             </Suspense>
+
+            <InternalLinks />
         </div>
     );
 }

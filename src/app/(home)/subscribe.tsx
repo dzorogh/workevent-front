@@ -15,6 +15,7 @@ import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { IconCaretDownFilled } from "@tabler/icons-react";
 import { IndustryResource } from "@/lib/types";
+import { reachGoal } from "@/components/yandex-metrika-goals";
 
 const FormSchema = z.object({
     industries: z.array(z.string()).min(1, 'Выберите хотя бы одну отрасль'),
@@ -44,6 +45,8 @@ export default function Subscribe({ industries }: { industries: IndustryResource
                 method: 'POST',
                 body: JSON.stringify(data),
             });
+
+            reachGoal('newsletter_subscribe');
 
             toast({
                 title: "Успешно!",

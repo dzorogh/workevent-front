@@ -2,8 +2,10 @@ import Logo from '@/components/icons/logo';
 import Container from '@/components/ui/container';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import footerBg from '@/images/footer.svg';
 import Image from 'next/image';
+import { Route } from 'next';
+import { getSeoYear } from '@/lib/seo/constants';
+import { getSeoHubs } from '@/lib/seo/hubs';
 
 const menu = [
     [
@@ -13,52 +15,18 @@ const menu = [
         },
         {
             title: 'Расписание',
-            href: '/schedule/2025',
-        },
-        {
-            title: 'Компании',
-            href: '/',
-        },
-        {
-            title: 'Спикеры',
-            href: '/',
-        },
-        {
-            title: 'Площадки',
-            href: '/',
-        },
-    ],
-    [
-        {
-            title: 'Платные услуги',
-            href: '/',
-        },
-        {
-            title: 'Обратная связь',
-            href: '/',
-        },
-        {
-            title: 'Контакты',
-            href: '/',
+            href: `/schedule/${getSeoYear()}`,
         },
         {
             title: 'Блог',
             href: '/blog',
         },
     ],
-    [
-        {
-            title: 'Личный кабинет',
-            href: '/',
-        },
-        {
-            title: 'Регистрация',
-            href: '/',
-        },
-    ]
 ]
 
-export default function Footer() {
+export default async function Footer() {
+    const { topCities, topIndustries, seoYear } = await getSeoHubs();
+
     return (
         <div className="pt-20 bg-linear-to-b from-footer-background to-footer-background-dark">
             <Container>
@@ -80,8 +48,8 @@ export default function Footer() {
                                 {menu.map((column, index) => (
                                     <div key={index} className="flex flex-col gap-4">
                                         {column.map((item) => (
-                                            <Link 
-                                                key={item.title} 
+                                            <Link
+                                                key={item.title}
                                                 href={{ pathname: item.href }}
                                                 className="text-primary-foreground text-lg"
                                             >
@@ -90,6 +58,43 @@ export default function Footer() {
                                         ))}
                                     </div>
                                 ))}
+                                {topCities.length > 0 && (
+                                    <div className="flex flex-col gap-4">
+                                        <div className="text-primary-foreground text-lg">Города</div>
+                                        {topCities.map((city) => (
+                                            <Link
+                                                key={city.id}
+                                                href={city.href as Route}
+                                                className="text-primary-foreground/80 text-sm"
+                                            >
+                                                {city.title}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
+                                {topIndustries.length > 0 && (
+                                    <div className="flex flex-col gap-4">
+                                        <div className="text-primary-foreground text-lg">Отрасли</div>
+                                        {topIndustries.map((industry) => (
+                                            <Link
+                                                key={industry.id}
+                                                href={industry.href as Route}
+                                                className="text-primary-foreground/80 text-sm"
+                                            >
+                                                {industry.title}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
+                                <div className="flex flex-col gap-4">
+                                    <div className="text-primary-foreground text-lg">Календарь</div>
+                                    <Link
+                                        href={`/schedule/${seoYear}` as Route}
+                                        className="text-primary-foreground/80 text-sm"
+                                    >
+                                        Календарь на {seoYear}
+                                    </Link>
+                                </div>
                             </div>
                             <div>
                                 <Link href="/" className="text-muted-foreground-dark text-sm">Политика конфиденциальности</Link>

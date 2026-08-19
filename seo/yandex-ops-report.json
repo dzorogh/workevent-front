@@ -1,0 +1,203 @@
+{
+  "site": "https://workevent.ru",
+  "generatedAt": "2026-08-19T22:40:00+03:00",
+  "secretsPolicy": "report contains only env names, HTTP statuses, public counter id, hostnames — never token/key values",
+  "envInventory": {
+    ".env": {
+      "yandexApiKeys": []
+    },
+    ".env.example": {
+      "yandexApiKeys": []
+    },
+    ".env.local": {
+      "yandexApiKeys": [
+        {
+          "name": "YANDEX_API_CLIENT_ID",
+          "service": "Yandex OAuth app (shared client for Metrika / Webmaster / Direct / legacy Wordstat OAuth)",
+          "present": true,
+          "looksLike": "oauth_client_id_hex_32"
+        },
+        {
+          "name": "YANDEX_API_CLIENT_SECRET",
+          "service": "Yandex OAuth app secret",
+          "present": true,
+          "looksLike": "oauth_client_secret_len_32"
+        },
+        {
+          "name": "YANDEX_API_REDIRECT_URI",
+          "service": "Yandex OAuth redirect (verification_code / desktop flow)",
+          "present": true,
+          "host": "oauth.yandex.ru"
+        }
+      ]
+    },
+    "processEnv": {
+      "yandexApiKeys": []
+    },
+    "dokployScripts": {
+      "files": [
+        "scripts/dokploy-exec.mjs",
+        "scripts/dokploy-run.mjs",
+        "docker-compose-dokploy.yml"
+      ],
+      "yandexApiKeys": []
+    },
+    "missingForLiveApi": [
+      "YANDEX_API_ACCESS_TOKEN",
+      "YANDEX_API_OAUTH_TOKEN",
+      "YANDEX_API_REFRESH_TOKEN",
+      "YANDEX_API_KEY",
+      "YANDEX_API_FOLDER_ID"
+    ]
+  },
+  "accessProbes": {
+    "oauthClientCredentials": {
+      "endpoint": "POST https://oauth.yandex.ru/token grant_type=client_credentials",
+      "httpStatus": 400,
+      "error": "unauthorized_client",
+      "meaning": "приложение не выдаёт токен без пользовательского OAuth-кода"
+    },
+    "oauthDeviceCode": {
+      "endpoint": "POST https://oauth.yandex.ru/device/code",
+      "httpStatus": 400,
+      "error": "unauthorized_client",
+      "meaning": "device flow для этого приложения не включён"
+    },
+    "loginInfoNoToken": {
+      "endpoint": "GET https://login.yandex.ru/info",
+      "httpStatus": 401,
+      "error": "NOT_AUTHORIZED"
+    },
+    "metrikaCountersNoToken": {
+      "endpoint": "GET https://api-metrika.yandex.net/management/v1/counters",
+      "httpStatus": 401,
+      "message": "Неавторизованный пользователь"
+    },
+    "webmasterUserNoToken": {
+      "endpoint": "GET https://api.webmaster.yandex.net/v4/user",
+      "httpStatus": 403
+    },
+    "wordstatCloudSecretAsApiKey": {
+      "endpoint": "POST https://searchapi.api.cloud.yandex.net/v2/wordstat/topRequests",
+      "httpStatus": 401,
+      "errorCode": 16,
+      "meaning": "YANDEX_API_CLIENT_SECRET не является Cloud Api-Key; Wordstat v2 недоступен"
+    }
+  },
+  "services": {
+    "webmaster": {
+      "available": false,
+      "reason": "нет пользовательского OAuth access token",
+      "done": [],
+      "notDone": [
+        "найти хост workevent.ru",
+        "статус сайта / диагностика / индексация",
+        "отправить https://workevent.ru/sitemap.xml через POST /user-added-sitemaps",
+        "переобход главной, /events и топ event-страниц"
+      ]
+    },
+    "metrika": {
+      "available": false,
+      "reason": "нет пользовательского OAuth access token",
+      "publicCounterIdFromCode": 99029501,
+      "goalsInFrontend": [
+        "event_apply",
+        "newsletter_subscribe",
+        "organizer_goto"
+      ],
+      "goalsVerifiedViaApi": false,
+      "goalsCreatedViaApi": false,
+      "organicSegmentCreated": false,
+      "done": [],
+      "notDone": [
+        "проверить список целей счётчика 99029501",
+        "создать JS-цели event_apply / newsletter_subscribe / organizer_goto если их нет",
+        "сегмент organic Yandex+Google"
+      ]
+    },
+    "wordstat": {
+      "available": false,
+      "reason": "нет OAuth token для старого API и нет Cloud Api-Key + folderId для Search API v2",
+      "reportFile": "seo/wordstat-report.json",
+      "queriesPrepared": 48,
+      "frequenciesCollected": 0
+    },
+    "direct": {
+      "available": false,
+      "probed": false,
+      "note": "отдельного YANDEX_API_* для Direct нет"
+    }
+  },
+  "productionPublicCheck": {
+    "note": "публичные URL, без API. Это не успех индексации в Вебмастере.",
+    "sitemapXml": {
+      "url": "https://workevent.ru/sitemap.xml",
+      "httpStatus": 200,
+      "contentType": "application/xml",
+      "kind": "sitemapindex → https://workevent.ru/sitemap-0.xml",
+      "bytes": 186
+    },
+    "sitemap0Xml": {
+      "url": "https://workevent.ru/sitemap-0.xml",
+      "httpStatus": 200,
+      "bytes": 52451,
+      "urlCount": 301,
+      "prefixes": {
+        "/": 1,
+        "/blog": 1,
+        "/event": 190,
+        "/events": 4,
+        "/icon.svg": 1,
+        "/schedule": 104
+      },
+      "hasCityLanding": false,
+      "hasIndustryLanding": false,
+      "looksLike": "старый next-sitemap артефакт на проде, не новый src/app/sitemap.ts"
+    },
+    "robotsTxt": {
+      "url": "https://workevent.ru/robots.txt",
+      "httpStatus": 200,
+      "hasGotoDisallow": false,
+      "hasApiDisallow": false,
+      "hasHost": true,
+      "hasSitemap": true
+    },
+    "cityMoscow": {
+      "url": "https://workevent.ru/city/moscow",
+      "httpStatus": 404
+    },
+    "indexationVerdict": "sitemap.xml сейчас 200, но это старая статическая карта без city/industry. Новые посадочные на проде 404. Не считать успехом индексации нового SEO-слоя. План описывал 500 — на момент проверки 19.08.2026 индекс и sitemap-0.xml отвечают 200."
+  },
+  "manualRemaining": [
+    {
+      "id": "oauth-user-token",
+      "service": "Yandex OAuth",
+      "action": "Выпустить пользовательский access token для приложения из YANDEX_API_CLIENT_ID и записать в .env.local как YANDEX_API_ACCESS_TOKEN (значение в чат не слать). Нужные права: metrika:read, metrika:write, webmaster:hostinfo, webmaster:hostview, webmaster:verify, webmaster:recrawl."
+    },
+    {
+      "id": "wordstat-cloud-key",
+      "service": "Wordstat / Yandex Cloud Search API v2",
+      "action": "Если нужен Wordstat 2026: завести Cloud Api-Key и folder id (YANDEX_API_KEY + YANDEX_API_FOLDER_ID). OAuth client_secret для этого API не подходит."
+    },
+    {
+      "id": "webmaster-confirm",
+      "service": "Webmaster",
+      "action": "Подтвердить workevent.ru, указать регион РФ (Москва, СПб), отправить sitemap, связать счётчик 99029501, запустить переобход. Через API сейчас нельзя."
+    },
+    {
+      "id": "metrika-goals",
+      "service": "Metrika",
+      "action": "В счётчике 99029501 завести JS-события exact: event_apply, newsletter_subscribe, organizer_goto. Не дублировать, если уже есть."
+    },
+    {
+      "id": "metrika-organic-segment",
+      "service": "Metrika",
+      "action": "Сегмент вручную: Источник трафика → последний значимый → поисковые системы → Яндекс ИЛИ Google. Management API сегментов без токена не проверялся; создавать вслепую нельзя."
+    },
+    {
+      "id": "deploy-seo-diff",
+      "service": "Production",
+      "action": "Задеплоить текущий SEO-дифф (динамический sitemap, robots с disallow /goto/ и /api/, /city и /industry). Пока city=404, отправка карты в Вебмастер не даст новых посадочных."
+    }
+  ]
+}

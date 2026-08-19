@@ -5,10 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
-    "generate-api": "openapi-typescript https://admin.workevent.ru/docs/api.json -o ./src/lib/api/v1.d.ts"
+    "generate-api": "openapi-typescript https://admin.workevent.ru/docs/api.json -o ./src/lib/api/v1.d.ts",
+    "dokploy:shell": "node scripts/dokploy-exec.mjs",
+    "dokploy:shell:backend": "node scripts/dokploy-exec.mjs --app backend",
+    "dokploy:shell:frontend": "node scripts/dokploy-exec.mjs --app frontend",
+    "seo:generate-pages-seed": "node scripts/generate-pages-seed.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -37,7 +40,6 @@
     "lucide-react": "^0.473.0",
     "mapbox-gl": "^3.9.3",
     "next": "^16.0.7",
-    "next-sitemap": "^4.2.3",
     "nextjs-toploader": "^3.7.15",
     "openapi-fetch": "^0.13.4",
     "react": "^19.2.0",
@@ -69,6 +71,7 @@
     "openapi-typescript": "^7.5.2",
     "postcss": "^8.5.1",
     "tailwindcss": "^4.1.16",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "ws": "^8.21.0"
   }
 }

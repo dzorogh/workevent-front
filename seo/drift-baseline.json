@@ -1,0 +1,24 @@
+{
+  "site": "https://workevent.ru",
+  "capturedAt": "2026-06-11",
+  "checks": {
+    "metadataBase": "https://workevent.ru",
+    "sitemap": "/sitemap.xml",
+    "robots": "/robots.txt",
+    "gotoNoindex": true,
+    "facetedEventsNoindex": true,
+    "jsonLdTypes": [
+      "Organization",
+      "WebSite",
+      "Event",
+      "BreadcrumbList",
+      "ItemList",
+      "BlogPosting",
+      "CollectionPage"
+    ],
+    "programmaticRoutes": [
+      "/city/[slug]",
+      "/industry/[slug]"
+    ]
+  }
+}
