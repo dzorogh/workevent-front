@@ -212,18 +212,18 @@ export default async function CityPage({ params }: Props) {
 
       <H1 className="mt-0">{title}</H1>
 
-      {Content && (
-        <div className="prose max-w-none text-sm">
-          <Content />
-        </div>
-      )}
-
       <EventsList
         initialEvents={initialEvents}
         initialMeta={initialMeta}
         params={{ city_id: city.id }}
         perPage={12}
       />
+
+      {Content && (
+        <div className="prose max-w-none text-sm">
+          <Content />
+        </div>
+      )}
 
       <InternalLinks />
     </div>

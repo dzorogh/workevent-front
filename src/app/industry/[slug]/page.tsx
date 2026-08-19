@@ -214,18 +214,18 @@ export default async function IndustryPage({ params }: Props) {
         </Link>
       </div>
 
-      {Content && (
-        <div className="prose max-w-none text-sm">
-          <Content />
-        </div>
-      )}
-
       <EventsList
         initialEvents={initialEvents}
         initialMeta={initialMeta}
         params={{ industry_id: industry.id }}
         perPage={12}
       />
+
+      {Content && (
+        <div className="prose max-w-none text-sm">
+          <Content />
+        </div>
+      )}
 
       <InternalLinks />
     </div>
