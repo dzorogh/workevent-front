@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 /**
+ * @deprecated Use content/*.md and npm run content:apply. This script is a fallback only.
+ * Generator output is a draft, not a publication. Later edits belong in content/, not apply.
+ *
  * Generates seo/pages-seed-priority.json: 8 city + 8 industry + calendar pages.
  * SEO title/H1/description/content live here and in backend pages — not in Next fallbacks.
  * Run: node scripts/generate-pages-seed.mjs

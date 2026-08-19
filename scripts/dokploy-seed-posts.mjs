@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 /**
+ * @deprecated Use content/*.md and npm run content:apply. This script is a fallback only.
+ *
  * Copy seed-seo-posts.php + seo/posts-seed.json into the Laravel container and upsert posts.
  *
  *   npm run seo:seed-posts

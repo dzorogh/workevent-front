@@ -1,49 +1,38 @@
 # SEO-контент Workevent
 
-Тексты посадочных и статьи блога пишутся в Laravel (Dokploy), не во фронт и не через публичный API.
+Оператор Яндекса: `.cursor/skills/seo-yandex`. План слоёв и серого контура: `seo/plan-power.md`. Контракт двух ВЧ: `seo/plan-top1.md`.
 
-Публичный `POST /api/v1/posts` = **405**. Filament → Posts есть, но штатный путь в репозитории — seed-скрипт.
+Тексты посадочных и статьи блога живут в Laravel, не во фронте и не через публичный API.
+
+Штатный путь: файлы в `content/` → `npm run content:lint` → `npm run content:apply -- --dry-run --only=path:/city/moskva-1` → `npm run content:apply -- --only=path:/city/moskva-1`.
+
+Запись идёт в Filament admin API (`/api/admin/pages`, `/api/admin/posts`) с токеном из `.env.local` (`ADMIN_API_URL`, `ADMIN_API_TOKEN`). Публичный `POST /api/v1/posts` по-прежнему 405.
+
+После ручных правок в Filament: `npm run content:pull`.
+
+Dokploy-сидеры `scripts/seed-seo-*.php` и `npm run seo:seed-posts` — deprecated, запасной путь на один переход.
 
 ## Линт
 
 ```bash
-npm run seo:lint-content
+npm run content:lint
 ```
 
-Голос и запрещённые метафразы: `.cursor/rules/seo-content-lint.mdc`.
+Голос и запрещённые метафразы: `.cursor/rules/seo-content-lint.mdc`. Алиас: `npm run seo:lint-content`.
 
 ## Посадочные (pages)
 
-- JSON: `seo/pages-seed-priority.json`
-- Сидер: `scripts/seed-seo-pages.php`
+- Рабочая копия: `content/pages/*.md` (ключ — `path`)
 - Модель: `App\Models\Page` (+ metadata)
-
-Скопировать файлы в контейнер и выполнить `php` с `LARAVEL_ROOT=/var/www/html`. Либо интерактивно:
-
-```bash
-npm run dokploy:shell:backend
-```
+- Черновик JSON: `seo/pages-seed-priority.json` (не публикация)
 
 ## Статьи блога (posts)
 
-- JSON: `seo/posts-seed.json`
-- Сидер: `scripts/seed-seo-posts.php`
+- Рабочая копия: `content/posts/{id}.md` (ключ — `id`)
+- Файлы `content/posts/new-*.md` — импорт без id, не apply-ить вслепую: сверьте title с живыми постами, иначе появятся дубли
 - Модель: `App\Models\Post`
 - Таблица: `title`, `content`, `user_id`, `created_at`, `updated_at`, `deleted_at`
-- Обложка: Spatie media, коллекция `cover` (обязательна для карточки на фронте). Сидер копирует cover с уже существующего поста.
+- Обложка: Spatie media, коллекция `cover`. Через admin API обложку не заливать
 - Slug в БД нет: URL = `https://workevent.ru/blog/{slug}-{id}`
 
-```bash
-npm run seo:lint-content
-npm run seo:seed-posts
-```
-
-Эквивалент вручную: `npm run dokploy:shell:backend`, затем в контейнере `workevent-backend-*-app-1`:
-
-```bash
-LARAVEL_ROOT=/var/www/html php /tmp/seed-seo-posts.php /tmp/posts-seed.json
-```
-
 Проверка: `GET https://admin.workevent.ru/api/v1/posts` и страница `/blog/...` на workevent.ru.
-
-Имя приложения в `.env.local` (`DOCKPLOY_BACKEND_APP_NAME`) может устареть: резолвер ищет бегущий `workevent-backend-*-app-1`.

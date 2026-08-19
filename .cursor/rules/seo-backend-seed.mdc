@@ -1,33 +1,31 @@
 ---
-description: SEO-тексты и статьи блога писать в бэкенд через Dokploy, не во фронт и не через POST /v1/posts
-globs: seo/**/*,scripts/seed-seo*.php,scripts/dokploy-*.mjs,scripts/lint-seo-content.mjs
+description: Контент pages/posts писать в Laravel через Filament admin API, не во фронт и не через POST /v1/posts
+globs: content/**/*,seo/**/*,scripts/content/**,scripts/seed-seo*.php,scripts/dokploy-*.mjs,scripts/lint-seo-content.mjs
 alwaysApply: true
 ---
 
-# SEO-контент: только бэкенд через Dokploy
+# Контент: Laravel через Filament API
 
-Посадочные (`pages`) и статьи блога (`posts`) живут в Laravel. Не хардкодить тексты во фронте. Не вызывать `POST /api/v1/posts` — публичный API отвечает 405 (только GET/HEAD).
+Посадочные (`pages`) и статьи (`posts`) живут в Laravel. Не хардкодить тексты во фронте. Не вызывать `POST /api/v1/posts` — 405.
 
 ## Команды
 
 ```bash
-npm run seo:lint-content
-# Pages
-node scripts/dokploy-run.mjs --app backend -- \
-  'LARAVEL_ROOT=/var/www/html php /tmp/seed-seo-pages.php /tmp/pages-seed-priority.json'
-# Posts
-npm run seo:seed-posts
+npm run content:pull
+npm run content:lint
+npm run content:apply -- --dry-run --only=path:/
+npm run content:apply -- --only=path:/
 ```
 
-Интерактивный шелл: `npm run dokploy:shell:backend` (контейнер `workevent-backend-*-app-1`).
+Токен: Filament → Tokens → `.env.local` (`ADMIN_API_TOKEN`). В чат не писать.
 
 ## Что куда
 
-| Сущность | Модель | Сидер | JSON |
+| Сущность | Модель | Файл | Запись |
 | --- | --- | --- | --- |
-| Посадочные city/industry/schedule | `Page` + metadata | `scripts/seed-seo-pages.php` | `seo/pages-seed-priority.json` |
-| Статьи блога | `Post` (`title`, `content`, `user_id`, timestamps; cover = Spatie `cover`) | `scripts/seed-seo-posts.php` | `seo/posts-seed.json` |
+| Посадочные | `Page` + metadata | `content/pages/*.md` | `PUT/POST /api/admin/pages` |
+| Статьи | `Post` | `content/posts/{id}.md` | `PUT/POST /api/admin/posts` |
 
-У `posts` нет slug и published: URL на фронте `/blog/{slugify(title)}-{id}`. Обложку копировать с существующего поста, не выдумывать чужой CDN.
+Ключ страницы — `path`. Ключ поста — `id`. Обложку не заливать через API.
 
-Перед записью в seed JSON — `npm run seo:lint-content` и правило `.cursor/rules/seo-content-lint.mdc`. Подробности: `seo/README.md`.
+Перед apply — `npm run content:lint`. Старые `seo:seed-posts` / `seed-seo-*.php` не использовать в новых задачах.

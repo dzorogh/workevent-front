@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 /**
+ * @deprecated Use content/*.md and npm run content:apply. This script is a fallback only.
+ *
  * Bulk upsert blog posts (App\Models\Post) from JSON seed file.
  *
  * Usage (inside Laravel / backend container):

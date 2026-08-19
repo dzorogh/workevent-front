@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 /**
+ * @deprecated Use content/*.md and npm run content:apply. This script is a fallback only.
+ *
  * Bulk upsert SEO landing pages (city + industry + schedule) from JSON seed file.
  *
  * Usage (inside Laravel / backend container):
