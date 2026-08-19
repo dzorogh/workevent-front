@@ -7,7 +7,7 @@ import { Route } from "next";
 import removeMarkdown from "remove-markdown";
 import InfoLabel from "./info-label";
 import Tags from "./tags";
-import { encodeUrl } from "@/lib/utils";
+import { encodeUrl, createSlugWithId } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
@@ -33,6 +33,14 @@ export default function Info({ event, className }: InfoProps) {
     }
 
     const additionalIndustries = event.industries?.filter(industry => industry.id !== event.industry?.id).map(industry => industry.title).join(', ');
+    let organizerName: string | null = null;
+    if (event.website) {
+        try {
+            organizerName = new URL(event.website).hostname.replace(/^www\./, '');
+        } catch {
+            organizerName = null;
+        }
+    }
 
 
     return (
@@ -62,10 +70,16 @@ export default function Info({ event, className }: InfoProps) {
 
                 <Separator />
 
-                <div className="flex flex-col gap-2">
-                    <InfoLabel label="Город" />
-                    <div className="font-medium">{event.city?.title}</div>
-                </div>
+                {event.city && (
+                    <div className="flex flex-col gap-2">
+                        <InfoLabel label="Город" />
+                        <div className="font-medium">
+                            <Link href={`/city/${createSlugWithId(event.city.title, event.city.id)}` as Route}>
+                                {event.city.title}
+                            </Link>
+                        </div>
+                    </div>
+                )}
 
                 {event.venue &&
                     <div className="flex flex-col gap-2">
@@ -96,6 +110,13 @@ export default function Info({ event, className }: InfoProps) {
                     <div className="flex flex-col gap-2">
                         <InfoLabel label="Отрасль" />
                         <div className="font-medium">{event.industry.title}{additionalIndustries ? `, ${additionalIndustries}` : ''}</div>
+                    </div>
+                )}
+
+                {organizerName && (
+                    <div className="flex flex-col gap-2">
+                        <InfoLabel label="Организатор" />
+                        <div className="font-medium">{organizerName}</div>
                     </div>
                 )}
             </div>

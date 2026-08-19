@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { Api } from '@/lib/api';
 import { createSlugWithId } from '@/lib/utils';
 import { getScheduleYears, SITE_URL } from '@/lib/seo/constants';
+import { cloneLandingPath, isIndexableCity, isIndexableIndustry } from '@/lib/seo/inventory';
 
 export const revalidate = 3600;
 
@@ -82,7 +83,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const staticPages: MetadataRoute.Sitemap = [
     { url: SITE_URL, lastModified: now, changeFrequency: 'daily', priority: 1 },
-    { url: `${SITE_URL}/events`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
     { url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
   ];
 
@@ -96,7 +96,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ),
       loadSource(
         'industries',
-        async (signal) => (await Api.GET('/v1/industries/slugs', { signal })).data?.data ?? [],
+        async (signal) => (await Api.GET('/v1/industries', { signal })).data?.data ?? [],
         [],
       ),
       loadSource(
@@ -118,34 +118,60 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     }));
 
-    const presetPages: MetadataRoute.Sitemap = presets
-      .filter((preset) => preset.slug)
+    const presetDetails = await Promise.all(
+      presets
+        .filter((preset) => preset.slug)
+        .map(async (preset) => {
+          const full = await loadSource(
+            `preset ${preset.slug}`,
+            async (signal) =>
+              (
+                await Api.GET('/v1/presets/{preset}', {
+                  params: { path: { preset: preset.slug as string } },
+                  signal,
+                })
+              ).data?.data ?? null,
+            null,
+          );
+          return { slug: preset.slug as string, filters: full?.filters };
+        }),
+    );
+    const presetPages: MetadataRoute.Sitemap = presetDetails
+      .filter((preset) => !cloneLandingPath(preset.filters, cities, industries))
       .map((preset) => ({
         url: `${SITE_URL}/events/${preset.slug}`,
         lastModified: now,
         changeFrequency: 'weekly',
-        priority: 0.8,
+        priority: 0.6,
       }));
 
-    const scheduleYears = getScheduleYears();
+    const liveIndustries = industries.filter(
+      (industry) => industry.slug && isIndexableIndustry(industry),
+    );
+    const currentYear = now.getFullYear();
+    const scheduleYears = getScheduleYears().filter(
+      (year) => year >= currentYear && year <= currentYear + 1,
+    );
     const schedulePages = scheduleYears.flatMap((year): MetadataRoute.Sitemap => {
       const yearPages: MetadataRoute.Sitemap = [
         {
           url: `${SITE_URL}/schedule/${year}`,
           lastModified: now,
           changeFrequency: 'weekly' as const,
-          priority: 0.8,
+          priority: year === currentYear ? 0.8 : 0.5,
         },
       ];
 
-      const industryPages: MetadataRoute.Sitemap = industries
-        .filter((industry) => industry.slug)
-        .map((industry) => ({
-          url: `${SITE_URL}/schedule/${year}/${industry.slug}`,
-          lastModified: now,
-          changeFrequency: 'weekly' as const,
-          priority: 0.7,
-        }));
+      if (year !== currentYear) {
+        return yearPages;
+      }
+
+      const industryPages: MetadataRoute.Sitemap = liveIndustries.map((industry) => ({
+        url: `${SITE_URL}/schedule/${year}/${industry.slug}`,
+        lastModified: now,
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+      }));
 
       return [...yearPages, ...industryPages];
     });
@@ -160,22 +186,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }));
 
     const cityPages: MetadataRoute.Sitemap = cities
-      .filter((city) => city.id && city.title)
+      .filter((city) => city.id && city.title && isIndexableCity(city))
       .map((city) => ({
         url: `${SITE_URL}/city/${createSlugWithId(city.title, city.id)}`,
         lastModified: now,
         changeFrequency: 'weekly',
-        priority: 0.7,
+        priority: city.id === 1 ? 0.9 : 0.7,
       }));
 
-    const industryPages: MetadataRoute.Sitemap = industries
-      .filter((industry) => industry.slug)
-      .map((industry) => ({
-        url: `${SITE_URL}/industry/${industry.slug}`,
-        lastModified: now,
-        changeFrequency: 'weekly',
-        priority: 0.7,
-      }));
+    const industryPages: MetadataRoute.Sitemap = liveIndustries.map((industry) => ({
+      url: `${SITE_URL}/industry/${industry.slug}`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    }));
 
     return [
       ...staticPages,

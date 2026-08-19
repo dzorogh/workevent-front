@@ -77,6 +77,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         : `Календарь мероприятий на ${selectedYear} год.`;
     const canonicalPath = `/schedule/${selectedYear}${industrySlug ? `/${industrySlug}` : ''}`;
 
+    const year = Number(selectedYear);
+    const eventsResponse = await Api.GET('/v1/events', {
+        params: {
+            query: {
+                date_from: new Date(year, 0, 1, 0, 0, 0, 0).getTime() / 1000,
+                date_to: new Date(year, 11, 31, 23, 59, 59).getTime() / 1000,
+                per_page: 1,
+                page: 1,
+                industry_id: industry?.id,
+            },
+        },
+    });
+    const hasEvents = (eventsResponse.data?.meta?.total ?? eventsResponse.data?.data?.length ?? 0) > 0;
+
     return buildMetadata(page?.metadata, {
         title: `${fallbackTitle} — Workevent`,
         description: fallbackDescription,
@@ -87,6 +101,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             description: fallbackDescription,
             url: `${SITE_URL}${canonicalPath}`,
         },
+        robots: hasEvents ? undefined : { index: false, follow: true },
     });
 }
 

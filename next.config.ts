@@ -74,6 +74,17 @@ const nextConfig: NextConfig = withBundleAnalyzer({
         destination: `/schedule/${seoYear}`,
         permanent: true,
       },
+      {
+        source: '/:path+/',
+        destination: '/:path+',
+        permanent: true,
+      },
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.workevent.ru' }],
+        destination: 'https://workevent.ru/:path*',
+        permanent: true,
+      },
     ]
   },
 });

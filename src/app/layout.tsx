@@ -15,7 +15,6 @@ import NextTopLoader from "nextjs-toploader";
 import CookieBanner from "@/components/cookie-banner";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { buildOrganizationJsonLd, buildWebSiteJsonLd } from "@/lib/seo/jsonld-builders";
-import { buildMetadata } from "@/lib/seo/metadata";
 import { SITE_URL } from "@/lib/seo/constants";
 
 const font = Geist({
@@ -26,33 +25,9 @@ const font = Geist({
 
 export const revalidate = 300;
 
-const getPage = async () => {
-  const pageResponse = await Api.GET('/v1/pages', {
-    params: {
-      query: {
-        path: '/',
-      }
-    }
-  });
-  return pageResponse.data?.data ?? undefined;
-}
-
 export async function generateMetadata(): Promise<Metadata> {
-  const page = await getPage();
-
   return {
     metadataBase: new URL(SITE_URL),
-    ...buildMetadata(page?.metadata, {
-      title: 'Workevent — каталог деловых мероприятий',
-      description: 'Каталог деловых мероприятий: поиск по датам, городам и отраслям.',
-      canonicalPath: '/',
-      openGraph: {
-        type: 'website',
-        title: 'Workevent — каталог деловых мероприятий',
-        description: 'Каталог деловых мероприятий: поиск по датам, городам и отраслям.',
-        url: SITE_URL,
-      },
-    }),
   };
 }
 

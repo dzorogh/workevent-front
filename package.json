@@ -13,7 +13,8 @@
     "dokploy:shell:frontend": "node scripts/dokploy-exec.mjs --app frontend",
     "seo:generate-pages-seed": "node scripts/generate-pages-seed.mjs",
     "seo:lint-content": "node scripts/lint-seo-content.mjs",
-    "seo:seed-posts": "node scripts/dokploy-seed-posts.mjs"
+    "seo:seed-posts": "node scripts/dokploy-seed-posts.mjs",
+    "seo:wordstat": "node scripts/fetch-wordstat.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

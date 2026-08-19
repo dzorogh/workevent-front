@@ -5,6 +5,8 @@ import Recommendations from "@/app/(home)/recommendations";
 import InternalLinks from "@/components/seo/internal-links";
 import { Api } from "@/lib/api";
 import { Metadata } from "next";
+import Link from "next/link";
+import { Route } from "next";
 import H1 from "@/components/ui/h1";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { buildCollectionPageJsonLd, buildFaqPageJsonLd } from "@/lib/seo/jsonld-builders";
@@ -85,7 +87,7 @@ export default async function Home() {
     },
     {
       question: 'Как искать события по городу или отрасли?',
-      answer: 'Откройте разделы городов и отраслей внизу страницы или воспользуйтесь поиском по датам и индустриям.',
+      answer: 'Откройте разделы городов и отраслей внизу страницы или поиск по датам. Столичные конференции и выставки — на странице мероприятий в Москве.',
     },
     {
       question: 'Где смотреть план на год?',
@@ -113,6 +115,20 @@ export default async function Home() {
       </div>
       {recommendations.length > 0 && <Recommendations initialEvents={recommendations} initialMeta={recommendationsMeta ?? EMPTY_META} />}
       <H1 className="m-0">{title}</H1>
+      <div className="flex flex-wrap gap-2">
+        <Link
+          href={"/city/moskva-1" as Route}
+          className="rounded-full border px-3 py-1 text-sm hover:bg-secondary"
+        >
+          Конференции в Москве
+        </Link>
+        <Link
+          href={`/schedule/${seoYear}` as Route}
+          className="rounded-full border px-3 py-1 text-sm hover:bg-secondary"
+        >
+          Календарь на {seoYear}
+        </Link>
+      </div>
       <EventsByIndustry initialIndustries={industries} initialEvents={events} initialMeta={eventsMeta ?? EMPTY_META} />
       <FaqSection items={faqItems} />
       <InternalLinks />

@@ -1,6 +1,7 @@
 import { Api } from '@/lib/api';
 import { createSlugWithId } from '@/lib/utils';
 import { getSeoYear } from './constants';
+import { isIndexableCity } from './inventory';
 
 export async function getSeoHubs(limit = 8) {
   try {
@@ -12,7 +13,12 @@ export async function getSeoHubs(limit = 8) {
     ]);
 
     const topCities = [...cities]
-      .sort((a, b) => (b.events_count ?? 0) - (a.events_count ?? 0))
+      .filter((city) => isIndexableCity(city))
+      .sort((a, b) => {
+        if (a.id === 1) return -1;
+        if (b.id === 1) return 1;
+        return (b.events_count ?? 0) - (a.events_count ?? 0);
+      })
       .slice(0, limit)
       .map((city) => ({
         id: city.id,

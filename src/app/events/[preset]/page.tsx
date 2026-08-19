@@ -20,6 +20,7 @@ import { JsonLd } from "@/lib/seo/jsonld";
 import { buildBreadcrumbJsonLd, buildFaqPageJsonLd, buildItemListJsonLd } from "@/lib/seo/jsonld-builders";
 import { buildMetadata, isIndustryCatalogIntent, resolvePresetHeading } from "@/lib/seo/metadata";
 import { getSeoYear, SITE_URL } from "@/lib/seo/constants";
+import { cloneLandingPath } from "@/lib/seo/inventory";
 import { resolvePageFaq } from "@/lib/seo/faq";
 import FaqSection from "@/components/seo/faq";
 import InternalLinks from "@/components/seo/internal-links";
@@ -68,6 +69,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         return { title: 'Подборка не найдена — Workevent' };
     }
 
+    const [industriesResponse, citiesResponse] = await Promise.all([
+        Api.GET('/v1/industries'),
+        Api.GET('/v1/cities'),
+    ]);
+    const clone = cloneLandingPath(
+        preset.filters,
+        citiesResponse.data?.data ?? [],
+        industriesResponse.data?.data ?? [],
+    );
+    if (clone) {
+        permanentRedirect(clone);
+    }
+
     const title = resolvePresetHeading(preset.title, preset.metadata?.title);
     const description = preset.metadata?.description && !isIndustryCatalogIntent(preset.metadata.description)
         ? preset.metadata.description
@@ -96,6 +110,17 @@ export default async function PresetPage({ params }: Props) {
         permanentRedirect('/events');
     }
 
+    const [industriesResponse, citiesResponse] = await Promise.all([
+        Api.GET('/v1/industries'),
+        Api.GET('/v1/cities'),
+    ]);
+    const industriesList = industriesResponse.data?.data ?? [];
+    const citiesList = citiesResponse.data?.data ?? [];
+    const clone = cloneLandingPath(preset.filters, citiesList, industriesList);
+    if (clone) {
+        permanentRedirect(clone);
+    }
+
     const presetParams = {
         format: preset.filters.format as EventFormat,
         city_id: preset.filters.city_id ? Number(preset.filters.city_id) : undefined,
@@ -111,8 +136,8 @@ export default async function PresetPage({ params }: Props) {
         last_page: 0
     };
 
-    const industries = await Api.GET('/v1/industries').then(res => res.data);
-    const cities = await Api.GET('/v1/cities').then(res => res.data);
+    const industries = { data: industriesList };
+    const cities = { data: citiesList };
 
     const code = String(
         await compile(preset.description ?? '', { outputFormat: 'function-body' })

@@ -126,30 +126,24 @@ export function resolveScheduleHeading(year: string, industryTitle?: string, raw
   return industryTitle ? `Календарь: ${industryTitle} на ${year}` : `Календарь мероприятий ${year}`;
 }
 
-export function buildFacetedEventsMetadata(searchParams: Record<string, string | string[] | undefined>): Metadata {
-  const hasFacets = Object.keys(searchParams).some((key) => {
-    const value = searchParams[key];
-    if (value === undefined || value === '') return false;
-    return true;
-  });
-
+export function buildFacetedEventsMetadata(_searchParams: Record<string, string | string[] | undefined>): Metadata {
   return buildMetadata(null, {
-    title: 'Каталог деловых мероприятий — Workevent',
+    title: 'Поиск мероприятий — Workevent',
     description:
-      'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
+      'Поиск деловых конференций, форумов и выставок по дате, городу и отрасли. Каталог — на главной, Москва — на странице города.',
     canonicalPath: '/events',
     openGraph: {
       type: 'website',
-      title: 'Каталог деловых мероприятий — Workevent',
+      title: 'Поиск мероприятий — Workevent',
       description:
-        'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
+        'Поиск деловых конференций, форумов и выставок по дате, городу и отрасли.',
       url: `${SITE_URL}/events`,
     },
     twitter: {
-      title: 'Каталог деловых мероприятий — Workevent',
+      title: 'Поиск мероприятий — Workevent',
       description:
-        'Мероприятия на сайте Workevent. Поиск по датам и индустриям. Конференции, форумы, выставки, семинары, тренинги, мастер-классы, лекции, круглые столы, встречи, презентации, концерты, шоу, фестивали, спортивные и развлекательные мероприятия',
+        'Поиск деловых конференций, форумов и выставок по дате, городу и отрасли.',
     },
-    robots: hasFacets ? { index: false, follow: true } : undefined,
+    robots: { index: false, follow: true },
   });
 }
