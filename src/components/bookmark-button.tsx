@@ -1,8 +1,11 @@
 'use client';
 
+import { usePathname, useRouter } from 'next/navigation';
+import { Route } from 'next';
 import { IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
 import { useBookmarks } from '@/hooks/use-bookmarks';
 import { useToast } from '@/hooks/use-toast';
+import { ToastAction } from '@/components/ui/toast';
 import { cn } from '@/lib/utils';
 
 export default function BookmarkButton({
@@ -14,6 +17,8 @@ export default function BookmarkButton({
 }) {
     const { isBookmarked, toggle } = useBookmarks();
     const { toast } = useToast();
+    const router = useRouter();
+    const pathname = usePathname();
     const bookmarked = isBookmarked(eventId);
 
     return (
@@ -25,13 +30,32 @@ export default function BookmarkButton({
             )}
             aria-label={bookmarked ? 'Убрать из закладок' : 'Добавить в закладки'}
             aria-pressed={bookmarked}
-            onClick={() => {
+            onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                const added = !bookmarked;
                 if (!toggle(eventId)) {
                     toast({
                         title: 'Не удалось сохранить на этом устройстве',
                         variant: 'destructive',
                     });
+                    return;
                 }
+                if (added) {
+                    toast({
+                        title: 'Добавлено в закладки',
+                        action: pathname === '/bookmarks' ? undefined : (
+                            <ToastAction
+                                altText="К списку"
+                                onClick={() => router.push('/bookmarks' as Route)}
+                            >
+                                К списку
+                            </ToastAction>
+                        ),
+                    });
+                    return;
+                }
+                toast({ title: 'Убрано из закладок' });
             }}
         >
             {bookmarked ? (

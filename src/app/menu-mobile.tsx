@@ -13,6 +13,7 @@ export default function MenuMobile({ setIsMenuOpen }: { setIsMenuOpen: (isMenuOp
             </button>
             <ul className="flex flex-col gap-8 items-end text-white font-medium pr-4 text-xl">
                 <li><Link href={{ pathname: "/events" }} onClick={() => setIsMenuOpen(false)}>Мероприятия</Link></li>
+                <li><Link href={"/bookmarks" as Route} onClick={() => setIsMenuOpen(false)}>Закладки</Link></li>
                 <li><Link href={schedulePath} onClick={() => setIsMenuOpen(false)}>Календарь</Link></li>
                 <li><Link href={{ pathname: "/blog" }} onClick={() => setIsMenuOpen(false)}>Журнал</Link></li>
                 <li><Link href={"/events" as Route} onClick={() => setIsMenuOpen(false)}>Поиск</Link></li>

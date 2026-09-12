@@ -8,6 +8,7 @@ import { useState } from "react";
 import Container from "@/components/ui/container";
 import { IconSearch } from "@tabler/icons-react";
 import { Route } from "next";
+import BookmarksNavLink from "@/components/bookmarks-nav-link";
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,6 +29,7 @@ export default function Header() {
                         >
                             <IconSearch className="size-5" stroke={1.75} />
                         </Link>
+                        <BookmarksNavLink />
                         <Link
                             href={"/events/new" as Route}
                             className="inline-flex h-[38px] w-[168px] items-center justify-center rounded-lg border border-[#D4DAE8] bg-white text-[14px] text-[#090D2B] hover:bg-[#E9E8FF] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4545EF]"
@@ -35,7 +37,8 @@ export default function Header() {
                             Добавить событие
                         </Link>
                     </div>
-                    <div className="ml-auto flex items-center justify-center min-[768px]:hidden">
+                    <div className="ml-auto flex items-center min-[768px]:hidden">
+                        <BookmarksNavLink />
                         <button
                             type="button"
                             className="flex size-11 shrink-0 flex-col items-center justify-center gap-1.5 text-[#090D2B]"
