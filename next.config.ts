@@ -40,6 +40,9 @@ const nextConfig: NextConfig = withBundleAnalyzer({
   },
   images: {
     minimumCacheTTL: 86400,
+    // Next 16 блокирует optimizer, если DNS резолвит hostname в private IP.
+    // Локальные прокси (Clash/Surge fake-ip: 198.18.0.0/15, fdfe:dcba:…) дают именно это.
+    dangerouslyAllowLocalIP: process.env.NODE_ENV === 'development',
     remotePatterns: [
       {
         protocol: 'https',
