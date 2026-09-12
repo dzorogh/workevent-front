@@ -72,6 +72,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/event-submissions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["eventSubmission.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/event-formats": {
         parameters: {
             query?: never;
@@ -861,6 +877,43 @@ export interface operations {
                 };
             };
             404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "eventSubmission.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    title: string;
+                    date_from: string;
+                    date_to?: string;
+                    city: string;
+                    industry_id?: number;
+                    contact: string;
+                    comment?: string;
+                    "h-captcha-response": string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            id: number;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
         };
     };
 }
