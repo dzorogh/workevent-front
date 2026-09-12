@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import Container from "./ui/container"
-import { Button } from "./ui/button"
 import { Route } from "next"
 import AppLink from "./ui/app-link"
 
@@ -38,18 +37,24 @@ export default function CookieBanner() {
     }
 
     return (
-        <div className={cn("fixed bottom-0 left-0 right-0 h-auto bg-secondary p-2 z-50 shadow-lg", isAccepted ? "hidden" : "block")}>
-            <Container className="flex flex-row items-center mx-16 gap-4">
-                <div>
-                    <div>
-                        Используем куки и рекомендательные технологии
+        <div data-cookie-banner className={cn("fixed bottom-4 left-0 right-0 z-50", isAccepted ? "hidden" : "block")}>
+            <Container>
+                <div className="flex items-center gap-4 rounded-[16px] bg-white px-5 py-4 shadow-[0_8px_32px_rgba(9,13,43,0.12)]">
+                    <div className="min-w-0 text-[14px] leading-5 text-[#090D2B]">
+                        <div className="font-medium">
+                            Используем куки и рекомендательные технологии
+                        </div>
+                        <div className="mt-1 text-[#657087]">
+                            Оставаясь с нами, вы соглашаетесь на использование <AppLink href={`/` as Route} className="underline underline-offset-4">файлов куки</AppLink>.
+                        </div>
                     </div>
-                    <div className="text-sm">
-                        Оставаясь с нами, вы соглашаетесь на использование <AppLink href={`/` as Route} className="underline">файлов куки</AppLink>.
-                    </div>
-                </div>
-                <div className="flex flex-row gap-2 justify-between">
-                    <Button variant="primary" onClick={handleAcceptCookies}>Ок</Button>
+                    <button
+                        type="button"
+                        onClick={handleAcceptCookies}
+                        className="inline-flex h-10 shrink-0 items-center justify-center rounded-full bg-[#4545EF] px-5 text-[14px] text-white hover:bg-[#3838d4] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4545EF]"
+                    >
+                        Ок
+                    </button>
                 </div>
             </Container>
         </div>

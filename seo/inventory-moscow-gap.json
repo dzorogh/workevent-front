@@ -1,0 +1,94 @@
+{
+  "generatedAt": "2026-08-20",
+  "horizon": "2026-09 — 2026-11",
+  "city": "Москва",
+  "canon": "/city/moskva-1",
+  "method": "Workevent GET /v1/events?city_id=1 (список) + GET /v1/events/{id} (карточка: website/venue/tariffs). Expomap.ru отдаёт captcha — сверка с календарём МВЦ «Крокус Экспо» сен–ноя 2026. Карточки не создавались.",
+  "workevent": {
+    "upcomingMoscow": 15,
+    "byMonth": { "2026-09": 15, "2026-10": 0, "2026-11": 0 },
+    "commercialOnShow": {
+      "website": 15,
+      "venue": 13,
+      "phone": 14,
+      "email": 15,
+      "tariffs": 0,
+      "note": "Список /v1/events отдаёт website и venue пустыми. Смотреть show."
+    },
+    "events": [
+      { "id": 221, "title": "CPM — Collection Première Moscow 2026", "start": "2026-09-01", "end": "2026-09-04", "match": "crocus", "venue": "ЦВК «Экспоцентр»", "website": "https://cpm-moscow.com/?lang=ru" },
+      { "id": 211, "title": "ПЛАС-Форум 2026", "start": "2026-09-08", "end": "2026-09-09", "match": "ours_only", "venue": "Рэдиссон Славянская", "website": "https://pay.plus-forum.com/" },
+      { "id": 223, "title": "ЭКВАТЭК-2026", "start": "2026-09-08", "end": "2026-09-10", "match": "crocus", "venue": "МВЦ «Крокус Экспо»", "website": "https://ecwatech.ru/" },
+      { "id": 224, "title": "ВЭЙСТТЕХ-2026", "start": "2026-09-08", "end": "2026-09-10", "match": "crocus", "venue": null, "website": "https://waste-tech.ru/visit" },
+      { "id": 227, "title": "РАРЧ «Репродуктивные технологии» 2026", "start": "2026-09-09", "end": "2026-09-12", "match": "ours_only", "venue": "Центр международной торговли", "website": "https://conf.rahr.ru/" },
+      { "id": 207, "title": "Team Lead Today 2026", "start": "2026-09-10", "end": "2026-09-10", "match": "ours_only", "venue": "Бизнес.Техноград", "website": "https://teamleadtoday.ru/" },
+      { "id": 212, "title": "FinServ Forum & Awards 2026", "start": "2026-09-10", "end": "2026-09-10", "match": "ours_only", "venue": "Лотте", "website": "https://finservforum.ru/" },
+      { "id": 214, "title": "CeMAT RUSSIA 2026", "start": "2026-09-15", "end": "2026-09-17", "match": "crocus", "venue": "МВЦ «Крокус Экспо»", "website": "https://www.cemat-russia.ru/" },
+      { "id": 222, "title": "ТЕКСТИЛЬЛЕГПРОМ-2026", "start": "2026-09-15", "end": "2026-09-17", "match": "crocus", "venue": "МВЦ «Крокус Экспо»", "website": "https://textilexpo.ru/" },
+      { "id": 234, "title": "Теплоэнергетика России", "start": "2026-09-16", "end": "2026-09-17", "match": "ours_only", "venue": "Glenver Garden", "website": "https://www.thermalpowerrussia.ru/" },
+      { "id": 209, "title": "SmartData 2026", "start": "2026-09-23", "end": "2026-09-23", "match": "ours_only", "venue": "Холидей Инн Москва Сокольники", "website": "https://smartdataconf.ru/en/" },
+      { "id": 236, "title": "Scoring Day 2026", "start": "2026-09-23", "end": "2026-09-23", "match": "ours_only", "venue": "Quattro Space", "website": "https://scorconf.ru/" },
+      { "id": 237, "title": "MARKETING DATA ANALYTICS 2026", "start": "2026-09-24", "end": "2026-09-25", "match": "ours_only", "venue": "Отель Сущевский Сафмар", "website": "https://interforums.ru/mda26/home" },
+      { "id": 216, "title": "Агропродмаш-2026", "start": "2026-09-28", "end": "2026-10-01", "match": "crocus", "venue": "ЦВК «Экспоцентр»", "website": "https://www.agroprodmash-expo.ru/" },
+      { "id": 217, "title": "100+ TechnoBuild 2026", "start": "2026-09-29", "end": "2026-10-02", "match": "suspect_city", "venue": null, "website": "https://forum-100.com/" }
+    ],
+    "qa": [
+      { "id": 221, "issue": "У Крокуса CPM осень 2026 — 46-я, пав. 3. У нас 45-я и площадка «Экспоцентр»." },
+      { "id": 216, "issue": "Агропродмаш у Крокуса в пав. 3; у нас площадка «Экспоцентр». Сверить официальный сайт." },
+      { "id": 224, "issue": "Нет venue; у Крокуса ВэйстТэк в те же даты, что ЭкваТэк." },
+      { "id": 217, "issue": "100+ TechnoBuild обычно Екатеринбург, не Москва. Venue пустой." },
+      { "id": 207, "issue": "Нет телефона." },
+      { "issue": "У всех 15 карточек tariffs пустые — нет цены / регистрации как оффера." }
+    ]
+  },
+  "crocus": {
+    "source": "https://www.crocus-expo.ru/exhibition/?year=2026",
+    "september": 20,
+    "october": 16,
+    "november": 10,
+    "totalSepNov": 46,
+    "matchedOnWorkevent": 6
+  },
+  "gapPriority": [
+    { "priority": "P0", "title": "WorldFood Moscow 2026", "dates": "15–18 сен", "site": "world-food.ru", "venue": "Крокус, пав. 3" },
+    { "priority": "P0", "title": "ДЕНТАЛ-ЭКСПО 2026", "dates": "21–24 сен", "site": "dental-expo.com", "venue": "Крокус, пав. 2" },
+    { "priority": "P0", "title": "InterCHARM 2026", "dates": "14–17 окт", "site": "intercharm.ru", "venue": "Крокус, пав. 3" },
+    { "priority": "P0", "title": "Weldex 2026", "dates": "6–9 окт", "site": "weldex.ru", "venue": "Крокус, пав. 1" },
+    { "priority": "P0", "title": "ПИР Экспо 2026", "dates": "26–29 окт", "site": "pirexpo.com", "venue": "Крокус, пав. 3" },
+    { "priority": "P0", "title": "РЕКЛАМА-2026", "dates": "27–29 окт", "site": "reklama-expo.ru", "venue": "Крокус, пав. 1" },
+    { "priority": "P0", "title": "Interlight | Smart City & Home", "dates": "27–30 окт", "site": "interlight-building.ru", "venue": "Крокус, пав. 1" },
+    { "priority": "P0", "title": "MITEX 2026", "dates": "10–13 ноя", "site": "mitexpo.ru", "venue": "Крокус, пав. 2" },
+    { "priority": "P0", "title": "МЕБЕЛЬ-2026", "dates": "23–26 ноя", "site": "meb-expo.ru", "venue": "Крокус, пав. 3" },
+    { "priority": "P0", "title": "Pharmtech & Ingredients 2026", "dates": "24–27 ноя", "site": "pharmtech-expo.ru", "venue": "Крокус, пав. 2" },
+    { "priority": "P1", "title": "ЦветыЭкспо 2026", "dates": "7–9 сен", "site": "flowers-expo.ru", "venue": "Крокус, пав. 1" },
+    { "priority": "P1", "title": "HouseHold Expo осень 2026", "dates": "8–10 сен", "site": "hhexpo.ru", "venue": "Крокус, пав. 2" },
+    { "priority": "P1", "title": "Мир детства 2026", "dates": "16–18 сен", "site": "mirdetstva-expo.ru", "venue": "Крокус, пав. 2" },
+    { "priority": "P1", "title": "CJF — Детская мода, осень", "dates": "16–18 сен", "site": "cjf-expo.ru", "venue": "Крокус, пав. 2" },
+    { "priority": "P1", "title": "ИНТЕРТКАНЬ-2026.Осень", "dates": "29 сен – 1 окт", "site": "intertkan.ru", "venue": "Крокус, пав. 2" },
+    { "priority": "P1", "title": "AGROSALON 2026", "dates": "6–9 окт", "site": "agrosalon.ru", "venue": "Крокус, пав. 2" },
+    { "priority": "P1", "title": "HEAT&POWER 2026", "dates": "19–21 окт", "site": "heatpower-expo.ru", "venue": "Крокус, пав. 1" },
+    { "priority": "P1", "title": "PCVExpo 2026", "dates": "19–21 окт", "site": "pcvexpo.ru", "venue": "Крокус, пав. 1" },
+    { "priority": "P1", "title": "БИОТ 2026", "dates": "17–20 ноя", "site": "biot-expo.ru", "venue": "Крокус, пав. 1" },
+    { "priority": "P1", "title": "Электроника России 2026", "dates": "24–26 ноя", "site": "rus-elektronika.ru", "venue": "Крокус, пав. 2" }
+  ],
+  "gapAlsoOnCrocus": [
+    { "title": "dreams by CPM", "dates": "1–4 сен", "site": "dreams-moscow.ru", "note": "сателлит CPM, можно не плодить отдельную карточку" },
+    { "title": "Textile Salon", "dates": "2–4 сен", "site": "textile-salon.ru" },
+    { "title": "GreenExpo", "dates": "7–9 сен", "site": "flowers-expo.ru" },
+    { "title": "Stylish Home осень", "dates": "8–10 сен", "site": "styhome.ru" },
+    { "title": "ПаркЗоо 2026", "dates": "23–25 сен", "site": "parkzoo.ru" },
+    { "title": "MIOF (оптика)", "dates": "23–25 сен", "site": "optica-expo.ru" },
+    { "title": "Мир охоты и рыбалки", "dates": "24–27 сен", "site": "huntfishexpo.ru", "note": "смешанный B2B/B2C" },
+    { "title": "Fastenex / НМФ-ЭКСПО", "dates": "6–9 окт", "note": "рядом с Weldex" },
+    { "title": "ExpoCoating / FastTec / NDT / Testing&Control", "dates": "19–21 окт", "note": "промкластер МВК" },
+    { "title": "Диагностический саммит", "dates": "20–22 окт", "site": "rdsummit.ru" },
+    { "title": "КормВетГрэйн", "dates": "27–29 окт", "site": "feedvet-expo.ru" },
+    { "title": "NVC / UtiliCon / Мир климата / Лифт Экспо / CleanExpo", "dates": "ноябрь" }
+  ],
+  "editorNext": [
+    "Не выдумывать карточки из этого файла — заводить только после сверки с официальным сайтом.",
+    "Сначала октябрь и ноябрь: без них канон /city/moskva-1 пустой на 60 дней вперёд.",
+    "Потом P0 сентября (WorldFood, Дентал).",
+    "Параллельно починить QA на уже существующих 15: площадки CPM/Агропродмаш/ВэйстТэк, город TechnoBuild, тарифы."
+  ]
+}

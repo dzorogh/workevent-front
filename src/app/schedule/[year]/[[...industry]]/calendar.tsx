@@ -3,38 +3,39 @@
 import { EventResource } from "@/lib/types";
 import CalendarMonth from "./calendar-month";
 
-export default function Calendar({ events }: { events: EventResource[] }) {
-    const months: { name: string; events: EventResource[] }[] = [
-        { name: 'Январь', events: [] },
-        { name: 'Февраль', events: [] },
-        { name: 'Март', events: [] },
-        { name: 'Апрель', events: [] },
-        { name: 'Май', events: [] },
-        { name: 'Июнь', events: [] },
-        { name: 'Июль', events: [] },
-        { name: 'Август', events: [] },
-        { name: 'Сентябрь', events: [] },
-        { name: 'Октябрь', events: [] },
-        { name: 'Ноябрь', events: [] },
-        { name: 'Декабрь', events: [] },
-    ];
+const MONTH_NAMES = [
+    'Январь',
+    'Февраль',
+    'Март',
+    'Апрель',
+    'Май',
+    'Июнь',
+    'Июль',
+    'Август',
+    'Сентябрь',
+    'Октябрь',
+    'Ноябрь',
+    'Декабрь',
+];
+
+export default function Calendar({ events, fromMonth = 0 }: { events: EventResource[]; fromMonth?: number }) {
+    const months = MONTH_NAMES
+        .map((name, index) => ({ name, events: [] as EventResource[], index }))
+        .filter((month) => month.index >= fromMonth);
 
     events.forEach((event) => {
-        const month = months.find((month) => new Date(event.start_date).getMonth() === months.indexOf(month));
+        const eventMonth = new Date(event.start_date).getMonth();
+        const month = months.find((item) => item.index === eventMonth);
         if (month) {
             month.events.push(event);
         }
     });
 
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-4 relative">
-                <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {months.map((month) => (
-                        <CalendarMonth key={month.name} month={month} />
-                    ))}
-                </div>
-            </div>
+        <div className="grid grid-cols-1 gap-3 min-[768px]:grid-cols-2 min-[1200px]:grid-cols-3">
+            {months.map((month) => (
+                <CalendarMonth key={month.name} month={month} />
+            ))}
         </div>
     );
 }

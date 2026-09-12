@@ -98,9 +98,9 @@ export default function NewEventForm({ industries }: { industries: IndustryResou
       for (const [field, messages] of Object.entries(fieldErrors)) {
         const formField = field === 'date_from' ? 'dateFrom'
           : field === 'date_to' ? 'dateTo'
-          : field === 'industry_id' ? 'industryId'
-          : field === 'h-captcha-response' ? undefined
-          : field;
+            : field === 'industry_id' ? 'industryId'
+              : field === 'h-captcha-response' ? undefined
+                : field;
         if (formField && messages[0]) {
           form.setError(formField as keyof FormValues, { message: messages[0] });
         }

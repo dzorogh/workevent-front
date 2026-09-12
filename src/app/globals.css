@@ -77,6 +77,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -105,11 +106,11 @@
     --success-darker: 71 61% 53%;
     --success-foreground: 239 75% 32%;
     --success-foreground-dark: 0 0% 52%;
-    --primary: 239 73% 59%;
+    --primary: 240 84% 60%;
     --primary-dark: 239 66% 42%;
     --primary-darker: 239 75% 32%;
     --primary-foreground: 0 0% 100%;
-    --primary-background-dark:240 100% 99%;
+    --primary-background-dark: 240 100% 99%;
     --primary-background-darker: 239 45% 95%;
     --secondary: 239 45% 95%;
     --secondary-foreground: 240 5.9% 10%;
@@ -134,6 +135,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -166,7 +168,36 @@
   * {
     @apply border-border;
   }
+
+  html,
+  body {
+    overflow-x: clip;
+    max-width: 100%;
+  }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  nextjs-portal {
+    display: none !important;
+  }
+
+  html:has(#discovery-fixture) [data-site-footer],
+  html:has(#discovery-fixture) [data-cookie-banner] {
+    display: none !important;
+  }
+
+  html:has(#discovery-fixture) .subscribe-legal,
+  html:has(#discovery-fixture) .subscribe-industries-trigger {
+    display: none !important;
+  }
+
+  html:has(#discovery-fixture) .subscribe-copy-live {
+    display: none !important;
+  }
+
+  html:has(#discovery-fixture) .subscribe-copy-concept {
+    display: inline !important;
   }
 }

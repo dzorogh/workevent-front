@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import Image, { getImageProps } from 'next/image';
 import Logo from '@/components/icons/logo';
 import { cn } from '@/lib/utils';
 
@@ -9,25 +9,74 @@ interface EventCoverImageProps {
     title: string;
     size?: 'sm' | 'md' | 'lg';
     priority?: boolean;
+    sizes?: string;
     className?: string;
 }
 
-export default function EventCoverImage({ cover, title, size = 'sm', priority = false, className }: EventCoverImageProps) {
+const SIZE_PX = {
+    sm: { width: 16 * 20, height: 9 * 20, sizes: '320px' },
+    md: { width: 16 * 30, height: 9 * 30, sizes: '480px' },
+    lg: { width: 16 * 100, height: 9 * 100, sizes: '100vw' },
+} as const;
 
-    return <div className="relative">
-        {cover ?
-            <div className={cn("aspect-video border-secondary border rounded-lg overflow-hidden bg-muted flex items-center justify-center", className)}>
+const prefetchedCovers = new Set<string>();
+
+function coverImageProps(cover: string, size: keyof typeof SIZE_PX = 'sm', sizes?: string) {
+    const dimensions = SIZE_PX[size];
+
+    return getImageProps({
+        src: cover,
+        alt: '',
+        width: dimensions.width,
+        height: dimensions.height,
+        sizes: sizes ?? dimensions.sizes,
+    }).props;
+}
+
+export function prefetchEventCover(cover?: string, size: keyof typeof SIZE_PX = 'sm', sizes?: string) {
+    if (!cover || prefetchedCovers.has(cover)) {
+        return;
+    }
+
+    prefetchedCovers.add(cover);
+
+    const { src, srcSet, sizes: imageSizes } = coverImageProps(cover, size, sizes);
+    const image = new window.Image();
+    image.decoding = 'async';
+    if (srcSet) {
+        image.srcset = srcSet;
+    }
+    if (imageSizes) {
+        image.sizes = imageSizes;
+    }
+    image.src = src;
+}
+
+export default function EventCoverImage({
+    cover,
+    title,
+    size = 'sm',
+    priority = false,
+    sizes,
+    className,
+}: EventCoverImageProps) {
+    const dimensions = SIZE_PX[size];
+
+    return (
+        <div className={cn("relative aspect-video overflow-hidden rounded-[22px] bg-muted flex items-center justify-center", className)}>
+            {cover ? (
                 <Image
                     priority={priority}
                     src={cover}
                     alt={title}
-                    width={size === 'sm' ? 16 * 20 : size === 'md' ? 16 * 30 : 16 * 100}
-                    height={size === 'sm' ? 9 * 20 : size === 'md' ? 9 * 30 : 9 * 100}
+                    width={dimensions.width}
+                    height={dimensions.height}
+                    sizes={sizes ?? dimensions.sizes}
+                    className="h-full w-full object-cover object-center"
                 />
-            </div>
-            : <div className={cn("flex items-center justify-center absolute inset-0", className)}>
+            ) : (
                 <Logo className="aspect-video *:fill-border" />
-            </div>
-        }
-    </div>
-} 
+            )}
+        </div>
+    );
+}

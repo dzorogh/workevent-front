@@ -17,6 +17,7 @@ import { getScheduleYears, SITE_URL } from "@/lib/seo/constants";
 import { resolvePageFaq } from "@/lib/seo/faq";
 import FaqSection from "@/components/seo/faq";
 import InternalLinks from "@/components/seo/internal-links";
+import { discoveryFilterLabelClass, discoverySectionTitleClass } from "@/lib/discovery-ui";
 import { EventResource } from "@/lib/types";
 
 type Props = {
@@ -120,10 +121,13 @@ export default async function SchedulePage({ params }: Props) {
     const page = await getPage(selectedYear, industrySlug);
 
     const years = getScheduleYears();
+    const selectedYearNumber = Number(selectedYear);
+    const now = new Date();
+    const fromMonth = selectedYearNumber === now.getFullYear() ? now.getMonth() : 0;
     const industries = (await Api.GET('/v1/industries')).data?.data ?? [];
     const requestParams = {
-        date_from: new Date(Number(selectedYear), 0, 1, 0, 0, 0, 0).getTime() / 1000,
-        date_to: new Date(Number(selectedYear), 11, 31, 23, 59, 59).getTime() / 1000,
+        date_from: new Date(selectedYearNumber, fromMonth, 1, 0, 0, 0, 0).getTime() / 1000,
+        date_to: new Date(selectedYearNumber, 11, 31, 23, 59, 59).getTime() / 1000,
         per_page: 100,
         industry_id: industry?.id ?? undefined,
     }
@@ -172,7 +176,7 @@ export default async function SchedulePage({ params }: Props) {
     ]);
     const faqJsonLd = buildFaqPageJsonLd(faq.items);
 
-    return <div className="flex flex-col md:gap-12 gap-6">
+    return <div className="flex flex-col gap-8">
         <JsonLd
             data={[
                 buildBreadcrumbJsonLd([
@@ -194,30 +198,30 @@ export default async function SchedulePage({ params }: Props) {
         />
 
         <Breadcrumb>
-            <BreadcrumbList>
+            <BreadcrumbList className="text-[#657087]">
                 <BreadcrumbItem>
-                    <BreadcrumbLink href="/">Главная</BreadcrumbLink>
+                    <BreadcrumbLink href="/" className="hover:text-[#4545EF]">Главная</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 {industry ? (
                     <>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href={`/schedule/${selectedYear}`}>Календарь {selectedYear}</BreadcrumbLink>
+                            <BreadcrumbLink href={`/schedule/${selectedYear}`} className="hover:text-[#4545EF]">Календарь {selectedYear}</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbPage>{title}</BreadcrumbPage>
+                            <BreadcrumbPage className="text-[#090D2B]">{title}</BreadcrumbPage>
                         </BreadcrumbItem>
                     </>
                 ) : (
                     <BreadcrumbItem>
-                        <BreadcrumbPage>{title}</BreadcrumbPage>
+                        <BreadcrumbPage className="text-[#090D2B]">{title}</BreadcrumbPage>
                     </BreadcrumbItem>
                 )}
             </BreadcrumbList>
         </Breadcrumb>
 
-        <H1>{title}</H1>
+        <H1 className={discoverySectionTitleClass}>{title}</H1>
 
         <InternalLinks
             variant="related"
@@ -229,29 +233,18 @@ export default async function SchedulePage({ params }: Props) {
             ]}
         />
 
-        <div className="flex flex-col md:flex-row gap-6">
-
-            <div className="flex flex-col gap-2">
-                <div className="font-bold">
-                    Год
-                </div>
-
+        <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-2.5">
+                <div className={discoveryFilterLabelClass}>Год</div>
                 <Years years={years} selectedYear={selectedYear} />
-
             </div>
-
-            <div className="flex flex-col gap-2">
-                <div className="font-bold">
-                    Отрасль
-                </div>
-
+            <div className="flex min-w-0 flex-col gap-2.5">
+                <div className={discoveryFilterLabelClass}>Отрасль</div>
                 <Industries industries={industries} industrySlug={industrySlug} homeRoute={`/schedule/${selectedYear}`} />
-
             </div>
-
         </div>
 
-        <Calendar events={scheduleEvents} />
+        <Calendar events={scheduleEvents} fromMonth={fromMonth} />
 
         {page?.content && <Description>
             <div className="prose max-w-none text-sm">

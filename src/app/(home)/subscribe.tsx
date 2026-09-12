@@ -8,17 +8,15 @@ import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Link from "next/link";
-import Image from "next/image";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Overlay } from "@/components/ui/overlay";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { IconCaretDownFilled } from "@tabler/icons-react";
+import { IconMail } from "@tabler/icons-react";
 import { IndustryResource } from "@/lib/types";
 import { reachGoal } from "@/components/yandex-metrika-goals";
 
 const FormSchema = z.object({
-    industries: z.array(z.string()).min(1, 'Выберите хотя бы одну отрасль'),
+    industries: z.array(z.string()),
     email: z.string().email('Введите корректный email'),
 });
 
@@ -39,11 +37,17 @@ export default function Subscribe({ industries }: { industries: IndustryResource
     const selectedIndustries = form.watch('industries');
 
     const onSubmit = async (data: FormValues) => {
+        const payload = {
+            ...data,
+            industries: data.industries.length
+                ? data.industries
+                : industries.map((industry) => industry.id.toString()),
+        };
+
         try {
-            // Replace with your API call
             await fetch('/api/subscribe', {
                 method: 'POST',
-                body: JSON.stringify(data),
+                body: JSON.stringify(payload),
             });
 
             reachGoal('newsletter_subscribe');
@@ -53,7 +57,7 @@ export default function Subscribe({ industries }: { industries: IndustryResource
                 description: "Вы успешно подписались на рассылку",
             });
             form.reset();
-        } catch (error) {
+        } catch {
             toast({
                 title: "Ошибка",
                 description: "Что-то пошло не так. Попробуйте позже",
@@ -67,75 +71,68 @@ export default function Subscribe({ industries }: { industries: IndustryResource
         const updated = current.includes(industryId)
             ? current.filter(id => id !== industryId)
             : [...current, industryId];
-        form.setValue('industries', updated);
+        form.setValue('industries', updated, { shouldValidate: true });
     };
 
     return (
-        <div className="flex flex-col gap-8 px-10 py-12 justify-center bg-linear-to-r from-primary to-primary-dark rounded-lg text-primary-foreground bg-cover bg-center relative">
-            <Image
-                src="/subscribe-bg.svg"
-                alt="Workevent Subscribe background"
-                fill
-                className="absolute right-0! left-auto! w-auto! top-0 mix-blend-screen z-0"
-            />
-
-            <h2 className="text-2xl max-w-xl relative z-10">
-                Будьте в курсе всех актуальных мероприятий — подпишитесь на нашу рассылку
-            </h2>
-
+        <div className="rounded-[20px] min-[768px]:rounded-[12px] bg-[#EBEBFD] px-5 py-5 min-[1200px]:h-[116px] min-[1200px]:px-8 min-[1200px]:py-0">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 relative z-10">
-                    <div className="flex gap-2 flex-wrap sm:flex-nowrap">
-                        <div className="min-w-48">
-                            <Popover open={open} onOpenChange={setOpen}>
-                                <PopoverTrigger asChild>
-                                    <div className="relative">
-                                        <Input
-                                            placeholder="Выберите отрасль"
-                                            value={selectedIndustries.length ? `Выбрано: ${selectedIndustries.length}` : ''}
-                                            readOnly
-                                            className="cursor-pointer"
-                                            type="text"
-                                        />
-                                        <IconCaretDownFilled className="absolute text-muted-foreground opacity-50 right-3 top-1/2 -translate-y-1/2 h-4 w-4 transition-transform" />
-                                    </div>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto min-w-64 p-0" align="start">
-                                    <div className="flex flex-col gap-4 p-5">
-                                        {industries.map((industry) => (
-                                            <div key={industry.id} className="flex items-center gap-x-2">
-                                                <Checkbox
-                                                    id={industry.id.toString()}
-                                                    checked={selectedIndustries.includes(industry.id.toString())}
-                                                    onCheckedChange={() => toggleIndustry(industry.id.toString())}
-                                                />
-                                                <label
-                                                    htmlFor={industry.id.toString()}
-                                                    className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                                >
-                                                    {industry.title}
-                                                </label>
-                                            </div>
-                                        ))}
-                                        <Button
-                                            variant="primary"
-                                            onClick={() => setOpen(false)}
-                                            type="button"
-                                        >
-                                            Применить
-                                        </Button>
-                                    </div>
-                                    <Overlay onClick={() => setOpen(false)} />
-                                </PopoverContent>
-                            </Popover>
-                            {form.formState.errors.industries && (
-                                <p className="text-red-500 text-sm mt-1">
-                                    {form.formState.errors.industries.message}
-                                </p>
-                            )}
+                <form onSubmit={form.handleSubmit(onSubmit)} className="grid h-full min-w-0 grid-cols-1 min-[1200px]:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)_auto] items-center gap-4 min-[1200px]:gap-6">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white">
+                            <IconMail className="size-5 text-[#657087]" stroke={1.75} />
                         </div>
+                        <div className="min-w-0">
+                            <div className="text-[11px] uppercase tracking-[0.14em] text-[#657087] mb-1">
+                                события по вашим интересам
+                            </div>
+                            <div className="font-semibold text-[18px] leading-snug text-[#090D2B]">
+                                Главные события — в вашей почте
+                            </div>
+                        </div>
+                    </div>
 
-                        <div className="min-w-48">
+                    <p className="text-[14px] leading-5 text-[#657087] max-w-md">
+                        Подбираем мероприятия по интересам и присылаем{' '}
+                        <span className="subscribe-copy-live">подборку на почту.</span>
+                        <span className="subscribe-copy-concept hidden">раз в неделю.</span>
+                    </p>
+
+                    <div className="flex flex-col min-[480px]:flex-row gap-2 items-stretch min-[480px]:items-center">
+                        <Popover open={open} onOpenChange={setOpen}>
+                            <PopoverTrigger asChild>
+                                <button type="button" className="subscribe-industries-trigger text-xs text-[#657087] underline underline-offset-4 mr-1 max-[767px]:order-last">
+                                    {selectedIndustries.length ? `Отрасли: ${selectedIndustries.length}` : 'Отрасли'}
+                                </button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto min-w-64 p-0" align="end">
+                                <div className="flex flex-col gap-4 p-5">
+                                    {industries.map((industry) => (
+                                        <div key={industry.id} className="flex items-center gap-x-2">
+                                            <Checkbox
+                                                id={industry.id.toString()}
+                                                checked={selectedIndustries.includes(industry.id.toString())}
+                                                onCheckedChange={() => toggleIndustry(industry.id.toString())}
+                                            />
+                                            <label
+                                                htmlFor={industry.id.toString()}
+                                                className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                            >
+                                                {industry.title}
+                                            </label>
+                                        </div>
+                                    ))}
+                                    <Button
+                                        variant="primary"
+                                        onClick={() => setOpen(false)}
+                                        type="button"
+                                    >
+                                        Применить
+                                    </Button>
+                                </div>
+                            </PopoverContent>
+                        </Popover>
+                        <div className="min-w-0 min-[480px]:w-52">
                             <Controller
                                 name="email"
                                 control={form.control}
@@ -143,28 +140,32 @@ export default function Subscribe({ industries }: { industries: IndustryResource
                                     <Input
                                         {...field}
                                         type="email"
-                                        placeholder="Укажите вашу почту"
+                                        placeholder="Ваш e-mail"
+                                        className="rounded-full h-11 bg-white border-0 shadow-none"
                                     />
                                 )}
                             />
-                            {form.formState.errors.email && (
-                                <p className="text-red-500 text-sm mt-1">
-                                    {form.formState.errors.email.message}
-                                </p>
-                            )}
                         </div>
-
-                        <Button type="submit">Подписаться</Button>
-                    </div>
-
-                    <div className="text-sm text-muted">
-                        Нажимая на кнопку, вы соглашаетесь с{' '}
-                        <Link href="/" className="underline underline-offset-4">
-                            политикой конфиденциальности
-                        </Link>
+                        <Button
+                            type="submit"
+                            className="rounded-full h-11 px-6 bg-[#4545EF] text-white hover:bg-[#3838d4] bg-none from-transparent to-transparent shadow-none ring-0"
+                        >
+                            Подписаться
+                        </Button>
                     </div>
                 </form>
             </Form>
+            {form.formState.errors.email && (
+                <p className="text-destructive text-sm mt-2">
+                    {form.formState.errors.email.message}
+                </p>
+            )}
+            <div className="subscribe-legal text-xs text-[#657087] mt-2 min-[768px]:mt-0 min-[768px]:absolute min-[768px]:sr-only">
+                Нажимая на кнопку, вы соглашаетесь с{' '}
+                <Link href="/" className="underline underline-offset-4">
+                    политикой конфиденциальности
+                </Link>
+            </div>
         </div>
     );
 }

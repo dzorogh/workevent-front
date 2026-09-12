@@ -1,4 +1,5 @@
 import type { FaqItem } from '@/lib/seo/faq';
+import { discoverySectionTitleClass } from '@/lib/discovery-ui';
 
 export default function FaqSection({
   items,
@@ -10,13 +11,13 @@ export default function FaqSection({
   if (items.length === 0) return null;
 
   return (
-    <section className="flex flex-col gap-4">
-      <h2 className="text-lg font-semibold">{title}</h2>
-      <dl className="flex flex-col gap-4">
+    <section className="flex flex-col gap-5">
+      <h2 className={discoverySectionTitleClass}>{title}</h2>
+      <dl className="grid grid-cols-1 gap-3 min-[900px]:grid-cols-3">
         {items.map((item) => (
-          <div key={item.question} className="flex flex-col gap-1">
-            <dt className="font-medium">{item.question}</dt>
-            <dd className="text-sm text-muted-foreground">{item.answer}</dd>
+          <div key={item.question} className="flex flex-col rounded-[16px] bg-white px-5 py-5">
+            <dt className="text-[16px] font-semibold leading-snug text-[#090D2B]">{item.question}</dt>
+            <dd className="mt-2 text-[14px] leading-6 text-[#657087]">{item.answer}</dd>
           </div>
         ))}
       </dl>

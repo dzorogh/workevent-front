@@ -2,12 +2,14 @@ import Search from "@/components/search";
 import Presets from "@/app/(home)/presets";
 import EventsByIndustry from "@/app/(home)/events-by-industry";
 import Recommendations from "@/app/(home)/recommendations";
+import Hero from "@/app/(home)/hero";
 import InternalLinks from "@/components/seo/internal-links";
 import { Api } from "@/lib/api";
 import { Metadata } from "next";
 import Link from "next/link";
 import { Route } from "next";
 import H1 from "@/components/ui/h1";
+import { discoveryChipClass, discoverySectionTitleClass } from "@/lib/discovery-ui";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { buildCollectionPageJsonLd, buildFaqPageJsonLd } from "@/lib/seo/jsonld-builders";
 import { buildMetadata } from "@/lib/seo/metadata";
@@ -97,7 +99,7 @@ export default async function Home() {
   const faqJsonLd = buildFaqPageJsonLd(faqItems);
 
   return (
-    <div className="flex flex-col gap-12">
+    <div>
       <JsonLd
         data={[
           buildCollectionPageJsonLd({
@@ -109,29 +111,32 @@ export default async function Home() {
         ]}
       />
 
-      <div className="flex flex-col gap-4">
-        <Search industries={industries} cities={cities} />
-        <Presets />
+      <div className="flex flex-col">
+        <Hero />
+        <div className="mt-5 min-[1200px]:mt-[24px]">
+          <Search cities={cities} />
+        </div>
+        <div className="mt-4 min-[1200px]:mt-[14px]">
+          <EventsByIndustry initialIndustries={industries} initialEvents={events} initialMeta={eventsMeta ?? EMPTY_META} />
+        </div>
       </div>
-      {recommendations.length > 0 && <Recommendations initialEvents={recommendations} initialMeta={recommendationsMeta ?? EMPTY_META} />}
-      <H1 className="m-0">{title}</H1>
-      <div className="flex flex-wrap gap-2">
-        <Link
-          href={"/city/moskva-1" as Route}
-          className="rounded-full border px-3 py-1 text-sm hover:bg-secondary"
-        >
-          Конференции в Москве
-        </Link>
-        <Link
-          href={`/schedule/${seoYear}` as Route}
-          className="rounded-full border px-3 py-1 text-sm hover:bg-secondary"
-        >
-          Календарь на {seoYear}
-        </Link>
-      </div>
-      <EventsByIndustry initialIndustries={industries} initialEvents={events} initialMeta={eventsMeta ?? EMPTY_META} />
-      <FaqSection items={faqItems} />
-      <InternalLinks />
+      <section className="mt-16 flex flex-col gap-12">
+        <div className="flex flex-col gap-4">
+          <H1 className={discoverySectionTitleClass}>{title}</H1>
+          <div className="flex flex-wrap gap-3.5">
+            <Link href={"/city/moskva-1" as Route} className={discoveryChipClass}>
+              Конференции в Москве
+            </Link>
+            <Link href={`/schedule/${seoYear}` as Route} className={discoveryChipClass}>
+              Календарь на {seoYear}
+            </Link>
+            <Presets />
+          </div>
+        </div>
+        {recommendations.length > 0 && <Recommendations initialEvents={recommendations} initialMeta={recommendationsMeta ?? EMPTY_META} />}
+        <FaqSection items={faqItems} />
+        <InternalLinks />
+      </section>
     </div>
   );
 }

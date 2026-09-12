@@ -4,6 +4,7 @@ import { createSlugWithId } from '@/lib/utils';
 import { getSeoYear } from '@/lib/seo/constants';
 import { getSeoHubs } from '@/lib/seo/hubs';
 import type { EventResource } from '@/lib/types';
+import { discoveryChipClass, discoverySectionTitleClass } from '@/lib/discovery-ui';
 
 type RelatedLink = {
   href: string;
@@ -16,15 +17,13 @@ type InternalLinksProps = {
   links?: RelatedLink[];
 };
 
-const chipClassName = 'rounded-full border px-3 py-1 text-sm hover:bg-secondary';
-
 function RelatedNav({ links }: { links: RelatedLink[] }) {
   if (links.length === 0) return null;
 
   return (
-    <nav aria-label="Связанные разделы" className="flex flex-wrap gap-2">
+    <nav aria-label="Связанные разделы" className="flex flex-wrap gap-3.5">
       {links.map((link) => (
-        <Link key={link.href} href={link.href as Route} className={chipClassName}>
+        <Link key={link.href} href={link.href as Route} className={discoveryChipClass}>
           {link.label}
         </Link>
       ))}
@@ -65,22 +64,22 @@ export default async function InternalLinks({ variant = 'home', event, links }: 
   const { topCities, topIndustries } = await getSeoHubs();
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-3">
-        <h2 className="text-lg font-semibold">Мероприятия по городам</h2>
-        <div className="flex flex-wrap gap-2">
+    <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-4">
+        <h2 className={discoverySectionTitleClass}>Мероприятия по городам</h2>
+        <div className="flex flex-wrap gap-3.5">
           {topCities.map((city) => (
-            <Link key={city.id} href={city.href as Route} className={chipClassName}>
+            <Link key={city.id} href={city.href as Route} className={discoveryChipClass}>
               {city.title}
             </Link>
           ))}
         </div>
       </div>
-      <div className="flex flex-col gap-3">
-        <h2 className="text-lg font-semibold">Мероприятия по отраслям</h2>
-        <div className="flex flex-wrap gap-2">
+      <div className="flex flex-col gap-4">
+        <h2 className={discoverySectionTitleClass}>Мероприятия по отраслям</h2>
+        <div className="flex flex-wrap gap-3.5">
           {topIndustries.map((industry) => (
-            <Link key={industry.id} href={industry.href as Route} className={chipClassName}>
+            <Link key={industry.id} href={industry.href as Route} className={discoveryChipClass}>
               {industry.title}
             </Link>
           ))}

@@ -13,6 +13,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from '@vercel/analytics/next';
 import NextTopLoader from "nextjs-toploader";
 import CookieBanner from "@/components/cookie-banner";
+import { Toaster } from "@/components/ui/toaster";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { buildOrganizationJsonLd, buildWebSiteJsonLd } from "@/lib/seo/jsonld-builders";
 import { SITE_URL } from "@/lib/seo/constants";
@@ -44,16 +45,16 @@ export default async function RootLayout({
         className={`${font.className} antialiased`}
       >
         <JsonLd data={[buildWebSiteJsonLd(), buildOrganizationJsonLd()]} />
-        <NextTopLoader color="#4a4de3" shadow={false} crawlSpeed={5} />
+        <NextTopLoader color="#4545EF" shadow={false} crawlSpeed={5} />
 
-        <div className="flex flex-col gap-8">
+        <div className="flex w-full min-w-0 flex-col overflow-x-clip bg-[#F6F8FC] text-[#090D2B]">
           <Header />
 
-          <Container>
+          <Container className="pt-8">
             {children}
           </Container>
 
-          <Container>
+          <Container width="subscribe" className="mt-[31px] mb-10">
             <Subscribe industries={industries?.data ?? []} />
           </Container>
 
@@ -68,6 +69,7 @@ export default async function RootLayout({
 
         <SpeedInsights />
         <CookieBanner />
+        <Toaster />
         <Analytics />
       </body>
     </html>

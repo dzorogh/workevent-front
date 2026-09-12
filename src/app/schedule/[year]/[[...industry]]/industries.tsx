@@ -1,10 +1,11 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
 import { Route } from "next";
 import Link from "next/link";
 import { IndustryResource } from "@/lib/types";
 import { useEffect } from "react";
+import { cn } from "@/lib/utils";
+import { discoveryChipActiveClass, discoveryChipClass } from "@/lib/discovery-ui";
 
 export default function Industries({ industries, industrySlug, homeRoute }: { industries: IndustryResource[], industrySlug: string | undefined, homeRoute: string }) {
 
@@ -19,7 +20,6 @@ export default function Industries({ industries, industrySlug, homeRoute }: { in
                     const scrollPosition = element.offsetLeft - (parentWidth / 2) + (elementWidth / 2);
                     parent.scrollTo({
                         left: scrollPosition,
-                        // behavior: "smooth"
                     });
                 }
             }
@@ -27,29 +27,23 @@ export default function Industries({ industries, industrySlug, homeRoute }: { in
     }, [industrySlug]);
 
     return (
-        <div className="flex gap-2 items-center md:flex-wrap overflow-x-auto">
-            <Button
-                variant={industrySlug === undefined ? "primary" : "muted"}
-                size="sm"
-                asChild
+        <div className="flex gap-2.5 items-center min-[768px]:flex-wrap overflow-x-auto">
+            <Link
+                href={homeRoute as Route}
+                className={cn(industrySlug === undefined ? discoveryChipActiveClass : discoveryChipClass, "shrink-0 whitespace-nowrap")}
             >
-                <Link href={homeRoute as Route}>
-                    Все
-                </Link>
-            </Button>
+                Все
+            </Link>
 
-            {industries.map((industry: any) => (
-                <Button
+            {industries.map((industry) => (
+                <Link
                     id={industry.slug}
-                    variant={industry.slug === industrySlug ? "primary" : "muted"}
-                    size="sm"
                     key={industry.id}
-                    asChild
+                    href={`${homeRoute}/${industry.slug}` as Route}
+                    className={cn(industry.slug === industrySlug ? discoveryChipActiveClass : discoveryChipClass, "shrink-0 whitespace-nowrap")}
                 >
-                    <Link href={`${homeRoute}/${industry.slug}` as Route}>
-                        {industry.title}
-                    </Link>
-                </Button>
+                    {industry.title}
+                </Link>
             ))}
         </div>
     )

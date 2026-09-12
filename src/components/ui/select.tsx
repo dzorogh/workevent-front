@@ -4,30 +4,17 @@ import * as React from "react"
 import * as SelectPrimitive from "@radix-ui/react-select"
 import { Check, ChevronDown, ChevronUp } from "lucide-react"
 import { IconCaretDownFilled } from "@tabler/icons-react"
-import { Overlay } from "@/components/ui/overlay"
-import { useEffect } from "react"
 import { cn } from "@/lib/utils"
 
 const Select = ({ children, value, onValueChange, open, onOpenChange }: { children: React.ReactNode, value?: string, onValueChange?: (value: string) => void, open?: boolean, onOpenChange?: (open: boolean) => void }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  useEffect(() => {
-    setIsOpen(open || false)
-  }, [open])
-
   return (
     <SelectPrimitive.Root
-      onOpenChange={(open) => {
-        console.log('open', open)
-        setIsOpen(open)
-        onOpenChange?.(open)
-      }}
+      onOpenChange={onOpenChange}
       value={value}
       onValueChange={onValueChange}
       open={open}
     >
       {children}
-      {isOpen && <Overlay />}
     </SelectPrimitive.Root>
   );
 };

@@ -12,12 +12,11 @@ import ClearableSelect from '@/components/clearable-select';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { DateRange } from "react-day-picker"
 import { useState } from 'react';
-import { Overlay } from "@/components/ui/overlay"
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
-import { IconLoader } from '@tabler/icons-react';
+import { IconCalendar, IconCaretDownFilled, IconLoader, IconMapPin, IconSearch } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation'
-import { CityResource, IndustryResource, EventIndexParametersQuery } from "@/lib/types";
+import { CityResource, EventIndexParametersQuery } from "@/lib/types";
 
 type SearchParams = NonNullable<EventIndexParametersQuery>;
 
@@ -33,17 +32,18 @@ const LazyCalendar = dynamic(() => import('@/components/ui/calendar').then(mod =
 const FormSchema = z.object({
   query: z.string().optional(),
   dateRange: z.string().optional(),
-  industry: z.string().optional(),
   city: z.string().optional(),
 })
 
 interface SearchProps {
-  industries: IndustryResource[];
   cities: CityResource[];
   initialParams?: SearchParams;
 }
 
-export default function Search({ industries, cities, initialParams = {} }: SearchProps) {
+const fieldTriggerClass =
+  "border-0 bg-transparent shadow-none ring-0 h-11 px-0 text-[15px] text-[#657087] focus:ring-0";
+
+export default function Search({ cities, initialParams = {} }: SearchProps) {
   const router = useRouter()
 
   const [date, setDate] = useState<DateRange | undefined>(() => {
@@ -57,7 +57,6 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
     defaultValues: {
       query: initialParams.query as string || '',
       dateRange: '',
-      industry: initialParams.industry_id?.toString() || '',
       city: initialParams.city_id?.toString() || '',
     }
   });
@@ -68,7 +67,6 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
     if (data.query) searchParams.query = data.query;
     if (date?.from) searchParams.date_from = String(date.from.getTime() / 1000);
     if (date?.to) searchParams.date_to = String(date.to.getTime() / 1000);
-    if (data.industry) searchParams.industry_id = data.industry;
     if (data.city) searchParams.city_id = data.city;
 
     const params = new URLSearchParams(searchParams);
@@ -76,50 +74,69 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
   }
 
   const [open, setOpen] = useState(false)
+  const dateLabel = date?.from || date?.to
+    ? [
+      date?.from?.toLocaleDateString('ru', { day: 'numeric', month: 'short', formatMatcher: 'best fit' }) ?? null,
+      date?.to?.toLocaleDateString('ru', { day: 'numeric', month: 'short', formatMatcher: 'best fit' }) ?? null
+    ].filter(Boolean).join(' - ')
+    : '';
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="">
-        <div className="flex flex-wrap overflow-x-auto gap-4 rounded-lg bg-linear-to-r from-primary to-primary-dark md:py-4 py-2 md:px-4 px-2 text-primary-foreground font-normal items-end">
-          <div className="flex flex-col grow gap-2 w-full md:w-48">
-            <div className="md:text-md text-sm">Поиск события</div>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="flex flex-col min-[1024px]:flex-row min-[1024px]:items-center gap-3 min-[1024px]:gap-0 rounded-[16px] min-[1024px]:rounded-[10px] border border-[#D4DAE8] bg-white min-[1024px]:h-[66px] px-3 py-2 min-[1024px]:py-0 min-[1024px]:pl-5 min-[1024px]:pr-2.5">
+          <div className="flex min-w-0 grow items-center gap-2 min-[1024px]:flex-1">
+            <IconSearch className="size-5 text-[#657087] shrink-0" stroke={1.75} />
             <FormField
               control={form.control}
               name="query"
               render={({ field }) => (
-                <Input {...field} placeholder="Найти..." />
+                <Input
+                  {...field}
+                  placeholder="Название или тема"
+                  className="border-0 bg-transparent shadow-none focus-visible:ring-0 h-11 px-0 text-[15px] placeholder:text-[#657087]"
+                />
               )}
             />
           </div>
-          <div className="flex flex-col gap-2 w-full md:w-48">
-            <div className="md:text-md text-sm">Даты проведения</div>
+          <div className="hidden min-[1024px]:block w-px h-8 bg-[#D4DAE8] shrink-0 mx-2" />
+          <div className="min-w-0 min-[1024px]:w-[220px] min-[1200px]:w-[260px]">
+            <FormField
+              control={form.control}
+              name="city"
+              render={({ field }) => (
+                <div className="flex items-center gap-2">
+                  <IconMapPin className="size-5 text-[#657087] shrink-0" stroke={1.75} />
+                  <ClearableSelect
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    placeholder="Все города"
+                    triggerClassName={fieldTriggerClass}
+                    options={cities.map(city => ({
+                      value: city.id.toString(),
+                      label: city.title
+                    }))}
+                  />
+                </div>
+              )}
+            />
+          </div>
+          <div className="hidden min-[1024px]:block w-px h-8 bg-[#D4DAE8] shrink-0 mx-2" />
+          <div className="min-w-0 min-[1024px]:w-[180px] min-[1200px]:w-[220px]">
             <FormField
               control={form.control}
               name="dateRange"
               render={({ field }) => (
                 <Popover open={open} onOpenChange={setOpen}>
                   <PopoverTrigger asChild>
-                    <div className="relative cursor-pointer">
-                      {!(date?.from || date?.to) && (
-                        <div className="flex items-center gap-2 absolute top-0 left-0 text-muted-foreground h-full w-full justify-between px-4 select-none text-sm">
-                          <div className="grow">Начало</div>
-                          <div className="w-px h-5 bg-border"></div>
-                          <div className="grow">Конец</div>
-                        </div>
-                      )}
-                      <Input
-                        {...field}
-                        value={
-                          date?.from || date?.to
-                            ? [
-                              date?.from?.toLocaleDateString('ru', { day: 'numeric', month: 'short', formatMatcher: 'best fit' }) ?? null,
-                              date?.to?.toLocaleDateString('ru', { day: 'numeric', month: 'short', formatMatcher: 'best fit' }) ?? null
-                            ].filter(Boolean).join(' - ')
-                            : ''  // Provide empty string as default value
-                        }
-                        readOnly  // Make it read-only since it's controlled by the calendar
-                      />
-                    </div>
+                    <button type="button" className="flex w-full items-center gap-2 h-11 text-left">
+                      <IconCalendar className="size-5 text-[#657087] shrink-0" stroke={1.75} />
+                      <span className={`text-[15px] truncate ${dateLabel ? 'text-[#090D2B]' : 'text-[#657087]'}`}>
+                        {dateLabel || 'Даты'}
+                      </span>
+                      <IconCaretDownFilled className="ml-auto size-3.5 text-[#657087]" />
+                      <input type="hidden" {...field} value={dateLabel} readOnly />
+                    </button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
                     <LazyCalendar
@@ -129,55 +146,19 @@ export default function Search({ industries, cities, initialParams = {} }: Searc
                       onSelect={setDate}
                       numberOfMonths={2}
                     />
-                    <Overlay onClick={() => setOpen(false)} />
                   </PopoverContent>
                 </Popover>
               )}
             />
-
           </div>
-          <div className="flex flex-col gap-2 w-full md:w-48">
-            <div className="md:text-md text-sm">Отрасль</div>
-            <FormField
-              control={form.control}
-              name="industry"
-              render={({ field }) => (
-                <ClearableSelect
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  placeholder="Выберите..."
-                  options={industries.map(industry => ({
-                    value: industry.id.toString(),
-                    label: industry.title
-                  }))}
-                />
-              )}
-            />
-          </div>
-          <div className="flex flex-col gap-2 w-full md:w-48">
-            <div className="md:text-md text-sm">Город</div>
-            <FormField
-              control={form.control}
-              name="city"
-              render={({ field }) => (
-                <ClearableSelect
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  placeholder="Выберите..."
-                  options={cities.map(city => ({
-                    value: city.id.toString(),
-                    label: city.title
-                  }))}
-                />
-              )}
-            />
-          </div>
-          <div className="flex flex-col gap-2 w-full md:w-32">
-            <Button type="submit">Поиск</Button>
-          </div>
+          <Button
+            type="submit"
+            className="rounded-full h-11 w-full shrink-0 bg-[#4545EF] text-white hover:bg-[#3838d4] bg-none from-transparent to-transparent shadow-none ring-0 min-[1024px]:h-[44px] min-[1024px]:w-[160px] min-[1200px]:w-[200px]"
+          >
+            Найти
+          </Button>
         </div>
       </form>
     </Form>
-
   );
 }

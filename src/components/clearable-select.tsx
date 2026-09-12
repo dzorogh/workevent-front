@@ -8,9 +8,10 @@ interface ClearableSelectProps {
     onValueChange?: (value: string) => void
     placeholder: string
     options: { value: string; label: string }[]
+    triggerClassName?: string
   }
   
-  export default function ClearableSelect({ value, onValueChange, placeholder, options }: ClearableSelectProps) {
+  export default function ClearableSelect({ value, onValueChange, placeholder, options, triggerClassName }: ClearableSelectProps) {
     const [open, setOpen] = useState(false)
   
     return (
@@ -21,7 +22,7 @@ interface ClearableSelectProps {
         onOpenChange={setOpen}
       >
         <FormControl>
-          <SelectTrigger className={value ? '' : 'text-muted-foreground'}>
+          <SelectTrigger className={`${value ? '' : 'text-muted-foreground'} ${triggerClassName ?? ''}`}>
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
         </FormControl>

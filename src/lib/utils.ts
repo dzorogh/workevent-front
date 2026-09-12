@@ -4,7 +4,7 @@ import { createEventSlug as createEventSlugGlobal } from "./globalUtils.js"
 import { Route } from "next"
 import * as crypto from 'crypto';
 import { EventResource } from "./types.js";
-import {date} from "zod";
+import { date } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -106,13 +106,13 @@ export function formatEventDates(event: EventResource) {
   const dateEnd = event.end_date ? new Date(event.end_date) : dateStart;
 
   const months = [
-      'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
-      'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+    'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+    'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
   ];
 
   const shortMonths = [
-      'янв', 'фев', 'мар', 'апр', 'мая', 'июня',
-      'июл', 'авг', 'сен', 'окт', 'нояб', 'дек'
+    'янв', 'фев', 'мар', 'апр', 'мая', 'июня',
+    'июл', 'авг', 'сен', 'окт', 'нояб', 'дек'
   ];
 
   if (dateStart.getFullYear() === dateEnd.getFullYear() && dateStart.getMonth() === dateEnd.getMonth() && dateStart.getDate() === dateEnd.getDate()) {
@@ -120,9 +120,100 @@ export function formatEventDates(event: EventResource) {
   }
 
   if (dateStart.getMonth() === dateEnd.getMonth() &&
-      dateStart.getFullYear() === dateEnd.getFullYear()) {
-      return `${dateStart.getDate()}-${dateEnd.getDate()} ${months[dateStart.getMonth()]} ${dateStart.getFullYear()}`;
+    dateStart.getFullYear() === dateEnd.getFullYear()) {
+    return `${dateStart.getDate()}-${dateEnd.getDate()} ${months[dateStart.getMonth()]} ${dateStart.getFullYear()}`;
   }
 
   return `${dateStart.getDate()} ${shortMonths[dateStart.getMonth()]} - ${dateEnd.getDate()} ${shortMonths[dateEnd.getMonth()]} ${dateStart.getFullYear()}`;
+}
+
+export function formatEventDatesShort(event: EventResource) {
+  const dateStart = new Date(event.start_date);
+  const dateEnd = event.end_date ? new Date(event.end_date) : dateStart;
+  const months = [
+    'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+    'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря',
+  ];
+  const shortMonths = [
+    'янв', 'фев', 'мар', 'апр', 'мая', 'июня',
+    'июл', 'авг', 'сен', 'окт', 'нояб', 'дек',
+  ];
+
+  if (
+    dateStart.getFullYear() === dateEnd.getFullYear()
+    && dateStart.getMonth() === dateEnd.getMonth()
+    && dateStart.getDate() === dateEnd.getDate()
+  ) {
+    return `${dateStart.getDate()} ${months[dateStart.getMonth()]}`;
+  }
+
+  if (
+    dateStart.getMonth() === dateEnd.getMonth()
+    && dateStart.getFullYear() === dateEnd.getFullYear()
+  ) {
+    return `${dateStart.getDate()}–${dateEnd.getDate()} ${months[dateStart.getMonth()]}`;
+  }
+
+  return `${dateStart.getDate()} ${shortMonths[dateStart.getMonth()]} – ${dateEnd.getDate()} ${shortMonths[dateEnd.getMonth()]}`;
+}
+
+export function formatEventDateBadge(event: EventResource): { day: string; month: string } {
+  const dateStart = new Date(event.start_date);
+  const dateEnd = event.end_date ? new Date(event.end_date) : dateStart;
+  const months = [
+    'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+    'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря',
+  ];
+  const shortMonths = [
+    'янв', 'фев', 'мар', 'апр', 'мая', 'июня',
+    'июл', 'авг', 'сен', 'окт', 'нояб', 'дек',
+  ];
+
+  if (
+    dateStart.getFullYear() === dateEnd.getFullYear()
+    && dateStart.getMonth() === dateEnd.getMonth()
+    && dateStart.getDate() === dateEnd.getDate()
+  ) {
+    return { day: String(dateStart.getDate()), month: months[dateStart.getMonth()] };
+  }
+
+  if (
+    dateStart.getMonth() === dateEnd.getMonth()
+    && dateStart.getFullYear() === dateEnd.getFullYear()
+  ) {
+    return {
+      day: `${dateStart.getDate()}–${dateEnd.getDate()}`,
+      month: months[dateStart.getMonth()],
+    };
+  }
+
+  return {
+    day: `${dateStart.getDate()}–${dateEnd.getDate()}`,
+    month: `${shortMonths[dateStart.getMonth()]}–${shortMonths[dateEnd.getMonth()]}`,
+  };
+}
+
+export function splitEventTitle(title: string): { heading: string; subtitle?: string } {
+  const dashed = title.split(/\s+[—–]\s+/);
+  if (dashed.length === 2 && dashed[0] && dashed[1]) {
+    return { heading: dashed[0], subtitle: dashed[1] };
+  }
+
+  const quoted = title.match(/[«"]([^»"]+)[»"]/);
+  if (quoted?.[1]) {
+    return {
+      heading: quoted[1],
+      subtitle: title.replace(quoted[0], '').replace(/[\s,;:.—–-]+$/g, '').trim() || undefined,
+    };
+  }
+
+  const acronym = title.match(/\b([A-Za-z][A-Za-z0-9&./-]*(?:\s+[A-Za-z0-9&./-]+)*)\s+(\d{4})\s*$/);
+  if (acronym?.index != null) {
+    return {
+      heading: `${acronym[1]} ${acronym[2]}`,
+      subtitle: title.slice(0, acronym.index).replace(/[\s,;:.—–-]+$/g, '').trim() || undefined,
+    };
+  }
+
+  return { heading: title };
 }

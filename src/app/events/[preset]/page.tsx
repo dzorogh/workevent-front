@@ -201,7 +201,6 @@ export default async function PresetPage({ params }: Props) {
             </Breadcrumb>
 
             <Search
-                industries={industries?.data ?? []}
                 cities={cities?.data ?? []}
                 initialParams={presetParams}
             />

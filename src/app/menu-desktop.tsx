@@ -1,32 +1,30 @@
-import AppLink from "@/components/ui/app-link";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Route } from "next";
 import { getSeoYear } from "@/lib/seo/constants";
+import { cn } from "@/lib/utils";
 
 export default function MenuDesktop({ className }: { className?: string }) {
   const schedulePath = `/schedule/${getSeoYear()}` as Route;
 
   return (
-    <nav className={className}>
-      <ul className={`flex gap-x-6 gap-y-2`}>
+    <nav className={cn(className)}>
+      <ul className="flex items-center gap-8 text-[15px] text-[#090D2B]">
         <li>
-          <Button variant="ghost" asChild>
-            <Link href={{ pathname: "/events" }}>Мероприятия</Link>
-          </Button>
+          <Link href={{ pathname: "/events" }} className="hover:text-[#4545EF]">
+            Мероприятия
+          </Link>
         </li>
         <li>
-          <Button variant="ghost" asChild>
-            <Link href={schedulePath}>Календарь</Link>
-          </Button>
+          <Link href={schedulePath} className="hover:text-[#4545EF]">
+            Календарь
+          </Link>
         </li>
         <li>
-          <Button variant="ghost" asChild>
-            <Link href={{ pathname: "/blog" }}>Блог</Link>
-          </Button>
+          <Link href={{ pathname: "/blog" }} className="hover:text-[#4545EF]">
+            Журнал
+          </Link>
         </li>
       </ul>
     </nav>
   );
 }
-

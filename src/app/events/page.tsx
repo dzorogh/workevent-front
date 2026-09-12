@@ -5,7 +5,6 @@ import Search from "@/components/search";
 import { EventIndexParametersQuery } from "@/lib/types";
 import { Metadata } from "next";
 type SearchParams = NonNullable<EventIndexParametersQuery>;
-import H1 from "@/components/ui/h1";
 import InternalLinks from "@/components/seo/internal-links";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { buildItemListJsonLd } from "@/lib/seo/jsonld-builders";
@@ -19,6 +18,7 @@ export const revalidate = 300;
 
 async function getEvents(searchParams: SearchParams) {
     return await Api.GET('/v1/events', {
+        cache: 'no-store',
         params: {
             query: {
                 query: searchParams.query,
@@ -94,12 +94,18 @@ export default async function Events({
                 })}
             />
 
-            <Search industries={industries} cities={cities} initialParams={initialParams} />
-
-            <H1 className="mt-0">Поиск мероприятий</H1>
+            <Search cities={cities} initialParams={initialParams} />
 
             <Suspense>
-                <EventsList initialEvents={initialEvents} initialMeta={initialMeta} params={initialParams} perPage={8} />
+                <EventsList
+                    initialEvents={initialEvents}
+                    initialMeta={initialMeta}
+                    params={initialParams}
+                    perPage={8}
+                    showViewControls
+                    heading="Поиск мероприятий"
+                    headingAs="h1"
+                />
             </Suspense>
 
             <InternalLinks />
