@@ -17,6 +17,7 @@ import { getScheduleYears, SITE_URL } from "@/lib/seo/constants";
 import { resolvePageFaq } from "@/lib/seo/faq";
 import FaqSection from "@/components/seo/faq";
 import InternalLinks from "@/components/seo/internal-links";
+import { EventResource } from "@/lib/types";
 
 type Props = {
     params: Promise<{
@@ -127,13 +128,23 @@ export default async function SchedulePage({ params }: Props) {
         industry_id: industry?.id ?? undefined,
     }
 
-    const events = await Api.GET('/v1/events', {
-        params: {
-            query: {
-                ...requestParams,
+    const scheduleEvents: EventResource[] = [];
+    let eventsPage = 1;
+    let lastEventsPage = 1;
+
+    do {
+        const events = await Api.GET('/v1/events', {
+            params: {
+                query: {
+                    ...requestParams,
+                    page: eventsPage,
+                }
             }
-        }
-    });
+        });
+        scheduleEvents.push(...(events.data?.data ?? []));
+        lastEventsPage = events.data?.meta?.last_page ?? 1;
+        eventsPage += 1;
+    } while (eventsPage <= lastEventsPage);
 
     const code = String(
         await compile(page?.content ?? '', { outputFormat: 'function-body' })
@@ -147,7 +158,6 @@ export default async function SchedulePage({ params }: Props) {
     const title = resolveScheduleHeading(selectedYear, industry?.title, page?.metadata?.h1 ?? page?.title);
     const canonicalPath = `/schedule/${selectedYear}${industrySlug ? `/${industrySlug}` : ''}`;
     const pageUrl = `${SITE_URL}${canonicalPath}`;
-    const scheduleEvents = events.data?.data ?? [];
     const faq = resolvePageFaq(page?.content, [
         {
             question: 'Чем календарь отличается от каталога отрасли?',
