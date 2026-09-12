@@ -126,7 +126,7 @@ export default async function SchedulePage({ params }: Props) {
     const fromMonth = selectedYearNumber === now.getFullYear() ? now.getMonth() : 0;
     const industries = (await Api.GET('/v1/industries')).data?.data ?? [];
     const requestParams = {
-        date_from: new Date(selectedYearNumber, fromMonth, 1, 0, 0, 0, 0).getTime() / 1000,
+        date_from: new Date(selectedYearNumber, 0, 1, 0, 0, 0, 0).getTime() / 1000,
         date_to: new Date(selectedYearNumber, 11, 31, 23, 59, 59).getTime() / 1000,
         per_page: 100,
         industry_id: industry?.id ?? undefined,

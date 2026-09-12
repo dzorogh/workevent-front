@@ -6,11 +6,10 @@ export function getSeoYear(): number {
   return month < 10 ? new Date().getFullYear() : new Date().getFullYear() + 1;
 }
 
-export function getScheduleYears(startYear?: number): number[] {
-  const from = startYear ?? new Date().getFullYear();
+export function getScheduleYears(startYear = 2025): number[] {
   const endYear = getSeoYear() + 2;
-  if (endYear < from) {
-    return [from];
+  if (endYear < startYear) {
+    return [startYear];
   }
-  return Array.from({ length: endYear - from + 1 }, (_, i) => from + i);
+  return Array.from({ length: endYear - startYear + 1 }, (_, i) => startYear + i);
 }
