@@ -48,7 +48,7 @@ export default function Industries({ industries, industrySlug, homeRoute }: { in
 
             {visible.map((industry) => (
                 <Link
-                    id={industry.slug}
+                    id={industry.slug ?? undefined}
                     key={industry.id}
                     href={`${homeRoute}/${industry.slug}` as Route}
                     className={cn(industry.slug === industrySlug ? discoveryChipActiveClass : discoveryChipClass, "shrink-0 whitespace-nowrap")}
