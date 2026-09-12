@@ -2,26 +2,18 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import Lightbox from "yet-another-react-lightbox";
-import "yet-another-react-lightbox/styles.css";
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
 import { EventResource } from '@/lib/types';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 
-interface GallerySectionProps { 
+interface GallerySectionProps {
     event: EventResource;
 }
 
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from "@/components/ui/carousel"
-
 const NextJsImageElement = ({ slide }: { slide: { src: string; alt?: string } }) => {
-
     return (
-        <div className="relative w-full h-full">
+        <div className="relative h-full w-full">
             <Image
                 fill
                 alt={slide.alt || ''}
@@ -30,7 +22,7 @@ const NextJsImageElement = ({ slide }: { slide: { src: string; alt?: string } })
                 draggable={false}
                 quality={80}
                 className="object-contain"
-                sizes={`80vw`}
+                sizes="80vw"
             />
         </div>
     );
@@ -40,42 +32,37 @@ export default function GallerySection({ event }: GallerySectionProps) {
     const [open, setOpen] = useState(false);
     const [imageIndex, setImageIndex] = useState(0);
 
-    const slides = [
-        {
-            src: event.cover,
-            alt: `${event.title} обложка мероприятия`,
-            className: "md:hidden"
-        }
-    ]
+    const slides = event.gallery.map((image, index) => ({
+        src: image,
+        alt: `${event.title} фото с мероприятия ${index + 1}`,
+    }));
 
-    event.gallery.forEach((image, index) => {
-        slides.push({
-            src: image,
-            alt: `${event.title} фото с мероприятия ${index + 1}`,
-            className: ""
-        });
-    });
+    if (slides.length === 0) {
+        return null;
+    }
 
     return (
         <section>
             <Carousel>
-                <CarouselContent className="w">
+                <CarouselContent>
                     {slides.map((slide, index) => (
-                        <CarouselItem key={index} className={`${slide.className} md:basis-[22%] basis-[90%]`}>
-                            <a key={index} href={slide.src} target="_blank" onClick={(e) => {
-                                e.preventDefault();
-                                setImageIndex(index);
-                                setOpen(true);
-                            }}>
+                        <CarouselItem key={slide.src} className="basis-[42%] min-[768px]:basis-[28%]">
+                            <button
+                                type="button"
+                                className="block w-full overflow-hidden rounded-[12px]"
+                                onClick={() => {
+                                    setImageIndex(index);
+                                    setOpen(true);
+                                }}
+                            >
                                 <Image
                                     src={slide.src}
                                     alt={slide.alt}
                                     width={400}
-                                    height={400}
-                                    className="rounded-sm aspect-video bg-white object-contain border border-border"
+                                    height={225}
+                                    className="aspect-video w-full bg-white object-cover"
                                 />
-                            </a>
-
+                            </button>
                         </CarouselItem>
                     ))}
                 </CarouselContent>

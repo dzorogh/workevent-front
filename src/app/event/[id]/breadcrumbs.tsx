@@ -1,6 +1,5 @@
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { EventResource } from "@/lib/types";
-import { cn } from "@/lib/utils";
 
 interface BreadcrumbsProps {
     event: EventResource
@@ -9,8 +8,8 @@ interface BreadcrumbsProps {
 
 export default function Breadcrumbs({ event, className }: BreadcrumbsProps) {
     return (
-        <Breadcrumb>
-            <BreadcrumbList>
+        <Breadcrumb className={className}>
+            <BreadcrumbList className="text-[#657087]">
                 <BreadcrumbItem>
                     <BreadcrumbLink href="/">Главная</BreadcrumbLink>
                 </BreadcrumbItem>

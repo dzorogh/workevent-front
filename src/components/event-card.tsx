@@ -1,43 +1,17 @@
 'use client';
 
 import EventCoverImage from '@/components/event-cover-image';
-import { IconBookmark, IconBookmarkFilled, IconMapPin } from '@tabler/icons-react';
+import { IconMapPin } from '@tabler/icons-react';
 import Link from 'next/link';
 import { EventResource } from '@/lib/types';
 import { Route } from 'next';
 import { createSlugWithId, formatEventDateBadge, formatEventDatesShort, splitEventTitle } from '@/lib/utils';
-import { useBookmarks } from '@/hooks/use-bookmarks';
-import { useToast } from '@/hooks/use-toast';
+import BookmarkButton from '@/components/bookmark-button';
 
 interface EventCardProps {
     event: EventResource;
     withIndustry?: boolean;
     layout?: 'grid' | 'list';
-}
-
-function BookmarkButton({ eventId }: { eventId: number }) {
-    const { isBookmarked, toggle } = useBookmarks();
-    const { toast } = useToast();
-    const bookmarked = isBookmarked(eventId);
-
-    return (
-        <button
-            type="button"
-            className="inline-flex size-8 items-center justify-center text-[#657087] hover:text-[#4545EF] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4545EF]"
-            aria-label={bookmarked ? 'Убрать из закладок' : 'Добавить в закладки'}
-            aria-pressed={bookmarked}
-            onClick={() => {
-                if (!toggle(eventId)) {
-                    toast({
-                        title: 'Не удалось сохранить на этом устройстве',
-                        variant: 'destructive',
-                    });
-                }
-            }}
-        >
-            {bookmarked ? <IconBookmarkFilled className="size-5 text-[#4545EF]" /> : <IconBookmark className="size-5" stroke={1.75} />}
-        </button>
-    );
 }
 
 export default function EventCard({ event, withIndustry = true, layout = 'grid' }: EventCardProps) {
@@ -69,7 +43,7 @@ export default function EventCard({ event, withIndustry = true, layout = 'grid' 
                         </div>
                     </div>
                 </Link>
-                <BookmarkButton eventId={event.id} />
+                <BookmarkButton eventId={event.id} className="size-8" />
             </div>
         );
     }
@@ -105,7 +79,7 @@ export default function EventCard({ event, withIndustry = true, layout = 'grid' 
                 {withIndustry && industryTitle ? (
                     <span className="text-[14px] text-[#4545EF]">{industryTitle}</span>
                 ) : <span />}
-                <BookmarkButton eventId={event.id} />
+                <BookmarkButton eventId={event.id} className="size-8" />
             </div>
         </div>
     );

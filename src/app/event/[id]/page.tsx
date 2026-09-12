@@ -1,13 +1,13 @@
+import type { ComponentProps } from "react";
 import { Api } from "@/lib/api";
 import { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { compile, run } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
-import { createSlugWithId, formatEventDates, formatPrice, getIdFromSlug, truncateText } from "@/lib/utils";
+import { createSlugWithId, encodeUrl, formatEventDates, formatPrice, getIdFromSlug, truncateText } from "@/lib/utils";
 import EventCardGrid from "@/components/event-card-grid";
 import EventCard from "@/components/event-card";
 import { Route } from "next";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import removeMarkdown from "remove-markdown";
 import LocationMapLoader from "./location-map-loader";
@@ -21,7 +21,6 @@ import Tags from "./tags";
 import Contacts from "./contacts";
 import CalendarComponent from "./calendar";
 import Description from "../../../components/description";
-import { Separator } from "@/components/ui/separator";
 import InternalLinks from "@/components/seo/internal-links";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { buildBreadcrumbJsonLd, buildEventJsonLd, buildFaqPageJsonLd } from "@/lib/seo/jsonld-builders";
@@ -29,6 +28,9 @@ import { buildMetadata } from "@/lib/seo/metadata";
 import { SITE_URL } from "@/lib/seo/constants";
 import { resolvePageFaq, type FaqItem } from "@/lib/seo/faq";
 import FaqSection from "@/components/seo/faq";
+import ApplyBar from "./apply-bar";
+import GallerySection from "./gallery-section";
+import { discoveryChipClass } from "@/lib/discovery-ui";
 
 const getLocation = async (location: string): Promise<Location | null> => {
     const query = location.trim()
@@ -37,10 +39,11 @@ const getLocation = async (location: string): Promise<Location | null> => {
         return null
     }
 
-    const url = new URL(`https://nominatim.openstreetmap.org/search`)
-    url.searchParams.set('q', query)
-    url.searchParams.set('limit', '1')
-    url.searchParams.set('format', 'json')
+        const url = new URL(`https://nominatim.openstreetmap.org/search`)
+        url.searchParams.set('q', query)
+        url.searchParams.set('limit', '1')
+        url.searchParams.set('format', 'json')
+        url.searchParams.set('countrycodes', 'ru')
 
     try {
         const response = await fetch(url.toString(), {
@@ -201,15 +204,34 @@ function buildEventFaq(event: EventResource): FaqItem[] {
     return items;
 }
 
-const prepareAddress = (address: string, city: string) => {
-    const addressString = address || city
-    return addressString.replace(/[^a-zA-Z0-9а-яА-Я\s]/g, '').replace(' д ', ' ')
+const prepareGeocodeQuery = (
+    venue: EventResource['venue'] | undefined,
+    city: string,
+) => {
+    const parts: string[] = [];
+
+    if (venue?.address?.trim()) {
+        parts.push(venue.address.trim());
+    } else if (venue?.title?.trim()) {
+        parts.push(venue.title.trim());
+    }
+
+    const cityTitle = city.trim();
+    if (cityTitle && !parts.some((part) => part.toLowerCase().includes(cityTitle.toLowerCase()))) {
+        parts.push(cityTitle);
+    }
+
+    return parts
+        .join(', ')
+        .replace(/[«»„“”"]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
 }
 
 export default async function EventPage({ params }: Props) {
     const { event, similarEvents, presets } = await getEventData(params);
 
-    const preparedAddress = prepareAddress(event.venue?.address ?? '', event.city?.title ?? '');
+    const preparedAddress = prepareGeocodeQuery(event.venue, event.city?.title ?? '');
     const location = await getLocation(preparedAddress);
 
     const code = String(
@@ -226,7 +248,7 @@ export default async function EventPage({ params }: Props) {
     const faqJsonLd = buildFaqPageJsonLd(faq.items);
 
     return (
-        <div className="flex flex-col md:gap-16 gap-8">
+        <div className="flex flex-col gap-10 pb-24 min-[768px]:gap-16 min-[768px]:pb-0">
             <JsonLd
                 data={[
                     buildEventJsonLd(event),
@@ -241,97 +263,99 @@ export default async function EventPage({ params }: Props) {
 
             <Breadcrumbs event={event} />
 
-            <div className="flex flex-col md:flex-row md:gap-8 gap-4">
-                <Images event={event} className="md:basis-1/2" />
-                <Info event={event} className="md:basis-1/2" />
+            <div className="flex flex-col items-start gap-8 min-[1024px]:flex-row min-[1024px]:gap-10">
+                <div className="flex min-w-0 w-full flex-1 flex-col gap-6">
+                    <Images event={event} />
+                    <Info event={event} hasMap={Boolean(location)} />
+                    <GallerySection event={event} />
+                </div>
+                <div
+                    id="apply"
+                    className="w-full scroll-mt-24 min-[1024px]:sticky min-[1024px]:top-24 min-[1024px]:w-[380px] min-[1024px]:shrink-0"
+                >
+                    <Form
+                        organizerHref={
+                            event.website
+                                ? encodeUrl(event.website, { utm_campaign: 'apply' })
+                                : undefined
+                        }
+                    />
+                </div>
             </div>
 
-            <Separator />
-
-            <div className="flex flex-col md:flex-row gap-8">
-                <div className="flex flex-col gap-6 grow">
+            <div className="flex flex-col gap-8 min-[1024px]:flex-row">
+                <div className="flex min-w-0 grow flex-col gap-5">
                     <SectionTitle>О мероприятии</SectionTitle>
                     <Description>
-                        <DescriptionMDX />
+                        <DescriptionMDX
+                            components={{
+                                h1: (props: ComponentProps<'h2'>) => <h2 {...props} />,
+                                h2: (props: ComponentProps<'h3'>) => <h3 {...props} />,
+                                h3: (props: ComponentProps<'h4'>) => <h4 {...props} />,
+                            }}
+                        />
                     </Description>
                 </div>
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-5 min-[1024px]:w-[380px] min-[1024px]:shrink-0">
                     <SectionTitle>Дата мероприятия</SectionTitle>
                     <CalendarComponent event={event} />
                 </div>
             </div>
 
             {event.tags && event.tags.length > 0 && (
-                <>
-                    <Separator />
-                    <div className="flex flex-col gap-6">
-                        <SectionTitle>Темы мероприятия</SectionTitle>
-                        <Tags tags={event.tags} />
-                    </div>
-                </>
+                <div className="flex flex-col gap-5">
+                    <SectionTitle>Темы мероприятия</SectionTitle>
+                    <Tags tags={event.tags} />
+                </div>
             )}
 
             {(event.website || event.email || event.phone) && (
-                <>
-                    <Separator />
-                    <div className="flex flex-col gap-6">
-                        <SectionTitle>Контакты организатора</SectionTitle>
-                        <Contacts event={event} />
-                    </div>
-                </>
+                <div className="flex flex-col gap-5">
+                    <SectionTitle>Контакты организатора</SectionTitle>
+                    <Contacts event={event} />
+                </div>
             )}
 
-            {location &&
-                <>
-                    <div className="flex flex-col gap-6" id="map">
-                        <SectionTitle>Местоположение</SectionTitle>
-                        <LocationMapLoader location={location} event={event} />
-                    </div>
-                </>
-            }
-
-            <div className="flex flex-col gap-6 -mx-4 md:mx-0 bg-secondary md:px-10 px-4 md:py-8 py-12 md:rounded-lg -mt-8 md:mt-0 max-w-[1000px]">
-                <SectionTitle className="text-center md:text-left">Оставьте заявку на участие</SectionTitle>
-                <Form />
-            </div>
+            {location && (
+                <div className="flex flex-col gap-5" id="map">
+                    <SectionTitle>Местоположение</SectionTitle>
+                    <LocationMapLoader location={location} event={event} />
+                </div>
+            )}
 
             {similarEvents.length > 0 && (
-                <>
-                    <Separator />
-                    <div className="flex flex-col gap-6">
-                        <SectionTitle>Похожие мероприятия</SectionTitle>
-
-                        <EventCardGrid>
-                            {similarEvents.map((event) => (
-                                <EventCard key={event.id} event={event} />
-                            ))}
-                        </EventCardGrid>
-                    </div>
-                </>
+                <div className="flex flex-col gap-5">
+                    <SectionTitle>Похожие мероприятия</SectionTitle>
+                    <EventCardGrid>
+                        {similarEvents.map((similar) => (
+                            <EventCard key={similar.id} event={similar} />
+                        ))}
+                    </EventCardGrid>
+                </div>
             )}
 
             {presets && presets.length > 0 && (
-                <>
-                    <Separator />
-                    <div className="flex flex-col gap-6">
-                        <SectionTitle>Подборки</SectionTitle>
-
-                        <div className="flex flex-wrap gap-2">
-                            {presets.map(preset => (
-                                <div className="w-full md:w-auto overflow-x-auto" key={preset.id}>
-                                    <Button variant="default" asChild>
-                                        <Link href={`/events/${preset.slug}` as Route}>{preset.title}</Link>
-                                    </Button>
-                                </div>
-                            ))}
-                        </div>
+                <div className="flex flex-col gap-5">
+                    <SectionTitle>Подборки</SectionTitle>
+                    <div className="flex flex-wrap gap-2">
+                        {presets.map((preset) => (
+                            <Link
+                                key={preset.id}
+                                href={`/events/${preset.slug}` as Route}
+                                className={discoveryChipClass}
+                            >
+                                {preset.title}
+                            </Link>
+                        ))}
                     </div>
-                </>
+                </div>
             )}
 
             {faq.visible && <FaqSection items={faq.items} />}
 
             <InternalLinks variant="event" event={event} />
+
+            <ApplyBar />
         </div>
     );
 }

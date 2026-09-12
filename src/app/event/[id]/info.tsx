@@ -1,38 +1,23 @@
-import { EventResource } from "@/lib/types";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { formatEventDates, formatPrice } from "@/lib/utils";
-import { Route } from "next";
-import removeMarkdown from "remove-markdown";
-import InfoLabel from "./info-label";
-import Tags from "./tags";
-import { encodeUrl, createSlugWithId } from "@/lib/utils";
-import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
+import { EventResource } from '@/lib/types';
+import Link from 'next/link';
+import { formatEventDates, formatPrice, createSlugWithId, cn } from '@/lib/utils';
+import { Route } from 'next';
+import { IconMapPin } from '@tabler/icons-react';
+import HeroActions from './hero-actions';
+import { discoveryChipClass, discoveryCardClass, discoveryFilterLabelClass } from '@/lib/discovery-ui';
 
 interface InfoProps {
-    event: EventResource
-    className?: string
+    event: EventResource;
+    className?: string;
+    hasMap?: boolean;
 }
 
-export default function Info({ event, className }: InfoProps) {
-    const googleCalendarRoute = (): Route => {
-        const url = new URL('https://calendar.google.com/calendar/u/0/r/eventedit');
-        url.searchParams.set('text', event.title);
-        url.searchParams.set('dates', `${event.start_date.replace(/-/g, '')}T100000/${event.end_date.replace(/-/g, '')}T180000`);
-        url.searchParams.set('ctz', 'Europe/Moscow');
-        url.searchParams.set('details', removeMarkdown(event.description ?? event.title));
-        url.searchParams.set('location', event.city?.title ?? '' + (event.venue?.title ? `, ${event.venue.address}` : ''));
-        url.searchParams.set('pli', '1');
-        url.searchParams.set('uid', 'workevent' + event.id.toString());
-        url.searchParams.set('sf', 'true');
-        url.searchParams.set('output', 'xml');
+export default function Info({ event, className, hasMap }: InfoProps) {
+    const additionalIndustries = event.industries
+        ?.filter((industry) => industry.id !== event.industry?.id)
+        .map((industry) => industry.title)
+        .join(', ');
 
-        return url.toString() as Route;
-    }
-
-    const additionalIndustries = event.industries?.filter(industry => industry.id !== event.industry?.id).map(industry => industry.title).join(', ');
     let organizerName: string | null = null;
     if (event.website) {
         try {
@@ -42,84 +27,92 @@ export default function Info({ event, className }: InfoProps) {
         }
     }
 
+    const industrySlug =
+        event.industries?.find((industry) => industry.id === event.industry?.id)?.slug
+        ?? event.industries?.[0]?.slug;
+
+    const activeTariffs = [...(event.tariffs ?? [])]
+        .filter((tariff) => tariff.is_active)
+        .sort((a, b) => a.price - b.price);
+    const cheapest = activeTariffs[0];
+    const venueLine = [event.venue?.title, event.venue?.address].filter(Boolean).join(', ');
 
     return (
-        <div className={cn("flex flex-col gap-6", className)}>
-            <h1 className="md:text-3xl text-xl font-semibold">{event.title}</h1>
+        <div className={cn('flex flex-col gap-5', className)}>
+            <h1 className="m-0 text-[28px] font-bold tracking-tight text-[#090D2B] min-[1200px]:text-[34px] min-[1200px]:leading-10">
+                {event.title}
+            </h1>
 
-            {/* Tags */}
-            {event.tags && event.tags.length > 0 && (
-                <Tags tags={event.tags} />
-            )}
-
-            {/* Additional info */}
-            <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                    <InfoLabel label="Дата проведения" />
-                    <div className="font-medium">{formatEventDates(event)}</div>
-                </div>
-
-                <div className="flex flex-col md:flex-row gap-4 max-w-[550px]">
-                    <Button variant="primary" size="lg" asChild className="md:basis-1/2 w-full">
-                        <Link target="_blank" href={encodeUrl(event.website ?? '', { utm_campaign: 'participate' }) as Route}>Принять участие</Link>
-                    </Button>
-                    {/* <Button variant="default" size="lg" asChild className="md:basis-1/2 w-full">
-                        <Link target="_blank" href={googleCalendarRoute()}>Добавить в календарь</Link>
-                    </Button> */}
-                </div>
-
-                <Separator />
+            <div className="flex flex-wrap gap-2">
+                <span className={discoveryChipClass}>{formatEventDates(event)}</span>
 
                 {event.city && (
-                    <div className="flex flex-col gap-2">
-                        <InfoLabel label="Город" />
-                        <div className="font-medium">
-                            <Link href={`/city/${createSlugWithId(event.city.title, event.city.id)}` as Route}>
-                                {event.city.title}
-                            </Link>
-                        </div>
-                    </div>
+                    <Link
+                        href={`/city/${createSlugWithId(event.city.title, event.city.id)}` as Route}
+                        className={discoveryChipClass}
+                    >
+                        {event.city.title}
+                    </Link>
                 )}
 
-                {event.venue &&
-                    <div className="flex flex-col gap-2">
-                        <InfoLabel label="Место проведения" />
-                        <div className="font-medium">{event.venue?.title ? `${event.venue.title}` : ''}{event.venue?.title && event.venue?.address ? ', ' : ''}{event.venue?.address ? `${event.venue.address}` : ''}</div>
-                    </div>
-                }
-
-                {event.tariffs && event.tariffs.length > 0 && (
-                    <div className="flex flex-col gap-2">
-                        <InfoLabel label="Стоимость" />
-                        <div className="font-medium">от {formatPrice(event.tariffs?.sort((a, b) => a.price - b.price)[0]?.price)}</div>
-                    </div>
+                {cheapest && (
+                    <span className={discoveryChipClass}>от {formatPrice(cheapest.price)}</span>
                 )}
 
-                <Separator />
-
-                {/* Format */}
                 {event.format_label && (
-                    <div className="flex flex-col gap-2">
-                        <InfoLabel label="Формат мероприятия" />
-                        <div className="font-medium">{event.format_label}</div>
-                    </div>
+                    <span className={discoveryChipClass}>{event.format_label}</span>
                 )}
 
-                {/* Industry */}
-                {event.industry && (
-                    <div className="flex flex-col gap-2">
-                        <InfoLabel label="Отрасль" />
-                        <div className="font-medium">{event.industry.title}{additionalIndustries ? `, ${additionalIndustries}` : ''}</div>
-                    </div>
+                {event.industry && industrySlug && (
+                    <Link href={`/industry/${industrySlug}` as Route} className={discoveryChipClass}>
+                        {event.industry.title}
+                    </Link>
+                )}
+
+                {event.industry && !industrySlug && (
+                    <span className={discoveryChipClass}>
+                        {event.industry.title}
+                        {additionalIndustries ? `, ${additionalIndustries}` : ''}
+                    </span>
                 )}
 
                 {organizerName && (
-                    <div className="flex flex-col gap-2">
-                        <InfoLabel label="Организатор" />
-                        <div className="font-medium">{organizerName}</div>
-                    </div>
+                    <span className={discoveryChipClass}>{organizerName}</span>
                 )}
             </div>
+
+            {venueLine && hasMap && (
+                <a
+                    href="#map"
+                    className="inline-flex items-start gap-1.5 text-[14px] leading-5 text-[#657087] hover:text-[#4545EF]"
+                >
+                    <IconMapPin className="mt-0.5 size-4 shrink-0" stroke={1.75} />
+                    {venueLine}
+                </a>
+            )}
+
+            {venueLine && !hasMap && (
+                <div className="inline-flex items-start gap-1.5 text-[14px] leading-5 text-[#657087]">
+                    <IconMapPin className="mt-0.5 size-4 shrink-0" stroke={1.75} />
+                    {venueLine}
+                </div>
+            )}
+
+            {activeTariffs.length > 1 && (
+                <div className={`${discoveryCardClass} flex flex-col gap-2 px-5 py-4`}>
+                    <div className={discoveryFilterLabelClass}>Тарифы</div>
+                    <ul className="flex flex-col gap-1.5 text-[14px] text-[#090D2B]">
+                        {activeTariffs.map((tariff) => (
+                            <li key={tariff.id} className="flex justify-between gap-4">
+                                <span className="text-[#657087]">{tariff.title}</span>
+                                <span className="font-medium">{formatPrice(tariff.price)}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
+            <HeroActions event={event} />
         </div>
-    )
+    );
 }
