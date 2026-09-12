@@ -51,7 +51,7 @@ export default function CookieBanner() {
                     <button
                         type="button"
                         onClick={handleAcceptCookies}
-                        className="inline-flex h-10 shrink-0 items-center justify-center rounded-full bg-[#4545EF] px-5 text-[14px] text-white hover:bg-[#3838d4] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4545EF]"
+                        className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg bg-[#4545EF] px-5 text-[14px] text-white hover:bg-[#3838d4] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4545EF]"
                     >
                         Ок
                     </button>

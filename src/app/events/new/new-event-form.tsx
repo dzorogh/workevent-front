@@ -230,7 +230,7 @@ export default function NewEventForm({ industries }: { industries: IndustryResou
           )}
         </div>
 
-        <Button type="submit" variant="primary" className="rounded-full w-fit px-8">
+        <Button type="submit" variant="primary" className="rounded-lg w-fit px-8">
           Отправить заявку
         </Button>
       </form>

@@ -26,7 +26,7 @@ function pickVisible(industries: IndustryResource[]) {
 
 const chipClass = (active: boolean) =>
     cn(
-        'inline-flex h-9 shrink-0 items-center rounded-full px-4 text-[14px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4545EF]',
+        'inline-flex h-9 shrink-0 items-center rounded-lg px-4 text-[14px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4545EF]',
         active
             ? 'bg-[#4545EF] text-white'
             : 'bg-[#E9E8FF] text-[#090D2B] hover:bg-[#dcdbf8]'

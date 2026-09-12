@@ -141,14 +141,14 @@ export default function Subscribe({ industries }: { industries: IndustryResource
                                         {...field}
                                         type="email"
                                         placeholder="Ваш e-mail"
-                                        className="rounded-full h-11 bg-white border-0 shadow-none"
+                                        className="rounded-lg h-11 bg-white border-0 shadow-none"
                                     />
                                 )}
                             />
                         </div>
                         <Button
                             type="submit"
-                            className="rounded-full h-11 px-6 bg-[#4545EF] text-white hover:bg-[#3838d4] bg-none from-transparent to-transparent shadow-none ring-0"
+                            className="rounded-lg h-11 px-6 bg-[#4545EF] text-white hover:bg-[#3838d4] bg-none from-transparent to-transparent shadow-none ring-0"
                         >
                             Подписаться
                         </Button>

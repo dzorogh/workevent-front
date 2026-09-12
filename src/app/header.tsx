@@ -30,7 +30,7 @@ export default function Header() {
                         </Link>
                         <Link
                             href={"/events/new" as Route}
-                            className="inline-flex h-[38px] w-[168px] items-center justify-center rounded-full border border-[#D4DAE8] bg-white text-[14px] text-[#090D2B] hover:bg-[#E9E8FF] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4545EF]"
+                            className="inline-flex h-[38px] w-[168px] items-center justify-center rounded-lg border border-[#D4DAE8] bg-white text-[14px] text-[#090D2B] hover:bg-[#E9E8FF] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4545EF]"
                         >
                             Добавить событие
                         </Link>

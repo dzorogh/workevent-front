@@ -208,13 +208,13 @@ export default async function IndustryPage({ params }: Props) {
       <div className="flex flex-wrap gap-2">
         <Link
           href={`/schedule/${seoYear}/${slug}` as Route}
-          className="rounded-full border px-3 py-1 text-sm hover:bg-secondary"
+          className="rounded-lg border px-3 py-1 text-sm hover:bg-secondary"
         >
           Календарь {industry.title} на {seoYear}
         </Link>
         <Link
           href={"/city/moskva-1" as Route}
-          className="rounded-full border px-3 py-1 text-sm hover:bg-secondary"
+          className="rounded-lg border px-3 py-1 text-sm hover:bg-secondary"
         >
           Конференции в Москве
         </Link>

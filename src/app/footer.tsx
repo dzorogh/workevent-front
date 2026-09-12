@@ -20,7 +20,7 @@ export default async function Footer() {
                         </p>
                         <Link
                             href={"/events/new" as Route}
-                            className="inline-flex h-[38px] w-fit items-center justify-center rounded-full bg-[#4545EF] px-4 text-[14px] text-white hover:bg-[#3838d4] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                            className="inline-flex h-[38px] w-fit items-center justify-center rounded-lg bg-[#4545EF] px-4 text-[14px] text-white hover:bg-[#3838d4] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                         >
                             Добавить событие
                         </Link>

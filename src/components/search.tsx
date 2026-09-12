@@ -153,7 +153,7 @@ export default function Search({ cities, initialParams = {} }: SearchProps) {
           </div>
           <Button
             type="submit"
-            className="rounded-full h-11 w-full shrink-0 bg-[#4545EF] text-white hover:bg-[#3838d4] bg-none from-transparent to-transparent shadow-none ring-0 min-[1024px]:h-[44px] min-[1024px]:w-[160px] min-[1200px]:w-[200px]"
+            className="rounded-lg h-11 w-full shrink-0 bg-[#4545EF] text-white hover:bg-[#3838d4] bg-none from-transparent to-transparent shadow-none ring-0 min-[1024px]:h-[44px] min-[1024px]:w-[160px] min-[1200px]:w-[200px]"
           >
             Найти
           </Button>
