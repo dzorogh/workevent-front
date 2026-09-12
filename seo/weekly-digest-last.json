@@ -1,0 +1,110 @@
+{
+  "generatedAt": "2026-09-12T15:23:39.288Z",
+  "timezone": "Europe/Moscow",
+  "week": {
+    "from": "2026-08-31",
+    "to": "2026-09-06"
+  },
+  "previousWeek": {
+    "from": "2026-08-24",
+    "to": "2026-08-30"
+  },
+  "webmaster": {
+    "hostId": "https:workevent.ru:443",
+    "sqi": 10,
+    "searchable_pages_count": 566,
+    "excluded_pages_count": 114,
+    "problems": [
+      {
+        "code": "DUPLICATE_PAGES",
+        "severity": "POSSIBLE_PROBLEM"
+      }
+    ],
+    "sitemaps": [
+      {
+        "url": "https://workevent.ru/sitemap.xml",
+        "last_access_date": "2026-09-09T17:04:39.000+03:00",
+        "errors_count": 0
+      }
+    ],
+    "queries": [
+      {
+        "text": "рарч 2026",
+        "shows": 225,
+        "clicks": 0,
+        "position": 10.395555555555555
+      },
+      {
+        "text": "рарч 2026 программа",
+        "shows": 36,
+        "clicks": 0,
+        "position": 7.916666666666667
+      },
+      {
+        "text": "рарч 2026 где будет",
+        "shows": 30,
+        "clicks": 2,
+        "position": 8.3
+      },
+      {
+        "text": "deeptechnight",
+        "shows": 22,
+        "clicks": 0,
+        "position": 9.318181818181818
+      },
+      {
+        "text": "рарч москва 2026",
+        "shows": 17,
+        "clicks": 0,
+        "position": 9.941176470588236
+      },
+      {
+        "text": "нейродиалог казань 2026",
+        "shows": 14,
+        "clicks": 0,
+        "position": 9.928571428571429
+      },
+      {
+        "text": "программа рарч 2026",
+        "shows": 13,
+        "clicks": 0,
+        "position": 8.384615384615385
+      },
+      {
+        "text": "рарч 2026 москва",
+        "shows": 11,
+        "clicks": 0,
+        "position": 9.727272727272727
+      },
+      {
+        "text": "вреденовские чтения 2026 программа",
+        "shows": 10,
+        "clicks": 4,
+        "position": 7.5
+      },
+      {
+        "text": "нрф 10",
+        "shows": 8,
+        "clicks": 0,
+        "position": 8.25
+      }
+    ]
+  },
+  "metrika": {
+    "counterId": 99029501,
+    "segmentId": "1008074935",
+    "organicGoalsOk": true,
+    "organic": {
+      "visits": 29,
+      "event_apply": 0,
+      "newsletter_subscribe": 0,
+      "organizer_goto": 9
+    },
+    "totals": {
+      "visits": 96,
+      "event_apply": 0,
+      "newsletter_subscribe": 0,
+      "organizer_goto": 11
+    }
+  }
+}

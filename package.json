@@ -16,6 +16,7 @@
     "content:apply": "node scripts/content/apply.mjs",
     "content:test": "node --test scripts/content/*.test.mjs",
     "seo:generate-pages-seed": "node scripts/generate-pages-seed.mjs",
+    "seo:weekly-digest": "node scripts/seo-weekly-digest.mjs",
     "seo:lint-content": "node scripts/lint-seo-content.mjs",
     "seo:seed-posts": "node scripts/dokploy-seed-posts.mjs",
     "seo:wordstat": "node scripts/fetch-wordstat.mjs"
