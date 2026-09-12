@@ -13,19 +13,19 @@ export default function CalendarComponent({ event }: CalendarComponentProps) {
     return (
         <div className={`${discoveryCardClass} flex min-w-72 flex-col gap-4 p-5`}>
             {sameDay ? (
-                <div className="flex flex-col gap-1">
+                <div className="flex items-baseline justify-between gap-3">
                     <div className={discoveryFilterLabelClass}>Дата проведения</div>
-                    <div className="font-semibold text-[#090D2B]">{formatDate(event.start_date)}</div>
+                    <div className="whitespace-nowrap font-semibold text-[#090D2B]">{formatDate(event.start_date)}</div>
                 </div>
             ) : (
-                <div className="flex gap-4">
-                    <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-2">
+                    <div className="flex items-baseline justify-between gap-3">
                         <div className={discoveryFilterLabelClass}>Начало</div>
-                        <div className="font-semibold text-[#090D2B]">{formatDate(event.start_date)}</div>
+                        <div className="whitespace-nowrap font-semibold text-[#090D2B]">{formatDate(event.start_date)}</div>
                     </div>
-                    <div className="flex flex-col gap-1">
+                    <div className="flex items-baseline justify-between gap-3">
                         <div className={discoveryFilterLabelClass}>Окончание</div>
-                        <div className="font-semibold text-[#090D2B]">{formatDate(event.end_date)}</div>
+                        <div className="whitespace-nowrap font-semibold text-[#090D2B]">{formatDate(event.end_date)}</div>
                     </div>
                 </div>
             )}

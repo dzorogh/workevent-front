@@ -95,7 +95,9 @@ export function decodeUrl(encodedUrl: string): string {
 }
 
 export function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+  return new Date(date)
+    .toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+    .replace(/(\d{4}) г\./, '$1\u00A0г.');
 }
 
 export function formatEventDates(event: EventResource) {
